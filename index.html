@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Концепт сайта IZI TOUR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body>
+
+<div class="ribbon"><div class="wrap">
+  <b>КОНЦЕПТ</b>
+  <span>Прототип редизайна. Не действующий сайт IZI TOUR — официальный на izi.tours. Цены, места, борта и отзывы — пример данных.</span>
+</div></div>
+
+<header class="head"><div class="wrap">
+  <a class="logo" href="#" onclick="show('home');return false">
+    <span class="mark3d" aria-hidden="true"></span>
+    
+    <span class="logo-txt"><b>IZI</b><em>TOUR</em></span>
+  </a>
+  <nav class="pillnav">
+    <button type="button" data-view="home" aria-current="page" onclick="show('home')">Главная</button>
+    <button type="button" onclick="jump('#dest')">Направления</button>
+    <button type="button" onclick="jump('#value')">Что входит</button>
+    <button type="button" onclick="jump('#pay')">Оплата</button>
+    <button type="button" data-view="lp" onclick="show('lp')">Туры из Минвод</button>
+    <button type="button" onclick="return false">Агентствам</button>
+  </nav>
+  <div class="head-r">
+    <a class="callback" href="tel:+78007772953"><b>8 800 777-29-53</b><span>Перезвоним за 30 секунд</span></a>
+    <button class="btn btn-ember btn-s" type="button" onclick="jump('#dest')">Найти туры</button>
+  </div>
+</div></header>
+
+<main id="view-home">
+
+<section class="hero">
+  <div class="wrap">
+    <div class="stage3d dk">
+     <div class="scene" id="heroScene">
+      <img id="heroImg" alt="Миниатюрный макет курорта">
+      <div class="glare" aria-hidden="true"></div>
+      <div class="glass">
+       <span class="glass-edge" aria-hidden="true"></span>
+       <div class="hui hui-search">
+         <p class="hui-eyebrow">Собственная чартерная программа</p>
+         <h1 class="hui-title" id="heroTitle">Сразу к морю</h1>
+         <p class="hui-desc" id="heroDesc">Прямые рейсы из Минеральных Вод, Краснодара и Саранска. Без стыковок в Москве и без ночи в аэропорту.</p>
+
+
+       </div>
+      </div>
+
+      <div class="searchbar">
+         <form class="bigsearch" onsubmit="return false">
+           <div class="bf">
+             <label for="fFrom">Откуда</label>
+             <select id="fFrom" onchange="setCity(this.value)">
+               <option value="mrv">Минеральные Воды</option>
+               <option value="krr">Краснодар</option>
+               <option value="skx">Саранск</option>
+             </select>
+           </div>
+           <div class="bf">
+             <label for="fTo">Куда</label>
+             <select id="fTo" onchange="pickFromSearch()"></select>
+           </div>
+           <div class="bf">
+             <label for="fWhen">Когда</label>
+             <div class="bf-v num" id="fWhen">29 авг — 7 сен</div>
+           </div>
+           <div class="bf">
+             <label for="fWho">Кто едет</label>
+             <div class="bf-v" id="fWho">2 взрослых</div>
+           </div>
+           <button class="btn btn-ember bs-go" type="button" onclick="jump('#dest')">Найти туры</button>
+         </form>
+         <p class="bs-note">В рабочей версии кнопка открывает выдачу Tourvisor — того же модуля, что стоит у вас сейчас.</p>
+      </div>
+     </div>
+     <div class="tray" aria-hidden="true"></div>
+    </div>
+
+    <div class="trustbar">
+      <span class="tb"><span class="star">★</span> <b>4,7</b> из 5 · 1 284 отзыва</span>
+      <span class="tb"><b>РТО 025013</b> · обеспечение 50 млн ₽</span>
+      <span class="tb">Чартеры <b>Red Wings</b></span>
+      <span class="tb"><b>Бронь от 3 000 ₽</b> · рассрочка 0%</span>
+      <span class="tb">Поддержка <b>24/7</b></span>
+    </div>
+  </div>
+</section>
+
+<section id="dest" class="rev">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Шаг 1 · выберите направление</p>
+        <h2>Куда летим из <em id="city-name">Минеральных Вод</em></h2>
+        <p id="city-note"></p>
+      </div>
+    </div>
+    <div class="deals" id="deals"></div>
+  </div>
+</section>
+
+<section id="resort" class="rev">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Шаг 2 · посмотрите и выберите дату</p>
+        <h2>Подробно про <em id="stName2">Бодрум</em></h2>
+        <p id="resortLede">Что это за место, когда лететь дешевле и сколько это стоит именно из вашего города.</p>
+      </div>
+    </div>
+
+    <div class="stage3d stage3d-sm dk">
+     <div class="scene" id="stageScene">
+      <img id="stageImg" alt="Вид курорта">
+      <img id="stageImg2" class="xfade" alt="" aria-hidden="true">
+      <div class="glare" aria-hidden="true"></div>
+      <div class="glass">
+       <span class="glass-edge" aria-hidden="true"></span>
+       <div class="hui hui-sm">
+        <div class="hui-l">
+          <div>
+            <p class="hui-eyebrow" id="stSub">Турция · Эгейское побережье</p>
+            <h3 class="hui-title" id="stName">Бодрум</h3>
+          </div>
+          <div class="rtabs" id="rtabs" role="group" aria-label="О курорте"></div>
+          <p class="rtext" id="rtext"></p>
+        </div>
+        <div class="hui-r">
+          <div class="gcard">
+            <div class="gcard-h"><span>Коротко о месте</span></div>
+            <ul class="facts"><li id="chip1"></li><li id="chip2"></li><li id="chip3"></li><li id="chip4"></li></ul>
+          </div>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div class="tray" aria-hidden="true"></div>
+    </div>
+
+    <div class="calbox">
+      <div class="calbox-h">
+        <div><b id="calTitle">Когда лететь дешевле</b><span id="cal-city">Минеральные Воды → Бодрум · за двоих, 7 ночей</span></div>
+        <div class="calpick">Выбрано: <b class="num" id="calPick">вт, 9 сен · 119 200 ₽</b></div>
+      </div>
+      <div class="cal" id="cal"></div>
+      <div class="calbox-f">
+        <div><span class="num" id="rPrice">119 200 ₽</span><em>за двоих · бронь от 3 000 ₽ · остальное за 14 дней</em></div>
+        <button class="btn btn-ember btn-l" type="button" id="rCta" onclick="jump('#lead')">Найти туры в Бодрум</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="value" class="rev">
+  <div class="wrap">
+    <div class="sec-head"><div>
+      <p class="eyebrow">Шаг 3 · что вы получаете</p>
+      <h2>В цене уже <em>всё</em></h2>
+      <p>Цифра на карточке — это итог, а не «от». И до моря вы добираетесь за три часа, а не за четырнадцать.</p>
+    </div></div>
+
+    <div class="stage3d rt-stage dk">
+      <div class="scene rt-scene" id="routeScene">
+        <img id="routeImg" alt="Вид на маршрут с высоты эшелона" hidden>
+        <div class="rt-sky" id="rtSky" aria-hidden="true">
+          <span class="rt-stars"></span><span class="rt-sun"></span><span class="rt-earth"></span>
+          <span class="rt-cloud c1"></span><span class="rt-cloud c2"></span><span class="rt-cloud c3"></span>
+        </div>
+        <div class="rt-veil" aria-hidden="true"></div>
+        <div class="glare" aria-hidden="true"></div>
+        <div class="rt-ui">
+          <div class="routetabs" role="group" aria-label="Вариант перелёта">
+            <button type="button" data-r="direct" aria-pressed="true" onclick="setRoute('direct')">Прямым рейсом IZI</button>
+            <button type="button" data-r="moscow" aria-pressed="false" onclick="setRoute('moscow')">Через Москву самому</button>
+          </div>
+          <div class="rt-plot">
+            <svg id="routeSvg" viewBox="0 34 1000 296" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Схема маршрута">
+              <defs>
+                <linearGradient id="rg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#29B6EA"/><stop offset="1" stop-color="#F5A93E"/></linearGradient>
+                <filter id="rglow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+              </defs>
+              <path id="pDirect" d="M110 248 Q500 176 890 238" fill="none" stroke="url(#rg)" stroke-width="3" stroke-linecap="round" opacity=".95"/>
+              <path id="pMoscow" d="M110 248 Q200 120 420 104 Q650 88 690 168 Q730 240 890 238" fill="none" stroke="url(#rg)" stroke-width="3" stroke-linecap="round" stroke-dasharray="9 8" opacity="0"/>
+              <path id="pTrail" d="M110 248 Q500 176 890 238" fill="none" stroke="#FFE6C0" stroke-width="3.4" stroke-linecap="round" opacity=".85"/>
+              <g id="stopDot" opacity="0">
+                <circle cx="540" cy="96" r="17" fill="rgba(240,194,74,.16)"/><circle cx="540" cy="96" r="6" fill="#F0C24A"/>
+                <text x="540" y="68" text-anchor="middle" fill="#F0C24A" font-family="Onest,sans-serif" font-size="14" font-weight="600">Москва</text>
+                <text x="540" y="128" text-anchor="middle" fill="#DCEAF4" font-family="Onest,sans-serif" font-size="13">пересадка 6 ч 20 мин</text>
+              </g>
+              <g><circle cx="110" cy="248" r="20" fill="rgba(41,182,234,.18)"/><circle cx="110" cy="248" r="7" fill="#29B6EA"/>
+                <text x="110" y="292" text-anchor="middle" fill="#EAF4FA" font-family="Onest,sans-serif" font-size="15" font-weight="600" id="fromLabel">Минеральные Воды</text></g>
+              <g><circle cx="890" cy="238" r="20" fill="rgba(245,169,62,.2)"/><circle cx="890" cy="238" r="7" fill="#F5A93E"/>
+                <text x="890" y="282" text-anchor="middle" fill="#EAF4FA" font-family="Onest,sans-serif" font-size="15" font-weight="600" id="toLabel">Бодрум</text></g>
+              <g id="plane"><g transform="scale(1.22)"><path d="M15 0 L4 -2.3 L-2 -2.3 L-11 -9.5 L-14.5 -9.5 L-9.2 -2.1 L-13.4 -1.7 L-16 -4.2 L-18 -4.2 L-17 0 L-18 4.2 L-16 4.2 L-13.4 1.7 L-9.2 2.1 L-14.5 9.5 L-11 9.5 L-2 2.3 L4 2.3 Z" fill="#FFF6E6" stroke="rgba(6,20,34,.55)" stroke-width=".8" stroke-linejoin="round"/></g></g>
+            </svg>
+          </div>
+          <div class="rstats" id="rstats"></div>
+        </div>
+      </div>
+      <div class="tray" aria-hidden="true"></div>
+    </div>
+    <p class="rt-note" id="rtNote"></p>
+
+    <div class="incl incl-3">
+        <div class="inc"><b>Перелёт туда и обратно</b><span>Прямой чартер Red Wings</span></div>
+        <div class="inc"><b>Багаж 20 кг + ручная кладь</b><span>Без доплат у стойки</span></div>
+        <div class="inc"><b>Трансфер в обе стороны</b><span>Встречают в аэропорту</span></div>
+        <div class="inc"><b>Отель с питанием</b><span>От завтраков до «всё включено»</span></div>
+        <div class="inc"><b>Медицинская страховка</b><span>Покрытие 50 000 €</span></div>
+      <div class="inc"><b>Представитель на курорте</b><span>Русскоговорящий, 24/7</span></div>
+    </div>
+    <p class="incl-note"><b id="fleetLine">Летите на Boeing 777-200ER или Airbus A321neo</b> — тип борта и шаг кресел видны до брони. <b>Отдельно оплачиваются:</b> виза в Китай, экскурсии на месте и страховка от невыезда. Мы называем эти суммы до брони, а не после.</p>
+  </div>
+</section>
+
+
+<section id="cabin" class="rev">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Ваш борт</p>
+        <h2>Схема салона <em id="smName">Boeing 777-200ER</em></h2>
+        <p id="smLede"></p>
+      </div>
+      <div class="smtotals" id="smTotals"></div>
+    </div>
+
+    <figure class="acshot" id="acShot" hidden>
+      <img id="acImg" alt="">
+      <figcaption class="ac-cap"><b id="acName"></b><span id="acSpec"></span></figcaption>
+    </figure>
+
+    <div class="smbox dk">
+      <div class="smtypes" id="smTypes"></div>
+      <div class="smlegend" id="smLegend"></div>
+      <div class="smscroll">
+        <div class="smplane">
+          <div class="smnose" aria-hidden="true"></div>
+          <div class="smbody">
+            <div class="smbands" id="smBands"></div>
+            <div class="smgrid" id="smGrid" role="img" aria-label="Схема расположения кресел"></div>
+            <div class="smrows" id="smRows"></div>
+          </div>
+          <div class="smtail" aria-hidden="true"></div>
+        </div>
+      </div>
+      <div class="smtip" id="smTip">Наведите на кресло</div>
+      <p class="incl-note" id="smNote"></p>
+    </div>
+  </div>
+</section>
+
+<section id="pay" class="rev">
+  <div class="wrap">
+    <div class="sec-head"><div>
+      <p class="eyebrow">Шаг 4 · как платить</p>
+      <h2>Не обязательно <em>всю сумму сразу</em></h2>
+      <p>Цена в рублях фиксируется в день бронирования и дальше не меняется — что бы ни делал курс.</p>
+    </div></div>
+    <div class="pays">
+      <article class="pay"><p class="pay-k">Самый популярный</p><b class="num">3 000 ₽</b><p class="pay-t">Бронь места</p>
+        <p class="pay-d">Место в самолёте и номер закрепляются сразу. Остаток — за 14 дней до вылета.</p></article>
+      <article class="pay pay-hi"><p class="pay-k">Без переплаты</p><b class="num">0%</b><p class="pay-t">Рассрочка на 6 месяцев</p>
+        <p class="pay-d">Без первого взноса и процентов. Оформляется онлайн за пять минут.</p></article>
+      <article class="pay"><p class="pay-k">Выгоднее всего</p><b class="num">−3%</b><p class="pay-t">Полная оплата сразу</p>
+        <p class="pay-d">Скидка от стоимости тура при оплате целиком в день бронирования.</p></article>
+    </div>
+    <div class="guards">
+      <div class="guard"><b>50 млн ₽ обеспечения</b><p>Гарантия в СК «ТИТ», РТО 025013 — проверяется в реестре за минуту.</p></div>
+      <div class="guard"><b>Отмена за 21 день</b><p>Возвращаем всё уплаченное, кроме банковской комиссии.</p></div>
+      <div class="guard"><b>Цена не изменится</b><p>Зафиксирована в рублях в день брони, независимо от курса.</p></div>
+      <div class="guard"><b>Поддержка 24/7</b><p>WhatsApp и Telegram, ответ в среднем за четыре минуты.</p></div>
+    </div>
+    <p class="incl-note">Условия рассрочки приведены как пример: в рабочей версии подставляются из договора с банком-партнёром.</p>
+  </div>
+</section>
+
+<section id="proof" class="rev">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">Шаг 5 · убедитесь</p><h2>Что говорят те, <em>кто уже слетал</em></h2></div>
+      <div>
+        <div class="score"><span class="n num">4,7</span><div><b>из 5</b><div style="font-size:12.5px;color:var(--text-3)">1 284 оценки за сезон</div></div></div>
+        <div class="subscores">
+          <div class="ss"><span>Отель</span><b class="num">4,6</b><i style="--v:92%"></i></div>
+          <div class="ss"><span>Перелёт</span><b class="num">4,8</b><i style="--v:96%"></i></div>
+          <div class="ss"><span>Трансфер</span><b class="num">4,7</b><i style="--v:94%"></i></div>
+          <div class="ss"><span>Поддержка</span><b class="num">4,9</b><i style="--v:98%"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="rv-grid">
+      <article class="rv"><p class="stars">★★★★★</p>
+        <p>Летели из Минвод в Бодрум вчетвером. Три часа — и мы на месте, дети даже не успели устать. После двух лет полётов через Москву это другая жизнь.</p>
+        <div class="who"><div class="av" style="background:#29B6EA">ЕК</div><div><b>Елена К.</b><span>Пятигорск · Бодрум, июль</span></div></div></article>
+      <article class="rv"><p class="stars">★★★★★</p>
+        <p>Бронировали за 3 000 рублей в марте, доплатили в июне — цена не изменилась, хотя курс скакал. Для нас это было решающим.</p>
+        <div class="who"><div class="av" style="background:#F5BE6A">ДМ</div><div><b>Дмитрий М.</b><span>Краснодар · Анталия, июнь</span></div></div></article>
+      <article class="rv"><p class="stars">★★★★☆</p>
+        <p>Отель оказался проще, чем на фото, но представитель на курорте за день переселил в соседний без доплаты. Вопрос закрыли быстро.</p>
+        <div class="who"><div class="av" style="background:#5FCFA6">АС</div><div><b>Анна С.</b><span>Саранск · Анталия, август</span></div></div></article>
+    </div>
+  </div>
+</section>
+
+<section id="lead" class="rev">
+  <div class="wrap"><div class="lead">
+    <div>
+      <p class="eyebrow">Если не нашли сами</p>
+      <h2>Подберём <em>за вас</em></h2>
+      <p>Оставьте номер — менеджер перезвонит за 30 секунд, задаст три вопроса и пришлёт три варианта в мессенджер.</p>
+      <div class="reassure" style="margin-top:22px">
+        <i><span class="tick">✓</span> <b>Бесплатно</b> и ни к чему не обязывает</i>
+        <i><span class="tick">✓</span> <b>Без спама</b> — один звонок</i>
+      </div>
+      <p style="margin-top:20px;font-size:13.5px;color:var(--text-3)">Вы турагентство? <a href="#" onclick="return false" style="color:var(--azure)">Кабинет партнёра и комиссия →</a></p>
+    </div>
+    <div>
+      <form class="lead-form" id="leadForm" onsubmit="return submitLead(event)">
+        <input type="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" aria-label="Номер телефона" required>
+        <button class="btn btn-ember btn-l" type="submit">Перезвоните мне</button>
+        <small>Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности и обработкой персональных данных.</small>
+      </form>
+      <div class="lead-ok" id="leadOk">Заявка принята. В рабочей версии она уходит в CRM со всеми параметрами: город вылета, направление, выбранная дата.</div>
+    </div>
+  </div></div>
+</section>
+
+</main>
+
+<main id="view-lp" class="hidden">
+  <div class="wrap lp">
+    <p class="crumbs"><a href="#" onclick="show('home');return false">Главная</a> → <a href="#" onclick="return false">Из Минеральных Вод</a> → Турция</p>
+    <h1>Туры в Турцию <em>из Минеральных Вод</em></h1>
+    <p class="lp-lede">Прямой чартер Red Wings, три часа в воздухе — и вы на Эгейском побережье. Вылеты по вторникам и субботам с мая по октябрь. Перелёт, трансфер, отель и страховка — одним заказом, бронь от 3 000 ₽.</p>
+    <div class="lp-facts">
+      <div class="lf"><b class="num">3 ч 15 мин</b><span>В пути до Бодрума</span></div>
+      <div class="lf"><b>Вт · Сб</b><span>Дни вылета</span></div>
+      <div class="lf"><b class="num">от 130 705 ₽</b><span>За двоих, 7 ночей</span></div>
+      <div class="lf"><b style="color:var(--warn)">14 мест</b><span>Осталось на 2 сентября</span></div>
+    </div>
+  </div>
+  <section style="padding-block:48px">
+    <div class="wrap">
+      <div class="sec-head"><div>
+        <p class="eyebrow">Подобрано на ближайший вылет</p>
+        <h2>Отели с местами <em>на 29 августа</em></h2>
+        <p>Выдача формируется модулем Tourvisor в реальном времени — здесь показан её вид в новой вёрстке.</p>
+      </div></div>
+      <div class="hotels" id="hotels"></div>
+    </div>
+  </section>
+  <section style="padding-block:10px 76px">
+    <div class="wrap">
+      <div class="sec-head"><div><p class="eyebrow">Вопросы перед вылетом</p><h2>Что спрашивают <em>чаще всего</em></h2></div></div>
+      <div class="faq">
+        <details open><summary>Сколько лететь из Минеральных Вод до Бодрума?</summary><p>Прямой рейс Red Wings идёт 3 часа 15 минут. Пересадок нет, багаж не перегружается — вы получаете его сразу в Бодруме.</p></details>
+        <details><summary>По каким дням вылеты?</summary><p>Вторник и суббота с мая по октябрь. В высокий сезон, с июля по август, добавляется четверг.</p></details>
+        <details><summary>Что входит в цену тура?</summary><p>Перелёт в обе стороны, багаж 20 кг, групповой трансфер аэропорт — отель — аэропорт, проживание с выбранным питанием и медицинская страховка на весь срок поездки.</p></details>
+        <details><summary>Можно ли забронировать сейчас, а доплатить позже?</summary><p>Да. Бронь закрепляется взносом от 3 000 ₽, остаток вносится за 14 дней до вылета. Цена в рублях фиксируется в день бронирования и потом не меняется.</p></details>
+        <details><summary>А если придётся отказаться от поездки?</summary><p>При отказе более чем за 21 день до вылета возвращается вся уплаченная сумма за вычетом банковской комиссии. Ближе к дате действует шкала удержаний — она есть в договоре.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="msg">
+  <a href="#" onclick="return false" aria-label="Написать в WhatsApp" title="WhatsApp">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3.5 20.5l1.3-4.6A8.4 8.4 0 1 1 8.2 19l-4.7 1.5z" stroke="#5FCFA6" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 8.6c.2-.5.5-.5.8-.5h.6c.2 0 .4 0 .6.5l.7 1.6c.1.3 0 .5-.1.7l-.4.5c-.1.2-.2.4 0 .7.3.5 1 1.4 2 1.9.4.2.6.2.8 0l.6-.6c.2-.2.4-.2.6-.1l1.5.8c.3.2.4.4.4.6 0 .8-.6 1.6-1.4 1.7-.7.1-1.6.1-3.5-.9-2.2-1.2-3.6-3.6-3.7-3.8-.1-.2-.9-1.2-.9-2.3 0-1.1.6-1.6.8-1.8z" fill="#5FCFA6"/></svg>
+  </a>
+  <a href="#" onclick="return false" aria-label="Написать в Telegram" title="Telegram">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 11.6 20.4 4.8 17 19.6l-4.9-3.1-2.6 2.6-.5-4.1L18.7 6" stroke="#29B6EA" stroke-width="1.6" stroke-linejoin="round"/></svg>
+  </a>
+</div>
+
+<div class="stickysearch dk" id="stickysearch">
+  <span class="ss-t"><b id="ssFrom">Минеральные Воды</b> → <b id="ssTo">Бодрум</b> · <span id="ssWhen">29 авг</span> · 2 взрослых</span>
+  <button class="btn btn-ember btn-s" type="button" onclick="jump('#dest')">Найти туры</button>
+</div>
+
+<div class="sticky dk">
+  <div><span class="price num">130 705 ₽</span><small>за двоих · бронь от 3 000 ₽</small></div>
+  <button class="btn btn-ember btn-s" type="button" onclick="jump('#dest')">Найти туры</button>
+</div>
+
+<section class="studio dk">
+  <div class="wrap">
+    <p class="eyebrow">От разработчика — не часть сайта</p>
+    <h2>Как это собрано</h2>
+    <p class="t">Пять курортов — миниатюрные макеты, сгенерированные в Kling AI по единому промпту: белая подставка, тёмно-синий студийный фон, вечерний свет, тилт-шифт как при макросъёмке. Одна визуальная идея на весь сайт, которой нет ни у одного туроператора: все конкуренты сидят на одинаковых стоковых фотографиях пляжей.</p>
+
+    <h3>Что здесь работает на решение купить</h3>
+    <p class="t"><b>Город вылета вместо страны.</b> Весь смысл вашей программы — прямой рейс из региона, а на текущем сайте это нигде не сказано. Первый экран спрашивает город и показывает только то, что из него летает.<br><br>
+    <b>Три часа против четырнадцати.</b> Анимация маршрута сравнивает вас не с другим туроператором, а с «собрать самому через Москву» — в часах и рублях.<br><br>
+    <b>Календарь цен.</b> Приём Skyscanner: человек ещё не выбрал отель, но уже видит, что вторник дешевле субботы.<br><br>
+    <b>Снятие страха вместо уговоров.</b> Бронь от 3 000 ₽, фиксация цены, отмена за 21 день, финобеспечение 50 млн.<br><br>
+    <b>Борт до брони.</b> Тип судна, шаг кресел и норма багажа сняты с человека как источник тревоги — этого нет почти ни у кого в отрасли.<br><br>
+    <b>Один короткий путь для сомневающихся.</b> Одно поле «телефон» и обещание перезвонить за 30 секунд.</p>
+
+    <h3>Четыре честные оговорки</h3>
+    <p class="t"><b>Про ватермарки.</b> На картинках стоит знак Kling — это бесплатный тариф. Перед публикацией нужны чистые выгрузки с платного тарифа, он же даёт коммерческую лицензию. Без неё ставить эти изображения на сайт нельзя.<br><br>
+    <b>Про достоверность.</b> Макеты дают атмосферу и узнаваемость, но это образы, а не конкретные отели. В карточках отелей и на их страницах всё равно нужны реальные фотографии: человек хочет увидеть номер, в котором будет спать.<br><br>
+    <b>Про дефицит.</b> Плашки «осталось 14 мест» работают, только пока они правдивы. Их нужно привязывать к реальному остатку блока — выдуманный дефицит один раз поднимает конверсию и надолго портит репутацию.<br><br>
+    <b>Про борта.</b> Типы судов и компоновка — пример. Перед публикацией сверяются с фактической полётной программой Red Wings.</p>
+
+    <div class="deltas">
+      <div class="delta"><p class="was">TTFB 20–31 сек</p><p class="now num">&lt; 0,4 сек</p><span>Статика с сервера в РФ вместо PHP на каждый запрос</span></div>
+      <div class="delta"><p class="was">Нет H1</p><p class="now">Есть</p><span>И meta description без опечатки в слове «туроператор»</span></div>
+      <div class="delta"><p class="was">2 витрины</p><p class="now num">1</p><span>Единый поиск и единый путь к брони</span></div>
+      <div class="delta"><p class="was">0 посадочных</p><p class="now num">12</p><span>Город вылета × направление</span></div>
+      <div class="delta"><p class="was">0 интерактива</p><p class="now num">4</p><span>Города вылета, курорты, маршрут, борт</span></div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot dk"><div class="wrap">
+  <div class="foot-top">
+    <div>
+      <a class="logo" href="#" onclick="show('home');return false" style="margin-bottom:16px">
+        <span class="mark3d mark3d-lg" aria-hidden="true"></span>
+        <span class="logo-txt"><b>IZI</b><em>TOUR</em></span>
+      </a>
+      <p style="color:var(--text-2);max-width:34ch">Туроператор собственной чартерной программы. Турция, Египет, Китай.</p>
+    </div>
+    <div><h4>Туристам</h4><ul>
+      <li><a href="#" onclick="return false">Подбор тура</a></li><li><a href="#" onclick="return false">Курорты</a></li>
+      <li><a href="#" onclick="return false">Где купить</a></li><li><a href="#" onclick="return false">Отзывы</a></li></ul></div>
+    <div><h4>Агентствам</h4><ul>
+      <li><a href="#" onclick="return false">Кабинет партнёра</a></li><li><a href="#" onclick="return false">Аккредитация</a></li>
+      <li><a href="#" onclick="return false">Рекламные туры</a></li><li><a href="#" onclick="return false">Новости и акции</a></li></ul></div>
+    <div><h4>Связаться</h4><ul>
+      <li><a href="tel:+78007772953" style="font-size:18px;font-weight:700;color:var(--text)">8 800 777-29-53</a></li>
+      <li><a href="mailto:bron@izi.tours">bron@izi.tours</a> — бронирование</li>
+      <li><a href="mailto:travel@izi.tours">travel@izi.tours</a> — агентства</li></ul></div>
+  </div>
+  <div class="legal">
+    <p><b>ООО «Источник здоровья»</b> · РТО 025013 · ИНН 7728387028 · ОГРН 5177746221660 · 119027, Москва, Внуково, ул. Центральная, 8Б, офис 501</p>
+    <p>Финансовое обеспечение: ООО СК «ТИТ», 50 000 000 ₽. <b style="color:var(--gold)">Проверьте срок договора — в реестре он указан до 31.08.2026.</b></p>
+    <p>Демонстрационный прототип. Реквизиты приведены по открытой странице izi.tours/contacts на 28.08.2026 и требуют сверки перед публикацией.</p>
+  </div>
+</div></footer>
+
+<script src="assets/js/site.js" defer></script>
+</body>
+</html>
