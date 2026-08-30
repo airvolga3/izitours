@@ -104,6 +104,7 @@ function setCity(k){
   document.getElementById('fTo').innerHTML=c.dirs.map(function(d){
     return '<option value="'+d.art+'">'+d.t+'</option>';}).join('');
   setModel(document.getElementById('heroImg'),c.dirs[0].art);
+  renderSoon(); renderProg(); watchFill();
   openResort(c.dirs[0].art,true);
 }
 function pickFromSearch(){ openResort(document.getElementById('fTo').value); }
@@ -284,6 +285,129 @@ var DATA={
    {t:'Бодрум',c:'Турция · Эгейское побережье',art:'bodrum',badge:'Новинка сезона',bg:'mint',meta:['чт','3 ч 50 мин','7 и 10 ночей'],left:'Осталось 8 мест',r:'4,7',rn:'842',p:'133 200',old:''}
  ]}
 };
+/* ---------- полётная программа ---------- */
+/* Расписание, остатки мест и цены — демонстрационные. В рабочей версии
+   приходят из системы бронирования оператора. */
+var PROG={
+ mrv:[
+  {to:'Анталия',       k:'antalya',days:'ср · вс',   per:'25 апреля — 25 октября', plane:'Airbus A321neo',        n:'7 · 10 · 14 ночей', p:121400},
+  {to:'Бодрум',        k:'bodrum', days:'вт · сб',   per:'2 мая — 11 октября',     plane:'Airbus A321neo',        n:'7 · 10 ночей',      p:130705},
+  {to:'Шарм-эль-Шейх', k:'sharm',  days:'пн · пт',   per:'круглый год',            plane:'Boeing 777-200ER',      n:'7 · 10 · 14 ночей', p:138900},
+  {to:'Хайнань',       k:'hainan', days:'сб',        per:'1 ноября — 31 марта',    plane:'рейс GDS с пересадкой', n:'10 · 14 ночей',     p:289000}
+ ],
+ krr:[
+  {to:'Анталия',       k:'antalya',days:'вт · сб',   per:'18 апреля — 1 ноября',   plane:'Airbus A321neo',        n:'7 · 10 · 14 ночей', p:116800},
+  {to:'Бодрум',        k:'bodrum', days:'пн · чт',   per:'2 мая — 11 октября',     plane:'Airbus A321neo',        n:'7 · 10 ночей',      p:127300},
+  {to:'Чунцин и горы Аватара',k:'avatar',days:'1 сентября',per:'разовая группа',   plane:'Boeing 777-200ER',      n:'11 дней',           p:300000},
+  {to:'Хайнань',       k:'hainan', days:'сб',        per:'1 ноября — 31 марта',    plane:'рейс GDS с пересадкой', n:'10 · 14 ночей',     p:284500}
+ ],
+ skx:[
+  {to:'Анталия',       k:'antalya',days:'вт · сб',   per:'2 мая — 4 октября',      plane:'Airbus A321neo',        n:'7 · 10 · 14 ночей', p:124900},
+  {to:'Бодрум',        k:'bodrum', days:'чт',        per:'14 мая — 25 сентября',   plane:'Superjet 100',          n:'7 · 10 ночей',      p:133200}
+ ]
+};
+/* Ближайшие вылеты: то, что осталось в уже собранных бортах. */
+var SOON={
+ mrv:[
+  {to:'Бодрум', k:'bodrum', date:'2 сентября', wd:'вт', n:7,  seats:6,  p:118400, was:130705, plane:'A321neo'},
+  {to:'Анталия',k:'antalya',date:'3 сентября', wd:'ср', n:10, seats:11, p:109900, was:121400, plane:'A321neo'},
+  {to:'Шарм-эль-Шейх',k:'sharm',date:'5 сентября',wd:'пт',n:7,seats:3,  p:126400, was:138900, plane:'Boeing 777'},
+  {to:'Бодрум', k:'bodrum', date:'6 сентября', wd:'сб', n:10, seats:18, p:124200, was:130705, plane:'A321neo'}
+ ],
+ krr:[
+  {to:'Анталия',k:'antalya',date:'1 сентября', wd:'пн', n:7,  seats:4,  p:104900, was:116800, plane:'A321neo'},
+  {to:'Бодрум', k:'bodrum', date:'4 сентября', wd:'чт', n:7,  seats:9,  p:115600, was:127300, plane:'A321neo'},
+  {to:'Анталия',k:'antalya',date:'6 сентября', wd:'сб', n:10, seats:16, p:112300, was:116800, plane:'A321neo'},
+  {to:'Чунцин и горы Аватара',k:'avatar',date:'1 сентября',wd:'пн',n:11,seats:4,p:300000,was:0,plane:'Boeing 777'}
+ ],
+ skx:[
+  {to:'Анталия',k:'antalya',date:'2 сентября', wd:'вт', n:7,  seats:7,  p:113900, was:124900, plane:'A321neo'},
+  {to:'Бодрум', k:'bodrum', date:'4 сентября', wd:'чт', n:7,  seats:12, p:126700, was:133200, plane:'Superjet 100'},
+  {to:'Анталия',k:'antalya',date:'6 сентября', wd:'сб', n:10, seats:19, p:118400, was:124900, plane:'A321neo'}
+ ]
+};
+function plural(n,f){var m=n%100; if(m>=11&&m<=14) return f[2]; m=n%10; return m===1?f[0]:(m>=2&&m<=4?f[1]:f[2]);}
+function seatBar(n){ var cap=n<=5?'мало':(n<=12?'средне':'ещё есть'); return {cls:n<=5?'hot':(n<=12?'warm':'ok'), cap:cap}; }
+function renderSoon(){
+  var g=document.getElementById('soonGrid'); if(!g) return;
+  var L=SOON[curCity]||[];
+  if(SMALL) L=L.slice(0,3);
+  g.innerHTML=L.map(function(d,i){
+    var b=seatBar(d.seats), save=d.was? d.was-d.p : 0;
+    return '<article class="sc '+b.cls+'">'+
+      '<div class="sc-top"><span class="sc-wd">'+d.wd+'</span><b class="sc-d">'+d.date+'</b>'+
+        '<span class="sc-n">'+d.n+' '+plural(d.n,['ночь','ночи','ночей'])+'</span></div>'+
+      '<h3 class="sc-to">'+d.to+'</h3>'+
+      '<p class="sc-pl">'+d.plane+' · вылет из '+DATA[curCity].name+'</p>'+
+      '<div class="sc-seats"><i style="--w:'+Math.min(100,d.seats*5)+'%"></i>'+
+        '<span>'+plural(d.seats,['осталось','осталось','осталось'])+' <b>'+d.seats+'</b> '+plural(d.seats,['место','места','мест'])+'</span></div>'+
+      '<div class="sc-foot"><div class="sc-p"><b>'+money(d.p)+'</b>'+
+        (save>0? '<s>'+money(d.was)+'</s><em>−'+money(save)+'</em>':'<span>за двоих, всё включено в цену</span>')+'</div>'+
+        '<button type="button" class="btn btn-ember" onclick="soonBook('+i+')">Забронировать</button></div>'+
+    '</article>';
+  }).join('');
+  document.getElementById('soonNote').textContent=
+    'Даты, остатки мест и цены показаны как пример. В рабочей версии блок собирается из системы бронирования и обновляется сам — как только место продано, оно пропадает с сайта.';
+}
+function soonBook(i){
+  var d=(SOON[curCity]||[])[i]; if(!d) return;
+  track('soon_book','Взял место в ближайшем борту', d.to+' · '+d.date+' · осталось '+d.seats);
+  openResort(d.k,true);
+  IZI.ctx.date=d.wd+', '+d.date;
+  IZI.ctx.price=money(d.p);
+  iziStep('date');
+  bkOpen('soon', null);
+}
+function renderProg(){
+  var t=document.getElementById('progTable'); if(!t) return;
+  var L=PROG[curCity]||[];
+  document.getElementById('progCity').textContent=DATA[curCity].name;
+  t.innerHTML='<thead><tr><th>Направление</th><th>Дни вылета</th><th>Период программы</th><th>Борт</th><th>Длительность</th><th>Цена от</th><th></th></tr></thead>'+
+   '<tbody>'+L.map(function(r){
+    return '<tr><td class="pg-to"><b>'+r.to+'</b></td>'+
+      '<td><span class="pg-days">'+r.days+'</span></td>'+
+      '<td class="pg-per">'+r.per+'</td>'+
+      '<td class="pg-pl">'+r.plane+'</td>'+
+      '<td class="pg-n">'+r.n+'</td>'+
+      '<td class="pg-p"><b>'+money(r.p)+'</b></td>'+
+      '<td class="pg-a"><button type="button" onclick="progGo(\''+r.k+'\')">Даты и цены</button></td></tr>';
+   }).join('')+'</tbody>';
+  document.getElementById('progNote').textContent=
+    'Расписание демонстрационное и требует сверки с полётной программой оператора. Дни вылета могут меняться в начале и в конце сезона — точные даты всегда в календаре направления.';
+}
+function progGo(k){ track('prog_open','Открыл направление из расписания',k); openResort(k); }
+
+/* ---------- честно про чартер ---------- */
+var FAQ=[
+ {q:'А если рейс перенесут на несколько часов?',
+  a:'Такое бывает — чартер встраивают в свободные слоты аэропорта. Мы сообщаем о переносе в СМС и мессенджер сразу, как узнаём сами, а не за час до выезда. Отель при этом никуда не девается: заезд и выезд считаются по датам тура, а не по времени рейса. Если сдвиг больше шести часов, оператор оплачивает питание в аэропорту.'},
+ {q:'А если рейс отменят совсем?',
+  a:'Оператор обязан либо вывезти вас другим бортом, либо вернуть всю стоимость тура. Это не добрая воля, а закон: ответственность туроператора обеспечена финансовой гарантией — у нас это 50 млн ₽ в СК «ТИТ». Номер в реестре туроператоров можно проверить за минуту, ссылка внизу страницы.'},
+ {q:'Почему нельзя поменять дату вылета, как на регулярном рейсе?',
+  a:'Потому что борт летит по своей программе: место закреплено за конкретной ротацией. Поменять дату можно, но это перебронирование тура — с пересчётом цены на новую дату. Чем раньше вы об этом скажете, тем дешевле выходит: за 21 день и больше — без штрафа.'},
+ {q:'Я заболел и не могу лететь. Деньги сгорят?',
+  a:'Без страховки от невыезда вернётся только та часть, которую оператор успевает вернуть отелю и авиакомпании — ближе к вылету это почти ничего. Со страховкой от невыезда (2 400 ₽ с человека) возвращается вся стоимость тура. Это единственная допуслуга, которую мы советуем брать всегда.'},
+ {q:'Багаж, еда, вода — за это тоже платить?',
+  a:'Нет. 20 кг багажа и ручная кладь входят в цену тура, горячее питание на борту — тоже. Доплачивают только за второе место багажа и за выбор конкретного кресла. Никаких сюрпризов у стойки регистрации.'},
+ {q:'Чартер — это старые самолёты?',
+  a:'Наши рейсы выполняет Red Wings на Boeing 777-200ER, Airbus A321neo и Superjet 100. Тип борта, шаг кресел и схему салона видно на этой странице до брони — мы единственные в регионе, кто это показывает.'}
+];
+var faqOpen=-1;
+function renderFaq(){
+  var el=document.getElementById('qaList'); if(!el) return;
+  el.innerHTML=FAQ.map(function(f,i){
+    return '<div class="fq'+(faqOpen===i?' on':'')+'">'+
+      '<button type="button" class="fq-q" aria-expanded="'+(faqOpen===i)+'" onclick="faqTog('+i+')">'+
+        '<span>'+f.q+'</span><i aria-hidden="true"></i></button>'+
+      '<div class="fq-a"'+(faqOpen===i?'':' hidden')+'><p>'+f.a+'</p></div></div>';
+  }).join('');
+}
+function faqTog(i){
+  faqOpen = (faqOpen===i? -1 : i);
+  if(faqOpen===i) track('faq','Открыл вопрос', FAQ[i].q);
+  renderFaq();
+}
+
 var HOTELS=[
  {n:'Scala Nuova Beach Hotel',s:4,loc:'Кушадасы · 30 м до моря',d:'Реновация 2025, собственный песчано-галечный пляж, открытый бассейн.',art:'bodrum',r:'4,6',rn:'318',p:'158 243',meal:'всё включено',urg:'Последние 3 номера'},
  {n:'Bodrum Beach Resort',s:4,loc:'Гюмбет, Бодрум · 100 м до моря',d:'18 000 м² ухоженной территории, реновация 2024, кафе и магазины рядом.',art:'antalya',r:'4,4',rn:'512',p:'167 011',meal:'завтрак и ужин',urg:''},
@@ -783,7 +907,8 @@ function cmRender(){
   }
   document.getElementById('cmGrid').innerHTML=cells;
   document.getElementById('cmSub').textContent='Вылеты по расписанию: '+(curDir()? curDir().meta[0]:'—');
-  document.getElementById('cmNote').textContent='Цены за двоих на семь ночей, ориентировочные. Серым — дни без вылета по этому направлению. Зелёным — самый дешёвый вылет месяца.';
+  document.getElementById('cmNote').innerHTML='Цены за двоих на семь ночей, ориентировочные. Серым — дни без вылета по этому направлению. Зелёным — самый дешёвый вылет месяца. '+
+    '<a href="#watchSec" onclick="track(\'watch_link\',\'Пошёл подписываться на цену\');jump(\'#watchSec\');return false" style="color:var(--azure);white-space:nowrap">Нет подходящей даты →</a>';
 }
 function cmPick(d){
   var dt=new Date(2026,8,d), lbl=WD[dt.getDay()]+', '+d+' сен', p=cmPrice(d);
@@ -999,12 +1124,12 @@ var IZI={
   sid:'', started:Date.now(), events:[], maxScroll:0,
   src:{}, ctx:{from:'',fromName:'',to:'',toName:'',date:'',price:'',pax:'2 взрослых',
        resorts:[], tabs:[], seatmap:0, planes:[], compared:false, calendarUsed:false, hotels:[]},
-  steps:{visit:0,city:0,dest:0,detail:0,date:0,intent:0,book:0,lead:0},
-  lead:{type:'',adults:2,kids:0,deposit:0,email:''}
+  steps:{visit:0,city:0,dest:0,detail:0,date:0,intent:0,book:0,addons:0,lead:0},
+  lead:{type:'',adults:2,kids:0,inf:0,deposit:0,email:'',addons:[],addonsSum:0,total:0}
 };
 var FUNNEL=[['visit','Зашёл на сайт'],['city','Выбрал город вылета'],['dest','Открыл направление'],
             ['detail','Изучил детали'],['date','Выбрал дату'],['intent','Нажал кнопку действия'],
-            ['book','Начал бронирование'],['lead','Заявка создана']];
+            ['book','Начал бронирование'],['addons','Дошёл до допродаж'],['lead','Заявка создана']];
 
 function iziInit(){
   IZI.sid='S-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
@@ -1041,13 +1166,16 @@ function iziPacket(){
       name: IZI.lead.name || (document.getElementById('leadName')||{}).value || '',
       phone:IZI.lead.phone || (document.getElementById('leadPhone')||{}).value || '',
       email:IZI.lead.email || '',
-      adults:IZI.lead.adults, kids:IZI.lead.kids,
+      adults:IZI.lead.adults, kids:IZI.lead.kids, infants:IZI.lead.inf||0,
       deposit:IZI.lead.deposit || 0
     },
     choice:{
       from:IZI.ctx.fromName, to:IZI.ctx.toName, date:IZI.ctx.date,
       price:IZI.ctx.price, pax:IZI.ctx.pax,
-      hotel: (typeof BK!=='undefined'&&BK.hotel)? BK.hotel.n+' '+BK.hotel.s+'*, '+BK.hotel.meal : ''
+      hotel: (typeof BK!=='undefined'&&BK.hotel)? BK.hotel.n+' '+BK.hotel.s+'*, '+BK.hotel.meal : '',
+      addons: (IZI.lead.addons||[]).slice(),
+      addonsSum: IZI.lead.addonsSum||0,
+      totalRub: IZI.lead.total||0
     },
     behaviour:{
       resortsViewed:IZI.ctx.resorts.slice(),
@@ -1070,14 +1198,62 @@ function iziPacket(){
 
 
 /* ---------- бронирование за 3 000 ₽ ---------- */
-var BK={step:0, adults:2, kids:0, done:false, src:'', name:'', phone:'', email:'', hotel:null};
+var BK={step:0, adults:2, kids:0, inf:0, done:false, src:'', name:'', phone:'', email:'', hotel:null, add:{}};
 var BK_DEPOSIT=3000;
+var BK_STEPS=4;
+
+/* Коэффициенты размещения. Демонстрационные: в рабочей версии приходят из
+   ценовой матрицы туроператора вместе с ценой тура. */
+var PAX_K={single:1.35, extraAdult:0.82, child:0.45, infant:4900};
+
+function paxTotal(base){
+  if(!base) return 0;
+  var half=base/2, t;
+  if(BK.adults<=1) t=half*PAX_K.single;
+  else t=base+(BK.adults-2)*half*PAX_K.extraAdult;
+  t+=BK.kids*half*PAX_K.child;
+  t+=BK.inf*PAX_K.infant;
+  return Math.round(t/100)*100;
+}
+function bkBase(){ return BK.hotel? hotelPrice(BK.hotel) : curPriceNum(); }
+function paxCount(){ return BK.adults+BK.kids; }
+
+/* Что можно докупить. Состав и цены — демонстрационные. */
+var ADDONS=[
+ {id:'ins',  n:'Страховка от невыезда',   p:2400, per:'чел',  hot:'Берут чаще всего',
+  d:'Вернёт всю стоимость тура, если заболели, не пустили на рейс или вызвали на работу.'},
+ {id:'exc',  n:'Экскурсионный пакет',     p:11900,per:'чел',
+  d:'Три поездки с русскоговорящим гидом, входные билеты и трансфер. На месте те же экскурсии дороже.'},
+ {id:'seat', n:'Выбор мест в салоне',     p:1490, per:'чел',
+  d:'Сесть у окна или всей семьёй рядом. Без этого места назначит система при регистрации.'},
+ {id:'bag',  n:'Ещё 10 кг багажа',        p:3900, per:'чел',
+  d:'Второе место багажа туда и обратно. У стойки в аэропорту перевес обойдётся дороже.'},
+ {id:'early',n:'Ранний заезд в отель',    p:5600, per:'бронь',
+  d:'Номер с 8 утра в день прилёта — вместо ожидания до двух часов дня.'},
+ {id:'vip',  n:'Индивидуальный трансфер', p:6800, per:'бронь',
+  d:'Своя машина вместо группового автобуса: из аэропорта сразу в отель, без объезда.'}
+];
+function addonById(id){ for(var i=0;i<ADDONS.length;i++) if(ADDONS[i].id===id) return ADDONS[i]; return null; }
+function addonCost(a){ return a.per==='чел' ? a.p*Math.max(1,paxCount()) : a.p; }
+function addonsTotal(){ var s=0; for(var id in BK.add){ if(BK.add[id]){ var a=addonById(id); if(a) s+=addonCost(a); } } return s; }
+function addonsList(){ var r=[]; for(var i=0;i<ADDONS.length;i++) if(BK.add[ADDONS[i].id]) r.push(ADDONS[i].n); return r; }
+function bkToggleAdd(id){
+  BK.add[id]=!BK.add[id];
+  var a=addonById(id);
+  track(BK.add[id]?'addon_on':'addon_off', (BK.add[id]?'Добавил: ':'Убрал: ')+(a?a.n:id), a?addonCost(a):0);
+  bkRender();
+}
 
 function bkIsGroup(){ var d=(typeof curDir==='function')?curDir():null; return !!(d&&d.excursion); }
 function bkPriceLine(){
-  var d=IZI.ctx;
-  if(BK.adults===2 && BK.kids===0) return d.price||'уточняется';
-  return 'пересчитается при подтверждении';
+  var b=bkBase();
+  return b? money(paxTotal(b)) : (IZI.ctx.price||'уточняется');
+}
+function paxWord(){
+  var p=[]; p.push(BK.adults+' взр.');
+  if(BK.kids) p.push(BK.kids+' реб.');
+  if(BK.inf) p.push(BK.inf+' до 2 лет');
+  return p.join(' + ');
 }
 function bkOpen(src,hotelId){
   BK.step=1; BK.done=false; BK.src=src||'';
@@ -1091,20 +1267,21 @@ function bkOpen(src,hotelId){
 }
 function bkClose(){
   var w=document.getElementById('bkWrap');
-  if(!BK.done && BK.step) track('book_abandon','Закрыл бронирование','шаг '+BK.step+' из 3');
+  if(!BK.done && BK.step) track('book_abandon','Закрыл бронирование','шаг '+BK.step+' из 4');
   w.hidden=true; document.body.style.overflow='';
   BK.step=0; crmRender();
 }
-function bkPax(kind,delta){
-  if(kind==='a') BK.adults=Math.max(1,Math.min(4,BK.adults+delta));
-  else BK.kids=Math.max(0,Math.min(3,BK.kids+delta));
-  IZI.lead.adults=BK.adults; IZI.lead.kids=BK.kids;
-  IZI.ctx.pax=BK.adults+' взрослых'+(BK.kids?' + '+BK.kids+' детей':'');
-  track('book_pax','Изменил состав', BK.adults+' взр. / '+BK.kids+' реб.');
+function bkPaxSet(kind,delta){
+  if(kind==='a') BK.adults=Math.max(1,Math.min(6,BK.adults+delta));
+  else if(kind==='k') BK.kids=Math.max(0,Math.min(4,BK.kids+delta));
+  else BK.inf=Math.max(0,Math.min(2,BK.inf+delta));
+  IZI.lead.adults=BK.adults; IZI.lead.kids=BK.kids; IZI.lead.inf=BK.inf;
+  IZI.ctx.pax=paxWord();
+  track('book_pax','Изменил состав', paxWord());
   bkRender(); leadCtxRender();
 }
 function bkNext(){
-  if(BK.step===2){
+  if(BK.step===3){
     var n=document.getElementById('bkName').value.trim(),
         p=document.getElementById('bkPhone').value.trim(),
         e=document.getElementById('bkMail').value.trim(),
@@ -1121,33 +1298,50 @@ function bkNext(){
     track('book_contacts','Заполнил контакты',n);
   }
   BK.step++;
-  if(BK.step===3) track('book_terms','Дошёл до условий');
+  if(BK.step===2){ iziStep('addons'); track('book_addons','Дошёл до допродаж'); }
+  if(BK.step===4) track('book_terms','Дошёл до условий');
   bkRender();
 }
 function bkPay(){
-  BK.done=true; BK.step=4;
+  BK.done=true; BK.step=5;
+  var base=bkBase(), tour=paxTotal(base), extra=addonsTotal(), total=tour+extra;
   IZI.lead.type = bkIsGroup()? 'group' : 'booking';
   IZI.lead.deposit = BK_DEPOSIT;
+  IZI.lead.addons = addonsList();
+  IZI.lead.addonsSum = extra;
+  IZI.lead.total = total;
   iziStep('lead');
-  track('lead','Создана бронь', (IZI.ctx.toName||'—')+' · '+BK_DEPOSIT+' ₽');
+  track('lead','Создана бронь', (IZI.ctx.toName||'—')+' · '+BK_DEPOSIT+' ₽'+(extra?' + допы '+extra+' ₽':''));
   BK.no='IZI-'+new Date().toISOString().slice(2,10).replace(/-/g,'')+'-'+String(Math.floor(Math.random()*900+100));
   var day=parseInt((IZI.ctx.date||'').replace(/[^0-9]/g,''),10)||15;
-  var total=BK.hotel? hotelPrice(BK.hotel) : curPriceNum();
   TRIP={no:BK.no, from:IZI.ctx.fromName, to:IZI.ctx.toName, date:IZI.ctx.date||'дата уточняется',
-        hotel:BK.hotel? BK.hotel.n+' '+BK.hotel.s+'★' : '', pax:BK.adults+BK.kids, day:day,
+        hotel:BK.hotel? BK.hotel.n+' '+BK.hotel.s+'★' : '', pax:paxCount(), day:day,
         deposit:BK_DEPOSIT, rest:Math.max(0,total-BK_DEPOSIT), paid:false, seats:[],
+        addons:addonsList(),
         plane:tripPlane(), visa:(RESORTS[curResort].k==='hainan'||RESORTS[curResort].k==='avatar')};
   bkRender();
 }
 
+function bkTotalsHtml(){
+  var base=bkBase(), tour=paxTotal(base), extra=addonsTotal(), total=tour+extra;
+  var h='';
+  h+='<div class="bk-sr wide"><span>Тур · '+esc(paxWord())+'</span><b>'+(tour?money(tour):'уточняется')+'</b></div>';
+  if(extra) h+='<div class="bk-sr wide"><span>Дополнительно · '+addonsList().length+' поз.</span><b>'+money(extra)+'</b></div>';
+  if(tour) h+='<div class="bk-sr wide"><span>Итого за поездку</span><b>'+money(total)+'</b></div>';
+  h+='<div class="bk-sr wide tot"><span>К оплате сейчас</span><b>'+money(BK_DEPOSIT)+'</b></div>';
+  if(tour) h+='<div class="bk-sr wide"><span>Остаток за 14 дней до вылета</span><b>'+money(Math.max(0,total-BK_DEPOSIT))+'</b></div>';
+  return h;
+}
+
 function bkRender(){
   var st=document.getElementById('bkSteps'), b=document.getElementById('bkBody'), d=IZI.ctx, grp=bkIsGroup();
-  st.innerHTML=[1,2,3].map(function(i){return '<i class="'+(BK.step>=i?'on':'')+'"></i>';}).join('');
-  st.style.visibility = BK.step>=4 ? 'hidden' : 'visible';
+  st.innerHTML=[1,2,3,4].map(function(i){return '<i class="'+(BK.step>=i?'on':'')+'"></i>';}).join('');
+  st.style.visibility = BK.step>=5 ? 'hidden' : 'visible';
 
   if(BK.step===1){
+    var base=bkBase(), half=base/2;
     b.innerHTML=
-      '<p class="bk-eyebrow">Шаг 1 из 3 · что бронируем</p>'+
+      '<p class="bk-eyebrow">Шаг 1 из 4 · что бронируем</p>'+
       '<h3 class="bk-h">'+(grp?'Место в группе':'Бронь места и цены')+'</h3>'+
       '<p class="bk-p">'+(grp
         ? 'Группа с фиксированной датой вылета. Взнос закрепляет за вами место, остальное — после подтверждения.'
@@ -1158,25 +1352,56 @@ function bkRender(){
         '<div class="bk-sr"><span>'+(grp?'Вылет группы':'Дата вылета')+'</span><b>'+esc(d.date||'не выбрана')+'</b></div>'+
         (BK.hotel? '<div class="bk-sr"><span>Отель</span><b>'+esc(BK.hotel.n)+' '+'★'.repeat(BK.hotel.s)+'</b></div>'+
                    '<div class="bk-sr"><span>Питание</span><b>'+esc(BK.hotel.meal)+'</b></div>' : '')+
-        '<div class="bk-sr"><span>Стоимость тура</span><b>'+(BK.hotel&&BK.adults===2&&!BK.kids? money(hotelPrice(BK.hotel)) : esc(bkPriceLine()))+'</b></div>'+
-        '<div class="bk-sr tot"><span>К оплате сейчас</span><b>'+BK_DEPOSIT.toLocaleString('ru-RU')+' ₽</b></div>'+
       '</div>'+
       '<div class="bk-pax">'+
         '<div class="bk-cnt"><span>Взрослые</span><div>'+
-          '<button type="button" onclick="bkPax(\'a\',-1)"'+(BK.adults<=1?' disabled':'')+'>−</button>'+
+          '<button type="button" aria-label="Меньше взрослых" onclick="bkPaxSet(\'a\',-1)"'+(BK.adults<=1?' disabled':'')+'>−</button>'+
           '<b>'+BK.adults+'</b>'+
-          '<button type="button" onclick="bkPax(\'a\',1)"'+(BK.adults>=4?' disabled':'')+'>+</button></div></div>'+
-        '<div class="bk-cnt"><span>Дети до 12 лет</span><div>'+
-          '<button type="button" onclick="bkPax(\'k\',-1)"'+(BK.kids<=0?' disabled':'')+'>−</button>'+
+          '<button type="button" aria-label="Больше взрослых" onclick="bkPaxSet(\'a\',1)"'+(BK.adults>=6?' disabled':'')+'>+</button></div></div>'+
+        '<div class="bk-cnt"><span>Дети 2–11 лет</span><div>'+
+          '<button type="button" aria-label="Меньше детей" onclick="bkPaxSet(\'k\',-1)"'+(BK.kids<=0?' disabled':'')+'>−</button>'+
           '<b>'+BK.kids+'</b>'+
-          '<button type="button" onclick="bkPax(\'k\',1)"'+(BK.kids>=3?' disabled':'')+'>+</button></div></div>'+
+          '<button type="button" aria-label="Больше детей" onclick="bkPaxSet(\'k\',1)"'+(BK.kids>=4?' disabled':'')+'>+</button></div></div>'+
+        '<div class="bk-cnt"><span>Малыши до 2 лет</span><div>'+
+          '<button type="button" aria-label="Меньше малышей" onclick="bkPaxSet(\'i\',-1)"'+(BK.inf<=0?' disabled':'')+'>−</button>'+
+          '<b>'+BK.inf+'</b>'+
+          '<button type="button" aria-label="Больше малышей" onclick="bkPaxSet(\'i\',1)"'+(BK.inf>=2?' disabled':'')+'>+</button></div></div>'+
       '</div>'+
-      (BK.adults!==2||BK.kids? '<p class="bk-note">Цены на сайте показаны за двоих взрослых. Для другого состава менеджер пересчитает стоимость и пришлёт её до оплаты остатка.</p>':'')+
+      (base? '<div class="bk-calc">'+
+        '<div class="bk-cr"><span>Двое взрослых в номере</span><b>'+money(BK.adults<=1? Math.round(half*PAX_K.single/100)*100 : base)+'</b></div>'+
+        (BK.adults>2? '<div class="bk-cr"><span>Ещё '+(BK.adults-2)+' взр. · доп. место в номере</span><b>+ '+money(Math.round((BK.adults-2)*half*PAX_K.extraAdult/100)*100)+'</b></div>':'')+
+        (BK.kids? '<div class="bk-cr"><span>Дети 2–11 · −'+Math.round((1-PAX_K.child)*100)+'% от взрослого</span><b>+ '+money(Math.round(BK.kids*half*PAX_K.child/100)*100)+'</b></div>':'')+
+        (BK.inf? '<div class="bk-cr"><span>Малыши до 2 лет · только сбор</span><b>+ '+money(BK.inf*PAX_K.infant)+'</b></div>':'')+
+        '<div class="bk-cr tot"><span>Тур целиком</span><b>'+money(paxTotal(base))+'</b></div>'+
+      '</div>'
+      : '')+
+      '<p class="bk-note">'+(BK.kids? 'Ребёнок 2–11 лет на дополнительном месте стоит меньше половины взрослого — поэтому семейная цена ниже, чем «плюс ещё один взрослый». ':'')+
+        'Коэффициенты размещения показаны как пример: в рабочей версии они приходят из ценовой матрицы туроператора.</p>'+
       '<div class="bk-act"><button class="btn btn-ember btn-l" type="button" onclick="bkNext()">Дальше</button></div>';
   }
   else if(BK.step===2){
+    var extra=addonsTotal();
     b.innerHTML=
-      '<p class="bk-eyebrow">Шаг 2 из 3 · кто едет</p>'+
+      '<p class="bk-eyebrow">Шаг 2 из 4 · что добавим</p>'+
+      '<h3 class="bk-h">Можно добавить сейчас</h3>'+
+      '<p class="bk-p">Всё это докупается и потом, но на месте дороже. Ничего обязательного — можно просто пропустить.</p>'+
+      '<div class="bk-adds">'+ADDONS.map(function(a){
+        var on=!!BK.add[a.id], cost=addonCost(a);
+        return '<button type="button" class="bk-add'+(on?' on':'')+'" onclick="bkToggleAdd(\''+a.id+'\')" aria-pressed="'+on+'">'+
+          '<i class="bk-tick" aria-hidden="true">'+(on?'✓':'+')+'</i>'+
+          '<span class="bk-atx"><b>'+a.n+(a.hot?' <em class="bk-hot">'+a.hot+'</em>':'')+'</b><span>'+a.d+'</span></span>'+
+          '<span class="bk-ap">'+money(cost)+'<i>'+(a.per==='чел'? money(a.p)+' × '+Math.max(1,paxCount())+' чел.' : 'за бронь')+'</i></span>'+
+        '</button>';
+      }).join('')+'</div>'+
+      '<div class="bk-sum" style="margin-top:16px">'+bkTotalsHtml()+'</div>'+
+      '<p class="bk-note">Состав и цены дополнительных услуг демонстрационные. Ничего из этого не оплачивается сейчас — только депозит.</p>'+
+      '<div class="bk-act">'+
+        '<button class="bk-ghost" type="button" onclick="BK.step=1;bkRender()">Назад</button>'+
+        '<button class="btn btn-ember btn-l" type="button" onclick="bkNext()">'+(extra?'Дальше · '+money(extra)+' допом':'Пропустить и продолжить')+'</button></div>';
+  }
+  else if(BK.step===3){
+    b.innerHTML=
+      '<p class="bk-eyebrow">Шаг 3 из 4 · кто едет</p>'+
       '<h3 class="bk-h">Куда прислать подтверждение</h3>'+
       '<p class="bk-p">Договор и ваучер придут на почту, менеджер свяжется по телефону.</p>'+
       '<div class="bk-f">'+
@@ -1187,13 +1412,13 @@ function bkRender(){
         '<p class="bk-err" id="bkErr"></p>'+
       '</div>'+
       '<div class="bk-act">'+
-        '<button class="bk-ghost" type="button" onclick="BK.step=1;bkRender()">Назад</button>'+
+        '<button class="bk-ghost" type="button" onclick="BK.step=2;bkRender()">Назад</button>'+
         '<button class="btn btn-ember btn-l" type="button" onclick="bkNext()">Дальше</button></div>';
     setTimeout(function(){var el=document.getElementById('bkName'); if(el&&!BK.name) el.focus();},60);
   }
-  else if(BK.step===3){
+  else if(BK.step===4){
     b.innerHTML=
-      '<p class="bk-eyebrow">Шаг 3 из 3 · условия</p>'+
+      '<p class="bk-eyebrow">Шаг 4 из 4 · условия</p>'+
       '<h3 class="bk-h">Что даёт депозит</h3>'+
       '<div class="bk-terms">'+
         '<div class="bk-term"><i>✓</i><span><b>Цена фиксируется</b> в рублях на день брони и дальше не меняется — что бы ни делал курс.</span></div>'+
@@ -1204,11 +1429,12 @@ function bkRender(){
       '<div class="bk-sum" style="margin-top:18px">'+
         '<div class="bk-sr"><span>Направление</span><b>'+esc(d.toName||'—')+(d.date?' · '+esc(d.date):'')+'</b></div>'+
         (BK.hotel? '<div class="bk-sr"><span>Отель</span><b>'+esc(BK.hotel.n)+'</b></div>':'')+
+        (addonsList().length? '<div class="bk-sr"><span>Дополнительно</span><b>'+esc(addonsList().join(', '))+'</b></div>':'')+
         '<div class="bk-sr"><span>Турист</span><b>'+esc(BK.name)+' · '+esc(BK.phone)+'</b></div>'+
-        '<div class="bk-sr tot"><span>К оплате сейчас</span><b>'+BK_DEPOSIT.toLocaleString('ru-RU')+' ₽</b></div>'+
+        bkTotalsHtml()+
       '</div>'+
       '<div class="bk-act">'+
-        '<button class="bk-ghost" type="button" onclick="BK.step=2;bkRender()">Назад</button>'+
+        '<button class="bk-ghost" type="button" onclick="BK.step=3;bkRender()">Назад</button>'+
         '<button class="btn btn-ember btn-l" type="button" onclick="bkPay()">Перейти к оплате</button></div>'+
       '<p class="bk-note">Условия возврата и срок фиксации приведены как пример и требуют подтверждения туроператором до публикации.</p>';
   }
@@ -1263,7 +1489,7 @@ function crmRender(){
       ? Object.keys(src.utm).map(function(x){return x.replace('utm_','')+'='+src.utm[x];}).join(' · ')
       : (src.referrer? 'переход с '+src.referrer.replace(/^https?:\/\//,'').split('/')[0] : 'прямой заход');
 
-  var TYPES={callback:'Обратный звонок · холодный',booking:'Бронь с депозитом · горячий',group:'Место в группе · горячий'};
+  var TYPES={callback:'Обратный звонок · холодный',booking:'Бронь с депозитом · горячий',group:'Место в группе · горячий',watch:'Подписка на цену · тёплый',agency:'Турагентство · B2B'};
   document.getElementById('crmCard').innerHTML=
     crmRow('Тип заявки', TYPES[k.lead.type]||'— не создана', k.lead.type&&k.lead.type!=='callback'?'hi':'dim')+
     (k.lead.deposit? crmRow('Депозит', k.lead.deposit.toLocaleString('ru-RU')+' ₽','hi') : '')+
@@ -1274,7 +1500,10 @@ function crmRender(){
     crmRow('Куда', d.toName||'— не выбрано', d.toName?'':'dim')+
     crmRow('Дата', d.date||'— не выбрана', d.date?'':'dim')+
     crmRow('Цена на экране', d.price||'—', d.price?'hi':'dim')+
-    crmRow('Кто едет', IZI.lead.adults+' взр.'+(IZI.lead.kids?' + '+IZI.lead.kids+' реб.':''))+
+    crmRow('Кто едет', typeof paxWord==='function'? paxWord() : IZI.lead.adults+' взр.')+
+    (k.choice.addons&&k.choice.addons.length? crmRow('Допродажи', k.choice.addons.join(', '),'hi'):'')+
+    (k.choice.addonsSum? crmRow('Сумма допродаж', k.choice.addonsSum.toLocaleString('ru-RU')+' ₽','hi'):'')+
+    (k.choice.totalRub? crmRow('Итого за поездку', k.choice.totalRub.toLocaleString('ru-RU')+' ₽','hi'):'')+
     (k.choice.hotel? crmRow('Отель','—'===k.choice.hotel?'—':k.choice.hotel,'hi'):'')+
     (IZI.ctx.hotels&&IZI.ctx.hotels.length? crmRow('Смотрел отели', IZI.ctx.hotels.join(', '),'dim'):'')+
     (typeof favs!=='undefined'&&favs.length? crmRow('В избранном', favs.length+' отел'+(favs.length===1?'ь':'я'),'hi'):'')+
@@ -1282,6 +1511,8 @@ function crmRender(){
     crmRow('Вкладки курорта', d.tabs.length? d.tabs.join(', ') : '—','dim')+
     crmRow('Схема салона', d.seatmap? 'открывал '+d.seatmap+' раз'+(d.seatmap>1?'а':'') : 'нет','dim')+
     crmRow('Сравнил с Москвой', d.compared?'да':'нет','dim')+
+    (IZI.lead.watch? crmRow('Следит за ценой', IZI.lead.watch,'hi'):'')+
+    (IZI.lead.agency? crmRow('Агентство', IZI.lead.agency,'hi'):'')+
     crmRow('Источник', utm)+
     crmRow('Устройство', src.device+' · '+src.screen,'dim')+
     crmRow('На сайте', k.behaviour.secondsOnSite+' c · прокрутил '+IZI.maxScroll+'%','dim')+
@@ -1338,12 +1569,73 @@ function submitLead(e){
   return false;
 }
 
+
+/* ---------- подписка на цену ---------- */
+var WATCH=[];
+function watchFill(){
+  var sel=document.getElementById('wDir'); if(!sel) return;
+  var c=DATA[curCity];
+  sel.innerHTML=c.dirs.map(function(d){ return '<option value="'+d.art+'">'+d.t+' · из '+c.name+'</option>'; }).join('');
+  var k=RESORTS[curResort]&&RESORTS[curResort].k;
+  if(k) sel.value=k;
+}
+function submitWatch(e){
+  e.preventDefault();
+  var v=document.getElementById('wContact').value.trim(),
+      c=document.getElementById('wCons').checked,
+      err=document.getElementById('wErr');
+  var okPhone=v.replace(/\D/g,'').length>=10, okMail=/.+@.+\..+/.test(v);
+  if(!okPhone&&!okMail){ err.style.display='block'; err.textContent='Оставьте телефон или адрес почты'; return false; }
+  if(!c){ err.style.display='block'; err.textContent='Отметьте согласие на обработку данных'; return false; }
+  var sel=document.getElementById('wDir'), dir=sel.options[sel.selectedIndex].text,
+      when=document.getElementById('wWhen').value;
+  WATCH.push({dir:dir,when:when,contact:v});
+  IZI.lead.type='watch'; IZI.lead.phone=okPhone? v : IZI.lead.phone; IZI.lead.email=okMail? v : IZI.lead.email;
+  IZI.lead.watch=dir+' · '+when;
+  iziStep('intent');
+  track('price_watch','Подписался на цену', dir+' · '+when);
+  document.getElementById('watchForm').style.display='none';
+  var ok=document.getElementById('watchOk');
+  ok.innerHTML='<b>Следим за ценой</b>'+esc(dir)+' · '+esc(when)+'. Напишем на '+esc(v)+', как только цена станет ниже сегодняшней, и один раз — когда откроют новые даты.';
+  ok.style.display='block';
+  crmRender();
+  return false;
+}
+
+/* ---------- заявка турагентства ---------- */
+function submitAgency(e){
+  e.preventDefault();
+  var n=document.getElementById('agName').value.trim(),
+      c=document.getElementById('agCity').value.trim(),
+      p=document.getElementById('agPhone').value.trim(),
+      ok1=document.getElementById('agCons').checked,
+      err=document.getElementById('agErr');
+  if(!n||!c||p.replace(/\D/g,'').length<10||!ok1){
+    err.style.display='block';
+    err.textContent = !ok1? 'Отметьте согласие на обработку данных'
+      : (!n? 'Напишите название агентства' : (!c? 'Укажите город' : 'Проверьте номер телефона'));
+    return false;
+  }
+  IZI.lead.type='agency'; IZI.lead.name=n; IZI.lead.phone=p; IZI.lead.agency=n+' · '+c;
+  iziStep('intent'); iziStep('lead');
+  track('lead','Заявка турагентства', n+' · '+c);
+  var no='IZI-AG-'+String(Math.floor(Math.random()*9000+1000));
+  document.getElementById('agForm').style.display='none';
+  var ok=document.getElementById('agOk');
+  ok.innerHTML='<b>Заявка принята</b>Номер '+no+'. Пришлём договор и цены нетто на указанный номер в WhatsApp.';
+  ok.style.display='block';
+  crmRender();
+  return false;
+}
+
 /* ---------- boot ---------- */
 setCity('mrv');
 buildSeatMap();
 document.querySelectorAll('.mark3d').forEach(buildMark);
-iziInit(); leadCtxRender(); renderStay(); favBar(); favRestore();
+iziInit(); leadCtxRender(); renderStay(); favBar(); favRestore(); renderFaq(); watchFill();
 mobCollapse('#cabin','Показать схему салона и борт');
+mobCollapse('#program','Показать расписание вылетов');
+mobCollapse('#agents','Показать условия для агентств');
 mobCollapse('.studio','Показать, как это собрано');
 setRoute('direct');
 document.getElementById('hotels').innerHTML=HOTELS.map(hotelCard).join('');
