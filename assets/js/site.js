@@ -530,7 +530,7 @@ function renderCal(){
     document.getElementById('rPrice').textContent=dir.p+' ₽';
     document.getElementById('ssWhen').textContent=dir.depDate;
     var mb2=document.getElementById('mbPrice');
-    if(mb2){mb2.textContent=dir.p+' ₽'; document.getElementById('mbSub').textContent='Горы Аватара · за двоих';}
+    if(mb2){mb2.textContent=dir.p+' ₽'; document.getElementById('mbSub').textContent='Горы Аватара · за двоих · взнос 3 000 ₽';}
     return;
   }
   document.getElementById('cal').innerHTML=c.cals.map(function(d,i){
@@ -542,7 +542,7 @@ function renderCal(){
   document.getElementById('rPrice').textContent=selP;
   document.getElementById('ssWhen').textContent=sel[0].replace(/^[а-я]{2}, /,'');
   var mb=document.getElementById('mbPrice'); if(mb){mb.textContent=selP;
-    document.getElementById('mbSub').textContent=RESORTS[curResort].n+' · за двоих';}
+    document.getElementById('mbSub').textContent=RESORTS[curResort].n+' · за двоих · бронь от 3 000 ₽';}
   if(window.IZI && !pickedDate){ IZI.ctx.date=sel[0]; IZI.ctx.price=selP; }
 }
 function setDate(i){ curDate=i; pickedDate=null;
@@ -1010,7 +1010,22 @@ function depDays(){
   (d.meta[0]||'').split('·').forEach(function(x){ var k=x.trim().toLowerCase(); if(m[k]!==undefined) out.push(m[k]); });
   return out.length? out : [2,6];
 }
-function cmPrice(day){ var base=dirPriceNum(); return Math.round(base*(0.84+((day*37)%27)/100)/500)*500; }
+/* Цена дня месяца. Нормируем так, чтобы самый дешёвый день вылета был ровно
+   ценой «от» с карточки направления: календарь не может обещать меньше. */
+function cmMult(day){ return 1+((day*37)%27)/100; }
+function cmMinMult(){
+  var dd=depDays(), min=Infinity;
+  for(var d=1;d<=30;d++){
+    if(dd.indexOf(new Date(2026,8,d).getDay())<0) continue;
+    min=Math.min(min,cmMult(d));
+  }
+  return (min<Infinity)? min : 1;
+}
+function cmPrice(day){
+  var base=dirPriceNum(), k=cmMult(day)/cmMinMult();
+  if(k===1) return base;
+  return Math.round(base*k/500)*500;
+}
 function cmToggle(){
   var el=document.getElementById('calMonth');
   el.hidden=!el.hidden;
@@ -1073,16 +1088,18 @@ function cheapestDay(){
   }
   return best;
 }
-function bestHotel(){
+/* Для быстрой брони берём самый дешёвый отель: карточка обещает цену «от»,
+   и открывать по ней самый дорогой вариант — обман. */
+function cheapestHotel(){
   var list=STAY[RESORTS[curResort].k]||[];
   if(!list.length) return null;
-  return list.slice().sort(function(a,b){ return b.r-a.r; })[0];
+  return list.slice().sort(function(a,b){ return a.k-b.k; })[0];
 }
 function quickBook(key){
   openResort(key,true);
   var d=cheapestDay();
   if(d) cmPick(d);
-  var h=bestHotel();
+  var h=cheapestHotel();
   track('quick_book','Быстрая бронь с карточки', RESORTS[curResort].n+(h? ' · '+h.n:''));
   bkOpen('quick', h? h.id : null);
 }
@@ -1108,6 +1125,10 @@ function mobCollapse(sel,label){
 }
 
 /* ---------- подборка, сравнение, ссылка ---------- */
+function msgStub(name){
+  track('messenger','Нажал мессенджер',name);
+  toast('В рабочей версии здесь открывается '+name+' оператора. Номер для мессенджеров нужно взять у заказчика: 8 800 для них не подходит.');
+}
 function toast(msg){
   var t=document.getElementById('toast'); if(!t) return;
   t.textContent=msg; t.classList.add('on');
@@ -1379,6 +1400,7 @@ function bkOpen(src,hotelId){
   if(BK.hotel) track('hotel_pick','Выбрал отель для брони',BK.hotel.n);
   var w=document.getElementById('bkWrap'); w.hidden=false;
   document.body.style.overflow='hidden';
+  IZI.ctx.pax=paxWord(); IZI.lead.adults=BK.adults; IZI.lead.kids=BK.kids; IZI.lead.inf=BK.inf;
   iziStep('intent'); iziStep('book');
   track('book_open','Открыл бронирование', (IZI.ctx.toName||'—')+' · '+(IZI.ctx.date||'дата не выбрана'));
   bkRender();
