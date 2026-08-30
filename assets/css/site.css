@@ -860,6 +860,7 @@ section[id]{scroll-margin-top:96px}
 
 /* ---------- бронирование ---------- */
 .bkwrap{position:fixed;inset:0;z-index:95;display:grid;place-items:center;padding:20px}
+.bkwrap[hidden]{display:none}
 .bkbd{position:absolute;inset:0;background:rgba(3,10,20,.78);backdrop-filter:blur(6px);animation:bkFade .25s ease}
 @keyframes bkFade{from{opacity:0}to{opacity:1}}
 .bk{position:relative;width:100%;max-width:560px;max-height:calc(100vh - 40px);overflow-y:auto;
