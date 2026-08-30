@@ -47,9 +47,9 @@
     <button type="button" onclick="jump('#value')">Что входит</button>
     <button type="button" onclick="jump('#pay')">Оплата</button>
     <button type="button" data-view="lp" onclick="show('lp')">Из Минвод</button>
-    <button type="button" onclick="jump('#agents');track('agent_link','Открыл раздел агентствам')">Агентствам</button>
   </nav>
   <div class="head-r">
+    <a class="hd-cab" href="kabinet.html" title="Личный кабинет"><span aria-hidden="true">👤</span><b>Моя поездка</b></a>
     <a class="callback" href="tel:+78007772953"><b>8 800 777-29-53</b><span>Перезвоним за 30 секунд</span></a>
     <button class="btn btn-ember btn-s" type="button" onclick="jump('#dest')">Найти туры</button>
   </div>
@@ -501,7 +501,7 @@
         <i><span class="tick">✓</span> <b>Бесплатно</b> и ни к чему не обязывает</i>
         <i><span class="tick">✓</span> <b>Без спама</b> — один звонок</i>
       </div>
-      <p style="margin-top:20px;font-size:13.5px;color:var(--text-3)">Вы турагентство? <a href="#agents" onclick="jump('#agents');track('agent_link','Перешёл в раздел агентствам');return false" style="color:var(--azure)">Комиссия и заявка на блок мест →</a></p>
+      <p style="margin-top:20px;font-size:13.5px;color:var(--text-3)">Вы турагентство? <a href="agentam.html" style="color:var(--azure)">Условия работы и заявка →</a></p>
     </div>
     <div>
       <form class="lead-form" id="leadForm" onsubmit="return submitLead(event)">
@@ -519,44 +519,7 @@
   </div></div>
 </section>
 
-<section id="agents" class="rev">
-  <div class="wrap">
-    <div class="sec-head">
-      <div>
-        <p class="eyebrow">Турагентствам</p>
-        <h2>Продавайте наши борта <em>со своей комиссией</em></h2>
-        <p>Собственная полётная программа из трёх городов. Мы отдаём места агентствам на тех же условиях, что продаём сами, — цена на сайте и цена нетто для вас отличаются ровно на комиссию.</p>
-      </div>
-    </div>
-    <div class="agrid">
-      <div class="agent-box"><b class="big">10<span>%</span></b><p>Базовая комиссия с тура на первой же заявке. Выплата — в течение трёх рабочих дней после вылета туриста.</p></div>
-      <div class="agent-box"><b class="big">14<span>%</span></b><p>При выкупе блока мест на сезон. Блок закрепляется договором, цена фиксируется в рублях до конца программы.</p></div>
-      <div class="agent-box"><b class="big">24<span>ч</span></b><p>Опция на место без депозита. Успеваете согласовать с туристом и не теряете цену.</p></div>
-    </div>
-    <div class="apts">
-      <div class="apt"><b>Реестр и гарантия</b><p>РТО 025013, финансовое обеспечение 50 млн ₽ в СК «ТИТ». Договор с агентством — по типовой форме.</p></div>
-      <div class="apt"><b>Выгрузка в Tourvisor и «Слетать.ру»</b><p>Наши цены и остатки мест уходят в поисковики туров, но прямая заявка всегда дешевле для туриста.</p></div>
-      <div class="apt"><b>Материалы под ваш бренд</b><p>Расписание, макеты, фото направлений и схемы бортов — можно ставить свой логотип.</p></div>
-      <div class="apt"><b>Свой менеджер</b><p>Один человек на агентство, отвечает в рабочем чате, а не через общую почту.</p></div>
-    </div>
-    <div class="agform">
-      <div>
-        <h3>Заявка на подключение</h3>
-        <p>Пришлём договор, доступ к ценам нетто и расписание на сезон. Обычно отвечаем в тот же день.</p>
-      </div>
-      <form id="agForm" onsubmit="return submitAgency(event)">
-        <input id="agName" type="text" placeholder="Название агентства" autocomplete="organization">
-        <input id="agCity" type="text" placeholder="Город" autocomplete="address-level2">
-        <input id="agPhone" type="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" autocomplete="tel">
-        <label class="wf-cons"><input type="checkbox" id="agCons"><span>Согласен на обработку персональных данных</span></label>
-        <p class="bk-err" id="agErr"></p>
-        <button class="btn btn-ember btn-l" type="submit">Отправить заявку</button>
-      </form>
-      <div class="lead-ok" id="agOk"></div>
-    </div>
-    <p class="incl-note">Размер комиссии, условия блока и список поисковиков туров приведены как пример и требуют подтверждения туроператором до публикации.</p>
-  </div>
-</section>
+
 
 </main>
 
@@ -718,10 +681,10 @@
     </div>
     <div><h4>Туристам</h4><ul>
       <li><a href="#" onclick="return false">Подбор тура</a></li><li><a href="#" onclick="return false">Курорты</a></li>
-      <li><a href="#" onclick="return false">Где купить</a></li><li><a href="#" onclick="return false">Отзывы</a></li></ul></div>
+      <li><a href="kabinet.html">Личный кабинет</a></li><li><a href="#" onclick="return false">Отзывы</a></li></ul></div>
     <div><h4>Агентствам</h4><ul>
-      <li><a href="#" onclick="return false">Кабинет партнёра</a></li><li><a href="#" onclick="return false">Аккредитация</a></li>
-      <li><a href="#" onclick="return false">Рекламные туры</a></li><li><a href="#" onclick="return false">Новости и акции</a></li></ul></div>
+      <li><a href="agentam.html">Условия работы</a></li><li><a href="agentam.html#agform">Заявка на аккредитацию</a></li>
+      <li><a href="agentam.html#login">Кабинет партнёра</a></li><li><a href="#" onclick="return false">Рекламные туры</a></li></ul></div>
     <div><h4>Связаться</h4><ul>
       <li><a href="tel:+78007772953" style="font-size:18px;font-weight:700;color:var(--text)">8 800 777-29-53</a></li>
       <li><a href="mailto:bron@izi.tours">bron@izi.tours</a> — бронирование</li>

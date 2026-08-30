@@ -405,7 +405,7 @@ function dealCard(d,i){
    '<div class="deal-body"><div class="chips">'+d.meta.map(function(m){return '<span class="chip">'+m+'</span>'}).join('')+
    (d.left?'<span class="chip left">'+d.left+'</span>':'')+'</div>'+
    '<div class="deal-foot"><div>'+(d.old?'<div class="price-old num">'+d.old+' ₽</div>':'')+
-   '<div class="price num">'+d.p+' ₽</div><div class="price-note">за двоих · бронь 3 000 ₽, дальше '+money(perMonth(priceNum(d.p)))+'/мес</div></div>'+
+   '<div class="price num"><i>от</i> '+d.p+' ₽</div><div class="price-note">за двоих · бронь 3 000 ₽, дальше '+money(perMonth(priceNum(d.p)))+'/мес</div></div>'+
    '<button class="btn btn-ember btn-s quick" type="button" onclick="quickBook(\''+d.art+'\');event.stopPropagation()">Забронировать за 3 000 ₽</button>'+
    '<button class="deal-alt" type="button" onclick="openResort(\''+d.art+'\');event.stopPropagation()">Сначала посмотреть даты и отели</button></div></div></article>';
 }
@@ -448,8 +448,15 @@ function setCity(k){
 function pickFromSearch(){ openResort(document.getElementById('fTo').value); }
 
 /* --- step 2: resort detail --- */
+/* По умолчанию открываем самую дешёвую дату: иначе человек приходит с карточки
+   «от 130 705 ₽», а список отелей начинается со 141 000 ₽ и выглядит обманом. */
+function cheapestCalIndex(){
+  var c=DATA[curCity], best=0, min=Infinity;
+  for(var i=0;i<c.cals.length;i++){ var p=priceNum(c.cals[i][1]); if(p<min){min=p;best=i;} }
+  return best;
+}
 function openResort(key,silent){
-  curResort=resortByKey(key); curTab=0; curDate=0;
+  curResort=resortByKey(key); curTab=0; curDate=cheapestCalIndex();
   var r=RESORTS[curResort], c=DATA[curCity];
   var dir=null; for(var i=0;i<c.dirs.length;i++) if(c.dirs[i].art===key) dir=c.dirs[i];
   stageCur=null; setStageArt(key);
@@ -502,6 +509,19 @@ function setTab(i){
   setStageArt((t[2]&&IMAGES[t[2]]) ? t[2] : r.k);
 }
 
+/* Дни вылета берём из расписания города, а цену — от выбранного направления:
+   иначе Хайнань показывал бы цену Бодрума. */
+function calMult(i){
+  var c=DATA[curCity], min=Infinity;
+  for(var j=0;j<c.cals.length;j++) min=Math.min(min, priceNum(c.cals[j][1]));
+  return (min&&min<Infinity)? priceNum(c.cals[i][1])/min : 1;
+}
+function calPrice(i){
+  var m=calMult(i);
+  if(m===1) return dirPriceNum();          /* самая дешёвая дата — ровно цена «от» */
+  return Math.round(dirPriceNum()*m/500)*500;
+}
+
 function renderCal(){
   var c=DATA[curCity], dir=curDir();
   if(dir&&dir.excursion){
@@ -521,19 +541,21 @@ function renderCal(){
   }
   document.getElementById('cal').innerHTML=c.cals.map(function(d,i){
     return '<button class="day'+(i===curDate?' sel':'')+(d[2]?' best':'')+'" type="button" onclick="setDate('+i+')">'+
-      '<span class="d">'+d[0]+'</span><span class="p num">'+d[1]+' ₽</span>'+
+      '<span class="d">'+d[0]+'</span><span class="p num">'+money(calPrice(i))+'</span>'+
       (d[2]?'<span class="tagbest">дешевле всего</span>':'')+'</button>';}).join('');
-  var sel=c.cals[curDate];
-  document.getElementById('calPick').textContent=sel[0]+' · '+sel[1]+' ₽';
-  document.getElementById('rPrice').textContent=sel[1]+' ₽';
+  var sel=c.cals[curDate], selP=money(calPrice(curDate));
+  document.getElementById('calPick').textContent=sel[0]+' · '+selP;
+  document.getElementById('rPrice').textContent=selP;
   document.getElementById('ssWhen').textContent=sel[0].replace(/^[а-я]{2}, /,'');
-  var mb=document.getElementById('mbPrice'); if(mb){mb.textContent=sel[1]+' ₽';
+  var mb=document.getElementById('mbPrice'); if(mb){mb.textContent=selP;
     document.getElementById('mbSub').textContent=RESORTS[curResort].n+' · за двоих';}
+  if(window.IZI && !pickedDate){ IZI.ctx.date=sel[0]; IZI.ctx.price=selP; }
 }
-function setDate(i){ curDate=i; pickedDate=null; renderCal();
+function setDate(i){ curDate=i; pickedDate=null;
+  var _p=money(calPrice(i)); renderCal();
   if(window.IZI){ var _d=DATA[curCity].cals[i];
-    IZI.ctx.date=_d[0]; IZI.ctx.price=_d[1]+' ₽'; IZI.ctx.calendarUsed=true;
-    iziStep('date'); track('date','Выбрал дату',_d[0]+' · '+_d[1]+' ₽'); leadCtxRender(); renderStay();
+    IZI.ctx.date=_d[0]; IZI.ctx.price=_p; IZI.ctx.calendarUsed=true;
+    iziStep('date'); track('date','Выбрал дату',_d[0]+' · '+_p); leadCtxRender(); renderStay();
     var cm2=document.getElementById('calMonth'); if(cm2&&!cm2.hidden) cmRender(); }
 }
 
@@ -829,11 +851,25 @@ function buildMark(host){
 var HF={stars:[],meal:[],line1:false,kids:false,kf:false,sort:'price'};
 var favs=[];
 
+function dirPriceNum(){ var d=(typeof curDir==='function')?curDir():null; return d? priceNum(d.p) : 130000; }
 function curPriceNum(){
   var t=(IZI.ctx.price||'').replace(/[^0-9]/g,'');
-  return t? parseInt(t,10) : 130000;
+  return t? parseInt(t,10) : dirPriceNum();
 }
-function hotelPrice(h){ return Math.round(curPriceNum()*h.k/500)*500; }
+/* Цена на карточке направления — это «от»: самый дешёвый отель на самой дешёвой
+   дате должен ей равняться. Поэтому коэффициенты отелей нормируем по минимуму. */
+function hotelK(h){
+  for(var key in STAY){ var L=STAY[key];
+    if(L.indexOf(h)>=0){ var min=Infinity;
+      for(var i=0;i<L.length;i++) min=Math.min(min,L[i].k);
+      return (min&&min<Infinity)? h.k/min : h.k; } }
+  return h.k;
+}
+function hotelPrice(h){
+  var k=hotelK(h);
+  if(k===1) return curPriceNum();          /* самый дешёвый отель — ровно цена тура */
+  return Math.round(curPriceNum()*k/500)*500;
+}
 function money(n){ return n.toLocaleString('ru-RU')+' ₽'; }
 function hotelImg(h,key){
   var k=key||h.img;
@@ -887,9 +923,24 @@ function renderStay(){
     '. Цена — за двоих, за всю поездку: перелёт, трансфер, проживание и страховка.';
 
   var F=document.getElementById('hFilters');
+  /* Сколько отелей останется, если нажать именно эту кнопку: пустые варианты
+     видно сразу, и человек не тыкает в фильтр, который ничего не даст. */
+  var hfCount=function(kind,val){
+    if(kind==='sort') return null;
+    var save=JSON.stringify(HF), n;
+    if(kind==='stars'||kind==='meal'){ var a=HF[kind], i=a.indexOf(val); if(i<0) a.push(val); else a.splice(i,1); }
+    else HF[kind]=!HF[kind];
+    n=stayList().length;
+    HF=JSON.parse(save);
+    return n;
+  };
   var mk=function(kind,val,label){
     var on = kind==='sort'? HF.sort===val : (kind==='stars'||kind==='meal'? HF[kind].indexOf(val)>=0 : HF[kind]);
-    return '<button type="button" aria-pressed="'+on+'" onclick="hfToggle(\''+kind+'\','+(typeof val==='number'?val:'\''+val+'\'')+')">'+label+'</button>';
+    var n = on? null : hfCount(kind,val);
+    var dis = (n===0);
+    return '<button type="button" aria-pressed="'+on+'"'+(dis?' disabled title="Под это условие отелей нет"':'')+
+      ' onclick="hfToggle(\''+kind+'\','+(typeof val==='number'?val:'\''+val+'\'')+')">'+label+
+      (n!==null&&kind!=='sort'? '<i>'+n+'</i>':'')+'</button>';
   };
   F.innerHTML=
     '<div class="hfg"><em>Звёзды</em>'+[3,4,5].map(function(x){return mk('stars',x,x+'★');}).join('')+'</div>'+
@@ -974,7 +1025,7 @@ function depDays(){
   (d.meta[0]||'').split('·').forEach(function(x){ var k=x.trim().toLowerCase(); if(m[k]!==undefined) out.push(m[k]); });
   return out.length? out : [2,6];
 }
-function cmPrice(day){ var base=curPriceNum(); return Math.round(base*(0.84+((day*37)%27)/100)/500)*500; }
+function cmPrice(day){ var base=dirPriceNum(); return Math.round(base*(0.84+((day*37)%27)/100)/500)*500; }
 function cmToggle(){
   var el=document.getElementById('calMonth');
   el.hidden=!el.hidden;
@@ -1292,7 +1343,7 @@ function iziPacket(){
 
 
 /* ---------- бронирование за 3 000 ₽ ---------- */
-var BK={step:0, adults:2, kids:0, inf:0, done:false, src:'', name:'', phone:'', email:'', hotel:null, add:{}};
+var BK={step:0, adults:2, kids:0, inf:0, done:false, src:'', name:'', phone:'', email:'', cons:false, hotel:null, add:{}};
 var BK_DEPOSIT=3000;
 var BK_STEPS=4;
 
@@ -1375,7 +1426,7 @@ function bkNext(){
         : (!n ? 'Напишите имя' : (p.replace(/\D/g,'').length<10 ? 'Проверьте номер телефона' : 'Проверьте адрес почты'));
       return;
     }
-    BK.name=n; BK.phone=p; BK.email=e;
+    BK.name=n; BK.phone=p; BK.email=e; BK.cons=true;
     IZI.lead.name=n; IZI.lead.phone=p; IZI.lead.email=e;
     track('book_contacts','Заполнил контакты',n);
   }
@@ -1493,7 +1544,7 @@ function bkRender(){
         '<input id="bkName" type="text" placeholder="Имя и фамилия" value="'+esc(BK.name)+'" autocomplete="name">'+
         '<input id="bkPhone" type="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" value="'+esc(BK.phone)+'" autocomplete="tel">'+
         '<input id="bkMail" type="email" inputmode="email" placeholder="Почта для договора" value="'+esc(BK.email)+'" autocomplete="email">'+
-        '<label class="bk-cons"><input type="checkbox" id="bkCons"><span>Согласен на обработку персональных данных и ознакомлен с <a href="#" onclick="return false">политикой конфиденциальности</a></span></label>'+
+        '<label class="bk-cons"><input type="checkbox" id="bkCons"'+(BK.cons?' checked':'')+'><span>Согласен на обработку персональных данных и ознакомлен с <a href="#" onclick="return false">политикой конфиденциальности</a></span></label>'+
         '<p class="bk-err" id="bkErr"></p>'+
       '</div>'+
       '<div class="bk-act">'+
@@ -1633,7 +1684,13 @@ function jump(sel){
   if(window.IZI){ if(sel==='#lead'){ iziStep('intent'); track('cta','Нажал кнопку заявки', IZI.ctx.toName||'без направления'); }
     else track('nav','Переход к разделу',sel); }
   var el=document.querySelector(sel);
-  if(el) setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'start'});},20);
+  if(el) setTimeout(function(){
+    /* Страница длинная: плавно листать восемь тысяч пикселей — это несколько
+       секунд, за которые человек решает, что кнопка не сработала.
+       Близкие разделы прокручиваем плавно, далёкие — сразу. */
+    var far=Math.abs(el.getBoundingClientRect().top)>window.innerHeight*2.5;
+    el.scrollIntoView({behavior: far? 'auto':'smooth', block:'start'});
+  },20);
   return false;
 }
 function submitLead(e){
@@ -1687,31 +1744,6 @@ function submitWatch(e){
   return false;
 }
 
-/* ---------- заявка турагентства ---------- */
-function submitAgency(e){
-  e.preventDefault();
-  var n=document.getElementById('agName').value.trim(),
-      c=document.getElementById('agCity').value.trim(),
-      p=document.getElementById('agPhone').value.trim(),
-      ok1=document.getElementById('agCons').checked,
-      err=document.getElementById('agErr');
-  if(!n||!c||p.replace(/\D/g,'').length<10||!ok1){
-    err.style.display='block';
-    err.textContent = !ok1? 'Отметьте согласие на обработку данных'
-      : (!n? 'Напишите название агентства' : (!c? 'Укажите город' : 'Проверьте номер телефона'));
-    return false;
-  }
-  IZI.lead.type='agency'; IZI.lead.name=n; IZI.lead.phone=p; IZI.lead.agency=n+' · '+c;
-  iziStep('intent'); iziStep('lead');
-  track('lead','Заявка турагентства', n+' · '+c);
-  var no='IZI-AG-'+String(Math.floor(Math.random()*9000+1000));
-  document.getElementById('agForm').style.display='none';
-  var ok=document.getElementById('agOk');
-  ok.innerHTML='<b>Заявка принята</b>Номер '+no+'. Пришлём договор и цены нетто на указанный номер в WhatsApp.';
-  ok.style.display='block';
-  crmRender();
-  return false;
-}
 
 
 
@@ -1794,7 +1826,6 @@ iziInit(); leadCtxRender(); renderStay(); favBar(); favRestore(); renderFaq(); w
 mobCollapse('#cabin','Показать схему салона и борт');
 mobCollapse('#program','Показать расписание вылетов');
 mobCollapse('#club','Показать программу для постоянных туристов');
-mobCollapse('#agents','Показать условия для агентств');
 mobCollapse('.studio','Показать, как это собрано');
 setRoute('direct');
 document.getElementById('hotels').innerHTML=HOTELS.map(hotelCard).join('');
