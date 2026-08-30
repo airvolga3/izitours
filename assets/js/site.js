@@ -10,7 +10,7 @@ function setStageArt(key){
   var src=IMAGES[key]; if(!src||stageCur===key) return;
   stageCur=key;
   var a=document.getElementById('stageImg'), b=document.getElementById('stageImg2');
-  if(!a.getAttribute('src')||reduce){ a.src=src; return; }
+  if(!a.getAttribute('src')||reduce||window.innerWidth<=760){ a.src=src; return; }
   clearTimeout(stageT);
   b.src=src;
   requestAnimationFrame(function(){ b.classList.add('on'); });

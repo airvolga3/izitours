@@ -603,10 +603,11 @@ section[id]{scroll-margin-top:96px}
   .glass,.stage3d-sm .glass{position:relative;inset:auto;transform:none;margin:0;backdrop-filter:blur(10px)}
   .searchbar{position:relative;bottom:auto;transform:none;padding:14px 16px 18px}
   .glass-edge,.tray{display:none}
-  .hui{grid-template-columns:1fr;grid-template-rows:auto auto;height:auto}
-  .hui-l,.hui-r{grid-column:1;transform:none}
-  .hui-l{grid-row:1}
-  .hui-r{grid-row:2;flex-direction:row;flex-wrap:wrap}
+  .hui,.hui-sm{grid-template-columns:1fr;grid-template-rows:auto auto;height:auto}
+  .hui-l,.hui-r,.hui-sm .hui-l,.hui-sm .hui-r{grid-column:1;transform:none}
+  .hui-l,.hui-sm .hui-l{grid-row:1}
+  .hui-r,.hui-sm .hui-r{grid-row:2;flex-direction:row;flex-wrap:wrap}
+  .rtext{min-height:0}
   .hui-r .gcard{flex:1 1 220px}
   .hui-bar{position:relative;bottom:auto;transform:none;padding:16px 16px 20px;justify-content:stretch}
   .hui-bar .hbtn{flex:1 1 150px}
@@ -622,6 +623,27 @@ section[id]{scroll-margin-top:96px}
   .hotel-buy{grid-column:1/-1;border-left:0;border-top:1px solid var(--stroke);padding-left:0;padding-top:14px;flex-direction:row;align-items:center;justify-content:space-between;text-align:left}
   .foot-top{grid-template-columns:1fr 1fr}
   .pillnav{display:none}
+}
+/* телефон: картинка отдельной полосой, текст под ней на фоне страницы */
+@media (max-width:760px){
+  .scene{display:flex;flex-direction:column;background:none;border:0;box-shadow:none;
+    border-radius:0;overflow:visible}
+  .scene>img{position:relative;inset:auto;width:100%;height:auto;aspect-ratio:16/11;
+    border-radius:22px;object-position:center 50%;box-shadow:0 26px 52px -26px var(--shc);
+    border:1px solid var(--stroke)}
+  .scene>img.xfade{display:none}
+  .glare{display:none}
+  .glass{background:none!important;border:0;backdrop-filter:none;-webkit-backdrop-filter:none;
+    box-shadow:none;border-radius:0;margin-top:20px}
+  .glass::before{display:none}
+  .hui{padding:0;gap:16px}
+  .hui-title,.hui-eyebrow,.hui-desc,.hui-loc,.rtext,.bs-note{text-shadow:none}
+  .hui-desc,.rtext{max-width:none}
+  .hui-r{margin-top:2px}
+  .gcard{background:var(--glass);backdrop-filter:blur(16px)}
+  .rtabs button{background:var(--glass)}
+  .searchbar{padding:0;margin-top:18px}
+  .searchbar .bigsearch{background:var(--glass);border:1px solid var(--stroke-2)}
 }
 @media (max-width:660px){
   .wrap{padding-inline:18px}
