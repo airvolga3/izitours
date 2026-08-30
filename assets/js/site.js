@@ -1,13 +1,19 @@
+var IMAGES_SM={ac321:'assets/img/ac321-sm.webp',ac777:'assets/img/ac777-sm.webp',acssj:'assets/img/acssj-sm.webp',antalya:'assets/img/antalya-sm.webp',antalya_city:'assets/img/antalya_city-sm.webp',antalya_eve:'assets/img/antalya_eve-sm.webp',antalya_sea:'assets/img/antalya_sea-sm.webp',antalya_who:'assets/img/antalya_who-sm.webp',avatar:'assets/img/avatar-sm.webp',avatar_mtn:'assets/img/avatar_mtn-sm.webp',avatar_who:'assets/img/avatar_who-sm.webp',bodrum:'assets/img/bodrum-sm.webp',bodrum_city:'assets/img/bodrum_city-sm.webp',bodrum_eve:'assets/img/bodrum_eve-sm.webp',bodrum_sea:'assets/img/bodrum_sea-sm.webp',bodrum_who:'assets/img/bodrum_who-sm.webp',hainan:'assets/img/hainan-sm.webp',hainan_city:'assets/img/hainan_city-sm.webp',hainan_eve:'assets/img/hainan_eve-sm.webp',hainan_sea:'assets/img/hainan_sea-sm.webp',hainan_who:'assets/img/hainan_who-sm.webp',h_aqua:'assets/img/h_aqua-sm.webp',h_beach:'assets/img/h_beach-sm.webp',h_dine:'assets/img/h_dine-sm.webp',h_lobby:'assets/img/h_lobby-sm.webp',h_pool:'assets/img/h_pool-sm.webp',h_room:'assets/img/h_room-sm.webp',route:'assets/img/route-sm.webp',sharm:'assets/img/sharm-sm.webp',sharm_city:'assets/img/sharm_city-sm.webp',sharm_eve:'assets/img/sharm_eve-sm.webp',sharm_sea:'assets/img/sharm_sea-sm.webp',sharm_who:'assets/img/sharm_who-sm.webp'};
 var IMAGES={route:'assets/img/route.webp',ac777:'assets/img/ac777.webp',ac321:'assets/img/ac321.webp',acssj:'assets/img/acssj.webp',h_pool:'assets/img/h_pool.webp',h_room:'assets/img/h_room.webp',h_beach:'assets/img/h_beach.webp',h_dine:'assets/img/h_dine.webp',h_lobby:'assets/img/h_lobby.webp',h_aqua:'assets/img/h_aqua.webp',bodrum_sea:'assets/img/bodrum_sea.webp',bodrum_city:'assets/img/bodrum_city.webp',bodrum_eve:'assets/img/bodrum_eve.webp',bodrum_who:'assets/img/bodrum_who.webp',antalya_sea:'assets/img/antalya_sea.webp',antalya_city:'assets/img/antalya_city.webp',antalya_eve:'assets/img/antalya_eve.webp',antalya_who:'assets/img/antalya_who.webp',sharm_sea:'assets/img/sharm_sea.webp',sharm_city:'assets/img/sharm_city.webp',sharm_eve:'assets/img/sharm_eve.webp',sharm_who:'assets/img/sharm_who.webp',hainan_sea:'assets/img/hainan_sea.webp',hainan_city:'assets/img/hainan_city.webp',hainan_eve:'assets/img/hainan_eve.webp',hainan_who:'assets/img/hainan_who.webp',avatar_mtn:'assets/img/avatar_mtn.webp',avatar_city:'',avatar_eve:'',avatar_who:'assets/img/avatar_who.webp',bodrum:'assets/img/bodrum.webp',
             antalya:'assets/img/antalya.webp',
             sharm:'assets/img/sharm.webp',
             hainan:'assets/img/hainan.webp',
             avatar:'assets/img/avatar.webp'};
 var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-function setModel(imgEl,key){ var s=IMAGES[key]; if(s&&imgEl.getAttribute('src')!==s) imgEl.src=s; }
+var SMALL = (window.innerWidth<=820);
+function pic(key){
+  if(SMALL && window.IMAGES_SM && IMAGES_SM[key]) return IMAGES_SM[key];
+  return IMAGES[key]||'';
+}
+function setModel(imgEl,key){ var s=pic(key); if(s&&imgEl.getAttribute('src')!==s) imgEl.src=s; }
 var stageCur=null,stageT=null;
 function setStageArt(key){
-  var src=IMAGES[key]; if(!src||stageCur===key) return;
+  var src=pic(key); if(!src||stageCur===key) return;
   stageCur=key;
   var a=document.getElementById('stageImg'), b=document.getElementById('stageImg2');
   if(!a.getAttribute('src')||reduce||window.innerWidth<=760){ a.src=src; return; }
@@ -71,7 +77,7 @@ function resortByKey(k){ for(var i=0;i<RESORTS.length;i++) if(RESORTS[i].k===k) 
 
 /* --- step 1: destination cards --- */
 function dealCard(d,i){
-  return '<article class="deal" onclick="openResort(\''+d.art+'\')"><div class="deal-art"><img class="mini" alt="" src="'+IMAGES[d.art]+'">'+
+  return '<article class="deal" onclick="openResort(\''+d.art+'\')"><div class="deal-art"><img class="mini" alt="" src="'+pic(d.art)+'">'+
    '<span class="badge'+(d.bg==='mint'?' b-mint':'')+'">'+d.badge+'</span>'+
    '<span class="rating"><b class="num">'+d.r+'</b><span>'+d.rn+' отзывов</span></span>'+
    '<div class="deal-title"><h3>'+d.t+'</h3><p>'+d.c+'</p></div></div>'+
@@ -79,7 +85,8 @@ function dealCard(d,i){
    (d.left?'<span class="chip left">'+d.left+'</span>':'')+'</div>'+
    '<div class="deal-foot"><div>'+(d.old?'<div class="price-old num">'+d.old+' ₽</div>':'')+
    '<div class="price num">'+d.p+' ₽</div><div class="price-note">за двоих · бронь от 3 000 ₽</div></div>'+
-   '<button class="btn btn-ember btn-s" type="button">Выбрать даты →</button></div></div></article>';
+   '<button class="btn btn-ember btn-s quick" type="button" onclick="quickBook(\''+d.art+'\');event.stopPropagation()">Забронировать за 3 000 ₽</button>'+
+   '<button class="deal-alt" type="button" onclick="openResort(\''+d.art+'\');event.stopPropagation()">Сначала посмотреть даты и отели</button></div></div></article>';
 }
 
 function setCity(k){
@@ -93,6 +100,7 @@ function setCity(k){
   document.getElementById('ssFrom').textContent=c.from;
   document.getElementById('fleetLine').textContent=c.fleet;
   document.getElementById('deals').innerHTML=c.dirs.map(dealCard).join('');
+  heroPriceRender();
   document.getElementById('fTo').innerHTML=c.dirs.map(function(d){
     return '<option value="'+d.art+'">'+d.t+'</option>';}).join('');
   setModel(document.getElementById('heroImg'),c.dirs[0].art);
@@ -282,7 +290,7 @@ var HOTELS=[
  {n:'Siesta Beach Apart',s:3,loc:'Гюмбет, Бодрум · 250 м до моря',d:'Апарт-отель рядом с песчаным пляжем, до ворот Мундус около километра.',art:'hainan',r:'4,0',rn:'164',p:'139 693',meal:'без питания',urg:'Смотрят 12 человек'}
 ];
 function hotelCard(h){
-  return '<article class="hotel"><div class="hotel-art"><img class="mini" alt="" src="'+IMAGES[h.art]+'"></div>'+
+  return '<article class="hotel"><div class="hotel-art"><img class="mini" loading="lazy" decoding="async" alt="" src="'+pic(h.art)+'"></div>'+
    '<div><h3>'+h.n+' '+h.s+'* <span class="stars">'+'★'.repeat(h.s)+'</span></h3>'+
    '<p class="loc">'+h.loc+'</p><p class="desc">'+h.d+'</p>'+
    '<div class="chips" style="margin-top:12px"><span class="chip">Рейтинг '+h.r+' · '+h.rn+' отзывов</span><span class="chip">'+h.meal+'</span>'+
@@ -404,7 +412,7 @@ function buildSeatMap(){
   var shot=document.getElementById('acShot');
   if(AC.img && window.IMAGES && IMAGES[AC.img]){
     var ai=document.getElementById('acImg');
-    ai.src=IMAGES[AC.img]; ai.alt='Внешний вид '+AC.name;
+    ai.src=pic(AC.img); ai.alt='Внешний вид '+AC.name;
     document.getElementById('acName').textContent=AC.name;
     document.getElementById('acSpec').textContent=AC.spec;
     shot.hidden=false;
@@ -614,7 +622,7 @@ function hotelPrice(h){ return Math.round(curPriceNum()*h.k/500)*500; }
 function money(n){ return n.toLocaleString('ru-RU')+' ₽'; }
 function hotelImg(h,key){
   var k=key||h.img;
-  return (IMAGES[k]) ? IMAGES[k] : (IMAGES[RESORTS[curResort].k]||'');
+  return (IMAGES[k]) ? pic(k) : pic(RESORTS[curResort].k);
 }
 function stayList(){
   var key=RESORTS[curResort].k, list=(STAY[key]||[]).slice();
@@ -790,6 +798,59 @@ function cmPick(d){
   cmRender(); renderStay(); leadCtxRender();
 }
 
+
+
+/* ---------- быстрый путь: три клика до брони ---------- */
+function priceNum(v){ return parseInt(String(v).replace(/[^0-9]/g,''),10)||0; }
+function heroPriceRender(){
+  var el=document.getElementById('heroPrice'); if(!el) return;
+  var c=DATA[curCity], min=null;
+  c.dirs.forEach(function(d){ var p=priceNum(d.p); if(min===null||p<min) min=p; });
+  el.innerHTML='<b class="num">от '+min.toLocaleString('ru-RU')+' ₽</b>'+
+    '<span>за двоих — перелёт, отель, трансфер и страховка</span>'+
+    '<em>бронь от 3 000 ₽</em>';
+}
+function cheapestDay(){
+  var dd=depDays(), best=null, bp=null;
+  for(var d=1;d<=30;d++){
+    if(dd.indexOf(new Date(2026,8,d).getDay())<0) continue;
+    var p=cmPrice(d); if(bp===null||p<bp){ bp=p; best=d; }
+  }
+  return best;
+}
+function bestHotel(){
+  var list=STAY[RESORTS[curResort].k]||[];
+  if(!list.length) return null;
+  return list.slice().sort(function(a,b){ return b.r-a.r; })[0];
+}
+function quickBook(key){
+  openResort(key,true);
+  var d=cheapestDay();
+  if(d) cmPick(d);
+  var h=bestHotel();
+  track('quick_book','Быстрая бронь с карточки', RESORTS[curResort].n+(h? ' · '+h.n:''));
+  bkOpen('quick', h? h.id : null);
+}
+
+/* ---------- свёртка тяжёлых блоков на телефоне ---------- */
+function mobCollapse(sel,label){
+  var sec=document.querySelector(sel); if(!sec) return;
+  var wrap=sec.querySelector('.wrap'); if(!wrap) return;
+  var kids=[].slice.call(wrap.children);
+  var head=kids.shift();                      /* заголовок остаётся видимым */
+  if(!kids.length) return;
+  var body=document.createElement('div'); body.className='mcol-body';
+  kids.forEach(function(k){ body.appendChild(k); });
+  var btn=document.createElement('button');
+  btn.type='button'; btn.className='mcol-t'; btn.textContent=label;
+  btn.onclick=function(){
+    var closed=sec.classList.toggle('closed');
+    btn.textContent = closed? label : 'Свернуть';
+    if(!closed) track('expand','Раскрыл блок',sel);
+  };
+  wrap.appendChild(body); wrap.appendChild(btn);
+  sec.classList.add('mcol','closed');
+}
 
 /* ---------- подборка, сравнение, ссылка ---------- */
 function toast(msg){
@@ -1282,6 +1343,8 @@ setCity('mrv');
 buildSeatMap();
 document.querySelectorAll('.mark3d').forEach(buildMark);
 iziInit(); leadCtxRender(); renderStay(); favBar(); favRestore();
+mobCollapse('#cabin','Показать схему салона и борт');
+mobCollapse('.studio','Показать, как это собрано');
 setRoute('direct');
 document.getElementById('hotels').innerHTML=HOTELS.map(hotelCard).join('');
 if(!reduce) animPlane();
@@ -1300,7 +1363,7 @@ function tilt3d(id,amt){
 }
 tilt3d('heroScene',7); tilt3d('stageScene',6); tilt3d('routeScene',5);
 if(window.IMAGES&&IMAGES.route){var ri=document.getElementById('routeImg');
-  ri.src=IMAGES.route; ri.hidden=false; document.getElementById('rtSky').style.display='none';}
+  ri.src=pic('route'); ri.hidden=false; document.getElementById('rtSky').style.display='none';}
 function onScroll(){
   document.body.classList.toggle('scrolled', window.scrollY>40);
   if(window.IZI){ var h=document.documentElement.scrollHeight-window.innerHeight;
