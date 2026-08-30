@@ -154,7 +154,10 @@
       <div class="cal" id="cal"></div>
       <div class="calbox-f">
         <div><span class="num" id="rPrice">119 200 ₽</span><em>за двоих · бронь от 3 000 ₽ · остальное за 14 дней</em></div>
-        <button class="btn btn-ember btn-l" type="button" id="rCta" onclick="jump('#lead')">Найти туры в Бодрум</button>
+        <div class="cta2">
+          <button class="btn btn-ember btn-l" type="button" id="rBook" onclick="bkOpen('calendar')">Забронировать за 3 000 ₽</button>
+          <button class="bk-ghost" type="button" id="rCta" onclick="jump('#lead')">Пусть подберут за меня</button>
+        </div>
       </div>
     </div>
   </div>
@@ -326,11 +329,16 @@
     </div>
     <div>
       <form class="lead-form" id="leadForm" onsubmit="return submitLead(event)">
-        <input type="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" aria-label="Номер телефона" required>
+        <div class="leadctx" id="leadCtx"></div>
+        <input type="text" id="leadName" placeholder="Как к вам обращаться" aria-label="Имя" autocomplete="given-name">
+        <input type="tel" id="leadPhone" inputmode="tel" placeholder="+7 (___) ___-__-__" aria-label="Номер телефона" autocomplete="tel" required>
+        <input class="hp" type="text" id="leadHp" tabindex="-1" autocomplete="off" aria-hidden="true" placeholder="Не заполняйте это поле">
+        <label class="lead-consent"><input type="checkbox" id="leadOk1" required>
+          <span>Согласен на обработку персональных данных и ознакомлен с <a href="#" onclick="return false">политикой конфиденциальности</a></span></label>
         <button class="btn btn-ember btn-l" type="submit">Перезвоните мне</button>
-        <small>Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности и обработкой персональных данных.</small>
+        <small>Один звонок за 30 секунд. Без рассылок и передачи номера третьим лицам.</small>
       </form>
-      <div class="lead-ok" id="leadOk">Заявка принята. В рабочей версии она уходит в CRM со всеми параметрами: город вылета, направление, выбранная дата.</div>
+      <div class="lead-ok" id="leadOk"></div>
     </div>
   </div></div>
 </section>
@@ -373,6 +381,37 @@
   </section>
 </main>
 
+<div class="bkwrap" id="bkWrap" hidden>
+  <div class="bkbd" onclick="bkClose()"></div>
+  <div class="bk" role="dialog" aria-modal="true" aria-label="Бронирование">
+    <button class="bk-x" type="button" onclick="bkClose()" aria-label="Закрыть">✕</button>
+    <div class="bk-steps" id="bkSteps"></div>
+    <div class="bk-b" id="bkBody"></div>
+  </div>
+</div>
+
+<button class="crmfab" type="button" onclick="crmToggle()" aria-controls="crmPanel">
+  <i aria-hidden="true"></i>Что уйдёт в CRM · <b id="crmCount">0</b></button>
+
+<aside class="crmpanel" id="crmPanel" aria-hidden="true">
+  <div class="crmp-h">
+    <b>Сбор данных</b>
+    <span>Демонстрационная панель: показывает, что сайт знает о посетителе прямо сейчас. В рабочей версии её нет — эти данные молча уходят в CRM.</span>
+    <button class="crmp-x" type="button" onclick="crmToggle()" aria-label="Закрыть">✕</button>
+  </div>
+  <div class="crmp-b">
+    <p class="crmp-t">Воронка</p>
+    <ul class="fnl" id="crmFunnel"></ul>
+    <p class="crmp-t">Карточка лида</p>
+    <div class="crmcard" id="crmCard"></div>
+    <p class="crmp-t">Лента событий</p>
+    <div class="crmlog" id="crmLog"></div>
+    <p class="crmp-t">Пакет для сервера</p>
+    <div class="crmjson" id="crmJson"></div>
+    <p class="crmnote">Форма отправляет этот пакет на собственный обработчик сайта. Он проверяет данные, кладёт копию в свою базу и только потом передаёт в CRM. Ключи от CRM в браузер не попадают.</p>
+  </div>
+</aside>
+
 <div class="msg">
   <a href="#" onclick="return false" aria-label="Написать в WhatsApp" title="WhatsApp">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3.5 20.5l1.3-4.6A8.4 8.4 0 1 1 8.2 19l-4.7 1.5z" stroke="#5FCFA6" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 8.6c.2-.5.5-.5.8-.5h.6c.2 0 .4 0 .6.5l.7 1.6c.1.3 0 .5-.1.7l-.4.5c-.1.2-.2.4 0 .7.3.5 1 1.4 2 1.9.4.2.6.2.8 0l.6-.6c.2-.2.4-.2.6-.1l1.5.8c.3.2.4.4.4.6 0 .8-.6 1.6-1.4 1.7-.7.1-1.6.1-3.5-.9-2.2-1.2-3.6-3.6-3.7-3.8-.1-.2-.9-1.2-.9-2.3 0-1.1.6-1.6.8-1.8z" fill="#5FCFA6"/></svg>
@@ -389,7 +428,7 @@
 
 <div class="sticky dk">
   <div><span class="price num">130 705 ₽</span><small>за двоих · бронь от 3 000 ₽</small></div>
-  <button class="btn btn-ember btn-s" type="button" onclick="jump('#dest')">Найти туры</button>
+  <button class="btn btn-ember btn-s" type="button" onclick="bkOpen('sticky')">Забронировать</button>
 </div>
 
 <section class="studio dk">

@@ -84,6 +84,7 @@ function dealCard(d,i){
 }
 
 function setCity(k){
+  if(window.IZI){ var _c=DATA[k]; IZI.ctx.from=k; IZI.ctx.fromName=_c.from; iziStep('city'); track('city','Город вылета',_c.from); }
   curCity=k;
   var c=DATA[k];
   document.getElementById('fFrom').value=k;
@@ -127,7 +128,13 @@ function openResort(key,silent){
   document.getElementById('calTitle').textContent = exc? 'Ближайшая группа' : 'Когда лететь дешевле';
   document.getElementById('cal-city').textContent = exc?
     (c.from+' → Чунцин · за двоих, 11 дней') : (c.from+' → '+r.n+' · за двоих, 7 ночей');
-  document.getElementById('rCta').textContent = exc? 'Записаться в группу' : ('Найти туры в '+(r.acc||r.n));
+  document.getElementById('rCta').textContent = exc? 'Пусть подберут за меня' : 'Пусть подберут за меня';
+  document.getElementById('rBook').textContent = exc? 'Записаться в группу — 3 000 ₽' : 'Забронировать за 3 000 ₽';
+  if(window.IZI){
+    IZI.ctx.to=key; IZI.ctx.toName=r.n;
+    if(IZI.ctx.resorts.indexOf(r.n)<0) IZI.ctx.resorts.push(r.n);
+    iziStep('dest'); track('destination','Открыл направление',r.n); leadCtxRender();
+  }
   renderTabs(); renderCal(); setRoute(curRoute);
   if(!silent){ var el=document.getElementById('resort'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
 }
@@ -141,6 +148,9 @@ function renderTabs(){
 }
 function setTab(i){
   curTab=i; renderTabs();
+  if(window.IZI){ var _t=RESORTS[curResort].tabs[i][0];
+    if(IZI.ctx.tabs.indexOf(_t)<0) IZI.ctx.tabs.push(_t);
+    iziStep('detail'); track('tab','Вкладка курорта',RESORTS[curResort].n+' · '+_t); }
   var r=RESORTS[curResort], t=r.tabs[i];
   setStageArt((t[2]&&IMAGES[t[2]]) ? t[2] : r.k);
 }
@@ -173,7 +183,11 @@ function renderCal(){
   var mb=document.getElementById('mbPrice'); if(mb){mb.textContent=sel[1]+' ₽';
     document.getElementById('mbSub').textContent=RESORTS[curResort].n+' · за двоих';}
 }
-function setDate(i){ curDate=i; renderCal(); }
+function setDate(i){ curDate=i; renderCal();
+  if(window.IZI){ var _d=DATA[curCity].cals[i];
+    IZI.ctx.date=_d[0]; IZI.ctx.price=_d[1]+' ₽'; IZI.ctx.calendarUsed=true;
+    iziStep('date'); track('date','Выбрал дату',_d[0]+' · '+_d[1]+' ₽'); leadCtxRender(); }
+}
 
 /* --- step 3: route --- */
 
@@ -205,6 +219,7 @@ function setRoute(k){
     ? 'Время в пути и цена — по выбранному направлению и городу вылета.'
     : 'Оценка самостоятельного перелёта через Москву по типичным стыковкам: это ориентир для сравнения, а не предложение.';
   planeT=0;
+  if(window.IZI && k==='moscow'){ IZI.ctx.compared=true; iziStep('detail'); track('compare','Сравнил с перелётом через Москву'); }
 }
 function animPlane(){
   var p=document.getElementById(ROUTES[curRoute].path), g=document.getElementById('plane'),
@@ -368,6 +383,8 @@ function smCabinFor(AC,row){
 
 function setPlane(k){
   smType=k; smFilter=null;
+  if(window.IZI){ IZI.ctx.seatmap++; if(IZI.ctx.planes.indexOf(FLEET[k].name)<0) IZI.ctx.planes.push(FLEET[k].name);
+    iziStep('detail'); track('seatmap','Схема салона',FLEET[k].name); }
   document.getElementById('smTypes').querySelectorAll('button').forEach(function(b){
     b.setAttribute('aria-pressed',String(b.dataset.t===k));});
   buildSeatMap();
@@ -501,6 +518,296 @@ function buildMark(host){
   host.innerHTML=h;
 }
 
+/* ---------- сбор данных: событийный слой и профиль лида ---------- */
+var IZI={
+  sid:'', started:Date.now(), events:[], maxScroll:0,
+  src:{}, ctx:{from:'',fromName:'',to:'',toName:'',date:'',price:'',pax:'2 взрослых',
+       resorts:[], tabs:[], seatmap:0, planes:[], compared:false, calendarUsed:false},
+  steps:{visit:0,city:0,dest:0,detail:0,date:0,intent:0,book:0,lead:0},
+  lead:{type:'',adults:2,kids:0,deposit:0,email:''}
+};
+var FUNNEL=[['visit','Зашёл на сайт'],['city','Выбрал город вылета'],['dest','Открыл направление'],
+            ['detail','Изучил детали'],['date','Выбрал дату'],['intent','Нажал кнопку действия'],
+            ['book','Начал бронирование'],['lead','Заявка создана']];
+
+function iziInit(){
+  IZI.sid='S-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,6).toUpperCase();
+  var q=new URLSearchParams(location.search), u={};
+  ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function(k){ if(q.get(k)) u[k]=q.get(k); });
+  IZI.src={
+    utm:u,
+    referrer: document.referrer || '',
+    landing: location.pathname,
+    device: (window.innerWidth<760?'смартфон':(window.innerWidth<1100?'планшет':'десктоп')),
+    screen: window.innerWidth+'×'+window.innerHeight,
+    firstVisit: new Date().toLocaleString('ru-RU')
+  };
+  IZI.steps.visit=Date.now();
+  track('visit','Открыл сайт', IZI.src.device);
+}
+
+function track(type,label,value){
+  var t=Math.round((Date.now()-IZI.started)/1000);
+  IZI.events.push({t:t,type:type,label:label,value:value||''});
+  if(IZI.events.length>200) IZI.events.shift();
+  /* готовность к Яндекс.Метрике / GTM — в рабочей версии здесь ym(id,'reachGoal',type) */
+  window.dataLayer=window.dataLayer||[];
+  window.dataLayer.push({event:'izi_'+type,label:label,value:value||'',sid:IZI.sid});
+  crmRender();
+}
+
+function iziStep(k){ if(!IZI.steps[k]) IZI.steps[k]=Date.now(); }
+
+function iziPacket(){
+  var p={
+    lead:{
+      type: IZI.lead.type || 'callback',
+      name: IZI.lead.name || (document.getElementById('leadName')||{}).value || '',
+      phone:IZI.lead.phone || (document.getElementById('leadPhone')||{}).value || '',
+      email:IZI.lead.email || '',
+      adults:IZI.lead.adults, kids:IZI.lead.kids,
+      deposit:IZI.lead.deposit || 0
+    },
+    choice:{
+      from:IZI.ctx.fromName, to:IZI.ctx.toName, date:IZI.ctx.date,
+      price:IZI.ctx.price, pax:IZI.ctx.pax
+    },
+    behaviour:{
+      resortsViewed:IZI.ctx.resorts.slice(),
+      tabsViewed:IZI.ctx.tabs.slice(),
+      seatmapOpened:IZI.ctx.seatmap,
+      planesViewed:IZI.ctx.planes.slice(),
+      routeCompared:IZI.ctx.compared,
+      calendarUsed:IZI.ctx.calendarUsed,
+      secondsOnSite:Math.round((Date.now()-IZI.started)/1000),
+      scrollDepth:IZI.maxScroll+'%',
+      events:IZI.events.length
+    },
+    source:IZI.src,
+    meta:{sessionId:IZI.sid, ym_client_id:'(подставляется Метрикой)', page:location.href}
+  };
+  return p;
+}
+
+
+/* ---------- бронирование за 3 000 ₽ ---------- */
+var BK={step:0, adults:2, kids:0, done:false, src:'', name:'', phone:'', email:''};
+var BK_DEPOSIT=3000;
+
+function bkIsGroup(){ var d=(typeof curDir==='function')?curDir():null; return !!(d&&d.excursion); }
+function bkPriceLine(){
+  var d=IZI.ctx;
+  if(BK.adults===2 && BK.kids===0) return d.price||'уточняется';
+  return 'пересчитается при подтверждении';
+}
+function bkOpen(src){
+  BK.step=1; BK.done=false; BK.src=src||'';
+  var w=document.getElementById('bkWrap'); w.hidden=false;
+  document.body.style.overflow='hidden';
+  iziStep('intent'); iziStep('book');
+  track('book_open','Открыл бронирование', (IZI.ctx.toName||'—')+' · '+(IZI.ctx.date||'дата не выбрана'));
+  bkRender();
+}
+function bkClose(){
+  var w=document.getElementById('bkWrap');
+  if(!BK.done && BK.step) track('book_abandon','Закрыл бронирование','шаг '+BK.step+' из 3');
+  w.hidden=true; document.body.style.overflow='';
+  BK.step=0; crmRender();
+}
+function bkPax(kind,delta){
+  if(kind==='a') BK.adults=Math.max(1,Math.min(4,BK.adults+delta));
+  else BK.kids=Math.max(0,Math.min(3,BK.kids+delta));
+  IZI.lead.adults=BK.adults; IZI.lead.kids=BK.kids;
+  IZI.ctx.pax=BK.adults+' взрослых'+(BK.kids?' + '+BK.kids+' детей':'');
+  track('book_pax','Изменил состав', BK.adults+' взр. / '+BK.kids+' реб.');
+  bkRender(); leadCtxRender();
+}
+function bkNext(){
+  if(BK.step===2){
+    var n=document.getElementById('bkName').value.trim(),
+        p=document.getElementById('bkPhone').value.trim(),
+        e=document.getElementById('bkMail').value.trim(),
+        c=document.getElementById('bkCons').checked,
+        err=document.getElementById('bkErr');
+    if(!n||p.replace(/\D/g,'').length<10||!/.+@.+\..+/.test(e)||!c){
+      err.style.display='block';
+      err.textContent = !c ? 'Отметьте согласие на обработку данных'
+        : (!n ? 'Напишите имя' : (p.replace(/\D/g,'').length<10 ? 'Проверьте номер телефона' : 'Проверьте адрес почты'));
+      return;
+    }
+    BK.name=n; BK.phone=p; BK.email=e;
+    IZI.lead.name=n; IZI.lead.phone=p; IZI.lead.email=e;
+    track('book_contacts','Заполнил контакты',n);
+  }
+  BK.step++;
+  if(BK.step===3) track('book_terms','Дошёл до условий');
+  bkRender();
+}
+function bkPay(){
+  BK.done=true; BK.step=4;
+  IZI.lead.type = bkIsGroup()? 'group' : 'booking';
+  IZI.lead.deposit = BK_DEPOSIT;
+  iziStep('lead');
+  track('lead','Создана бронь', (IZI.ctx.toName||'—')+' · '+BK_DEPOSIT+' ₽');
+  BK.no='IZI-'+new Date().toISOString().slice(2,10).replace(/-/g,'')+'-'+String(Math.floor(Math.random()*900+100));
+  bkRender();
+}
+
+function bkRender(){
+  var st=document.getElementById('bkSteps'), b=document.getElementById('bkBody'), d=IZI.ctx, grp=bkIsGroup();
+  st.innerHTML=[1,2,3].map(function(i){return '<i class="'+(BK.step>=i?'on':'')+'"></i>';}).join('');
+  st.style.visibility = BK.step>=4 ? 'hidden' : 'visible';
+
+  if(BK.step===1){
+    b.innerHTML=
+      '<p class="bk-eyebrow">Шаг 1 из 3 · что бронируем</p>'+
+      '<h3 class="bk-h">'+(grp?'Место в группе':'Бронь места и цены')+'</h3>'+
+      '<p class="bk-p">'+(grp
+        ? 'Группа с фиксированной датой вылета. Взнос закрепляет за вами место, остальное — после подтверждения.'
+        : 'Депозит фиксирует цену и место в блоке. Остаток вы платите за 14 дней до вылета.')+'</p>'+
+      '<div class="bk-sum">'+
+        '<div class="bk-sr"><span>Откуда</span><b>'+esc(d.fromName||'—')+'</b></div>'+
+        '<div class="bk-sr"><span>Куда</span><b>'+esc(d.toName||'не выбрано')+'</b></div>'+
+        '<div class="bk-sr"><span>'+(grp?'Вылет группы':'Дата вылета')+'</span><b>'+esc(d.date||'не выбрана')+'</b></div>'+
+        '<div class="bk-sr"><span>Стоимость тура</span><b>'+esc(bkPriceLine())+'</b></div>'+
+        '<div class="bk-sr tot"><span>К оплате сейчас</span><b>'+BK_DEPOSIT.toLocaleString('ru-RU')+' ₽</b></div>'+
+      '</div>'+
+      '<div class="bk-pax">'+
+        '<div class="bk-cnt"><span>Взрослые</span><div>'+
+          '<button type="button" onclick="bkPax(\'a\',-1)"'+(BK.adults<=1?' disabled':'')+'>−</button>'+
+          '<b>'+BK.adults+'</b>'+
+          '<button type="button" onclick="bkPax(\'a\',1)"'+(BK.adults>=4?' disabled':'')+'>+</button></div></div>'+
+        '<div class="bk-cnt"><span>Дети до 12 лет</span><div>'+
+          '<button type="button" onclick="bkPax(\'k\',-1)"'+(BK.kids<=0?' disabled':'')+'>−</button>'+
+          '<b>'+BK.kids+'</b>'+
+          '<button type="button" onclick="bkPax(\'k\',1)"'+(BK.kids>=3?' disabled':'')+'>+</button></div></div>'+
+      '</div>'+
+      (BK.adults!==2||BK.kids? '<p class="bk-note">Цены на сайте показаны за двоих взрослых. Для другого состава менеджер пересчитает стоимость и пришлёт её до оплаты остатка.</p>':'')+
+      '<div class="bk-act"><button class="btn btn-ember btn-l" type="button" onclick="bkNext()">Дальше</button></div>';
+  }
+  else if(BK.step===2){
+    b.innerHTML=
+      '<p class="bk-eyebrow">Шаг 2 из 3 · кто едет</p>'+
+      '<h3 class="bk-h">Куда прислать подтверждение</h3>'+
+      '<p class="bk-p">Договор и ваучер придут на почту, менеджер свяжется по телефону.</p>'+
+      '<div class="bk-f">'+
+        '<input id="bkName" type="text" placeholder="Имя и фамилия" value="'+esc(BK.name)+'" autocomplete="name">'+
+        '<input id="bkPhone" type="tel" inputmode="tel" placeholder="+7 (___) ___-__-__" value="'+esc(BK.phone)+'" autocomplete="tel">'+
+        '<input id="bkMail" type="email" inputmode="email" placeholder="Почта для договора" value="'+esc(BK.email)+'" autocomplete="email">'+
+        '<label class="bk-cons"><input type="checkbox" id="bkCons"><span>Согласен на обработку персональных данных и ознакомлен с <a href="#" onclick="return false">политикой конфиденциальности</a></span></label>'+
+        '<p class="bk-err" id="bkErr"></p>'+
+      '</div>'+
+      '<div class="bk-act">'+
+        '<button class="bk-ghost" type="button" onclick="BK.step=1;bkRender()">Назад</button>'+
+        '<button class="btn btn-ember btn-l" type="button" onclick="bkNext()">Дальше</button></div>';
+    setTimeout(function(){var el=document.getElementById('bkName'); if(el&&!BK.name) el.focus();},60);
+  }
+  else if(BK.step===3){
+    b.innerHTML=
+      '<p class="bk-eyebrow">Шаг 3 из 3 · условия</p>'+
+      '<h3 class="bk-h">Что даёт депозит</h3>'+
+      '<div class="bk-terms">'+
+        '<div class="bk-term"><i>✓</i><span><b>Цена фиксируется</b> в рублях на день брони и дальше не меняется — что бы ни делал курс.</span></div>'+
+        '<div class="bk-term"><i>✓</i><span><b>Место в блоке закрепляется</b> за вами. Пока депозит внесён, его никто не займёт.</span></div>'+
+        '<div class="bk-term"><i>✓</i><span><b>Остаток — за 14 дней до вылета.</b> Можно частями, можно в рассрочку без процентов.</span></div>'+
+        '<div class="bk-term"><i>✓</i><span><b>Передумали — вернём депозит,</b> если сообщите в течение трёх дней после брони.</span></div>'+
+      '</div>'+
+      '<div class="bk-sum" style="margin-top:18px">'+
+        '<div class="bk-sr"><span>Направление</span><b>'+esc(d.toName||'—')+(d.date?' · '+esc(d.date):'')+'</b></div>'+
+        '<div class="bk-sr"><span>Турист</span><b>'+esc(BK.name)+' · '+esc(BK.phone)+'</b></div>'+
+        '<div class="bk-sr tot"><span>К оплате сейчас</span><b>'+BK_DEPOSIT.toLocaleString('ru-RU')+' ₽</b></div>'+
+      '</div>'+
+      '<div class="bk-act">'+
+        '<button class="bk-ghost" type="button" onclick="BK.step=2;bkRender()">Назад</button>'+
+        '<button class="btn btn-ember btn-l" type="button" onclick="bkPay()">Перейти к оплате</button></div>'+
+      '<p class="bk-note">Условия возврата и срок фиксации приведены как пример и требуют подтверждения туроператором до публикации.</p>';
+  }
+  else {
+    b.innerHTML=
+      '<div class="bk-done">'+
+        '<div class="tick">✓</div>'+
+        '<h3 class="bk-h">Бронь создана</h3>'+
+        '<p class="bk-no">'+BK.no+'</p>'+
+        '<p class="bk-p">'+esc(d.fromName||'')+' → '+esc(d.toName||'')+(d.date?' · '+esc(d.date):'')+'<br>'+
+          esc(BK.name)+' · '+esc(BK.phone)+'</p>'+
+      '</div>'+
+      '<div class="bk-stub"><b>Здесь в рабочей версии открывается страница банка-эквайера.</b><br>'+
+        'Макет платёжную форму не показывает намеренно: реквизиты карты принимает банк на своей странице, сайт их не видит и не хранит. '+
+        'После оплаты банк возвращает человека сюда, а заявка в CRM переходит из «бронь создана» в «депозит получен».</div>'+
+      '<div class="bk-act"><button class="bk-ghost" type="button" onclick="bkClose()">Закрыть</button>'+
+        '<button class="btn btn-ember btn-l" type="button" onclick="crmToggle();bkClose()">Что ушло в CRM</button></div>';
+  }
+  crmRender();
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){ var w=document.getElementById('bkWrap'); if(w&&!w.hidden) bkClose(); }
+});
+
+/* ---------- демо-панель ---------- */
+function crmToggle(){
+  var p=document.getElementById('crmPanel');
+  var open=p.classList.toggle('open');
+  p.setAttribute('aria-hidden', String(!open));
+  if(open) crmRender();
+}
+function esc(v){ return String(v==null?'':v).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+function crmRow(k,v,cls){ return '<div class="crmrow '+(cls||'')+'"><span>'+k+'</span><b>'+esc(v)+'</b></div>'; }
+
+function crmRender(){
+  var c=document.getElementById('crmCount'); if(!c) return;
+  c.textContent=IZI.events.length;
+  var p=document.getElementById('crmPanel');
+  if(!p||!p.classList.contains('open')) return;
+
+  document.getElementById('crmFunnel').innerHTML=FUNNEL.map(function(f){
+    var on=!!IZI.steps[f[0]];
+    var sec=on? Math.round((IZI.steps[f[0]]-IZI.started)/1000)+' c' : '';
+    return '<li class="'+(on?'on':'')+'"><span class="dot"></span>'+f[1]+'<em>'+sec+'</em></li>';
+  }).join('');
+
+  var d=IZI.ctx, k=iziPacket(), src=IZI.src;
+  var utm=Object.keys(src.utm||{}).length
+      ? Object.keys(src.utm).map(function(x){return x.replace('utm_','')+'='+src.utm[x];}).join(' · ')
+      : (src.referrer? 'переход с '+src.referrer.replace(/^https?:\/\//,'').split('/')[0] : 'прямой заход');
+
+  var TYPES={callback:'Обратный звонок · холодный',booking:'Бронь с депозитом · горячий',group:'Место в группе · горячий'};
+  document.getElementById('crmCard').innerHTML=
+    crmRow('Тип заявки', TYPES[k.lead.type]||'— не создана', k.lead.type&&k.lead.type!=='callback'?'hi':'dim')+
+    (k.lead.deposit? crmRow('Депозит', k.lead.deposit.toLocaleString('ru-RU')+' ₽','hi') : '')+
+    crmRow('Имя', k.lead.name||'— не заполнено', k.lead.name?'':'dim')+
+    crmRow('Телефон', k.lead.phone||'— не заполнено', k.lead.phone?'hi':'dim')+
+    (k.lead.email? crmRow('Почта', k.lead.email) : '')+
+    crmRow('Откуда', d.fromName||'—')+
+    crmRow('Куда', d.toName||'— не выбрано', d.toName?'':'dim')+
+    crmRow('Дата', d.date||'— не выбрана', d.date?'':'dim')+
+    crmRow('Цена на экране', d.price||'—', d.price?'hi':'dim')+
+    crmRow('Кто едет', IZI.lead.adults+' взр.'+(IZI.lead.kids?' + '+IZI.lead.kids+' реб.':''))+
+    crmRow('Смотрел направлений', d.resorts.length? d.resorts.length+' ('+d.resorts.join(', ')+')' : '0','dim')+
+    crmRow('Вкладки курорта', d.tabs.length? d.tabs.join(', ') : '—','dim')+
+    crmRow('Схема салона', d.seatmap? 'открывал '+d.seatmap+' раз'+(d.seatmap>1?'а':'') : 'нет','dim')+
+    crmRow('Сравнил с Москвой', d.compared?'да':'нет','dim')+
+    crmRow('Источник', utm)+
+    crmRow('Устройство', src.device+' · '+src.screen,'dim')+
+    crmRow('На сайте', k.behaviour.secondsOnSite+' c · прокрутил '+IZI.maxScroll+'%','dim')+
+    crmRow('ID сессии', IZI.sid,'dim');
+
+  var log=IZI.events.slice(-40).reverse().map(function(e){
+    return '<div><i>'+e.t+'c</i><b>'+esc(e.type)+'</b><u>'+esc(e.label)+(e.value?' · '+esc(e.value):'')+'</u></div>';
+  }).join('');
+  document.getElementById('crmLog').innerHTML=log||'<div><u>событий пока нет</u></div>';
+  document.getElementById('crmJson').textContent=JSON.stringify(k,null,1);
+}
+
+function leadCtxRender(){
+  var el=document.getElementById('leadCtx'); if(!el) return;
+  var d=IZI.ctx;
+  if(!d.toName){ el.innerHTML='<b>Ещё не выбрали направление</b><span>Ничего страшного — менеджер подберёт по телефону.</span>'; return; }
+  el.innerHTML='<b>Ваш выбор</b><span>'+esc(d.fromName)+' → '+esc(d.toName)+
+    (d.date? ' · '+esc(d.date):'')+' · '+esc(d.pax)+'</span>'+
+    (d.price? '<span>Цена на экране: <u>'+esc(d.price)+'</u></span>':'')+
+    '<span style="font-size:11px;color:var(--text-3)">Эти параметры уйдут менеджеру вместе с номером — повторять их в разговоре не придётся.</span>';
+}
+
 /* ---------- nav ---------- */
 function show(v){
   document.getElementById('view-home').classList.toggle('hidden',v!=='home');
@@ -511,14 +818,27 @@ function show(v){
 }
 function jump(sel){
   show('home');
+  if(window.IZI){ if(sel==='#lead'){ iziStep('intent'); track('cta','Нажал кнопку заявки', IZI.ctx.toName||'без направления'); }
+    else track('nav','Переход к разделу',sel); }
   var el=document.querySelector(sel);
   if(el) setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'start'});},20);
   return false;
 }
 function submitLead(e){
   e.preventDefault();
+  if(document.getElementById('leadHp').value){ return false; }   /* ловушка для ботов */
+  var pk=iziPacket();
+  iziStep('lead'); track('lead','Отправил заявку', pk.lead.phone||'—');
+  /* в рабочей версии здесь fetch('/api/lead',{method:'POST',body:JSON.stringify(pk)}) */
+  var no='IZI-'+new Date().toISOString().slice(2,10).replace(/-/g,'')+'-'+String(Math.floor(Math.random()*900+100));
+  var ok=document.getElementById('leadOk');
+  ok.innerHTML='<b>Заявка принята</b>Номер <span class="num">'+no+'</span>. Перезвоним за 30 секунд.'+
+    '<div style="margin-top:10px;font-size:12.5px;color:var(--text-3);line-height:1.55">'+
+    'Менеджер уже видит: '+(pk.choice.to? esc(pk.choice.from)+' → '+esc(pk.choice.to)+(pk.choice.date?', '+esc(pk.choice.date):'')+(pk.choice.price?', '+esc(pk.choice.price):'') : 'направление не выбрано')+
+    ' · смотрел направлений: '+pk.behaviour.resortsViewed.length+' · на сайте '+pk.behaviour.secondsOnSite+' c.'+
+    '<br>Полный состав пакета — в панели «Что уйдёт в CRM» слева внизу.</div>';
   document.getElementById('leadForm').style.display='none';
-  document.getElementById('leadOk').style.display='block';
+  ok.style.display='block';
   return false;
 }
 
@@ -526,6 +846,7 @@ function submitLead(e){
 setCity('mrv');
 buildSeatMap();
 document.querySelectorAll('.mark3d').forEach(buildMark);
+iziInit(); leadCtxRender();
 setRoute('direct');
 document.getElementById('hotels').innerHTML=HOTELS.map(hotelCard).join('');
 if(!reduce) animPlane();
@@ -547,6 +868,9 @@ if(window.IMAGES&&IMAGES.route){var ri=document.getElementById('routeImg');
   ri.src=IMAGES.route; ri.hidden=false; document.getElementById('rtSky').style.display='none';}
 function onScroll(){
   document.body.classList.toggle('scrolled', window.scrollY>40);
+  if(window.IZI){ var h=document.documentElement.scrollHeight-window.innerHeight;
+    var d=h>0? Math.round((window.scrollY/h)*100):0;
+    if(d>IZI.maxScroll){ IZI.maxScroll=Math.min(100,d); } }
   var lead=document.getElementById('lead');
   var past=window.scrollY>window.innerHeight*0.85;
   var atLead=lead && lead.getBoundingClientRect().top < window.innerHeight*0.95;
