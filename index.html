@@ -437,6 +437,29 @@
   </div>
 </div>
 
+<div class="favbar" id="favBar">
+  <b>В подборке <i id="favN">0</i></b>
+  <button class="bk-ghost" type="button" style="padding:9px 15px;font-size:13px" onclick="cmpOpen()">Сравнить</button>
+  <button class="btn btn-ember btn-s" type="button" onclick="favShare()">Поделиться</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<div class="bkwrap" id="cmpWrap" hidden>
+  <div class="bkbd" onclick="cmpClose()"></div>
+  <div class="bk" style="max-width:900px" role="dialog" aria-modal="true" aria-label="Сравнение отелей">
+    <button class="bk-x" type="button" onclick="cmpClose()" aria-label="Закрыть">✕</button>
+    <div class="bk-b" id="cmpBody"></div>
+  </div>
+</div>
+
+<div class="bkwrap" id="trWrap" hidden>
+  <div class="bkbd" onclick="trClose()"></div>
+  <div class="bk" style="max-width:720px" role="dialog" aria-modal="true" aria-label="Моя поездка">
+    <button class="bk-x" type="button" onclick="trClose()" aria-label="Закрыть">✕</button>
+    <div class="bk-b" id="trBody"></div>
+  </div>
+</div>
+
 <button class="crmfab" type="button" onclick="crmToggle()" aria-controls="crmPanel">
   <i aria-hidden="true"></i>Что уйдёт в CRM · <b id="crmCount">0</b></button>
 

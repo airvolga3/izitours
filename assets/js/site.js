@@ -1,4 +1,4 @@
-var IMAGES={route:'assets/img/route.webp',ac777:'assets/img/ac777.webp',ac321:'assets/img/ac321.webp',acssj:'assets/img/acssj.webp',h_pool:'',h_room:'',h_beach:'',h_dine:'',h_lobby:'',h_aqua:'',bodrum_sea:'assets/img/bodrum_sea.webp',bodrum_city:'assets/img/bodrum_city.webp',bodrum_eve:'assets/img/bodrum_eve.webp',bodrum_who:'assets/img/bodrum_who.webp',antalya_sea:'assets/img/antalya_sea.webp',antalya_city:'assets/img/antalya_city.webp',antalya_eve:'assets/img/antalya_eve.webp',antalya_who:'assets/img/antalya_who.webp',sharm_sea:'assets/img/sharm_sea.webp',sharm_city:'assets/img/sharm_city.webp',sharm_eve:'assets/img/sharm_eve.webp',sharm_who:'assets/img/sharm_who.webp',hainan_sea:'assets/img/hainan_sea.webp',hainan_city:'assets/img/hainan_city.webp',hainan_eve:'assets/img/hainan_eve.webp',hainan_who:'assets/img/hainan_who.webp',avatar_mtn:'assets/img/avatar_mtn.webp',avatar_city:'',avatar_eve:'',avatar_who:'assets/img/avatar_who.webp',bodrum:'assets/img/bodrum.webp',
+var IMAGES={route:'assets/img/route.webp',ac777:'assets/img/ac777.webp',ac321:'assets/img/ac321.webp',acssj:'assets/img/acssj.webp',h_pool:'assets/img/h_pool.webp',h_room:'assets/img/h_room.webp',h_beach:'assets/img/h_beach.webp',h_dine:'assets/img/h_dine.webp',h_lobby:'assets/img/h_lobby.webp',h_aqua:'assets/img/h_aqua.webp',bodrum_sea:'assets/img/bodrum_sea.webp',bodrum_city:'assets/img/bodrum_city.webp',bodrum_eve:'assets/img/bodrum_eve.webp',bodrum_who:'assets/img/bodrum_who.webp',antalya_sea:'assets/img/antalya_sea.webp',antalya_city:'assets/img/antalya_city.webp',antalya_eve:'assets/img/antalya_eve.webp',antalya_who:'assets/img/antalya_who.webp',sharm_sea:'assets/img/sharm_sea.webp',sharm_city:'assets/img/sharm_city.webp',sharm_eve:'assets/img/sharm_eve.webp',sharm_who:'assets/img/sharm_who.webp',hainan_sea:'assets/img/hainan_sea.webp',hainan_city:'assets/img/hainan_city.webp',hainan_eve:'assets/img/hainan_eve.webp',hainan_who:'assets/img/hainan_who.webp',avatar_mtn:'assets/img/avatar_mtn.webp',avatar_city:'',avatar_eve:'',avatar_who:'assets/img/avatar_who.webp',bodrum:'assets/img/bodrum.webp',
             antalya:'assets/img/antalya.webp',
             sharm:'assets/img/sharm.webp',
             hainan:'assets/img/hainan.webp',
@@ -647,7 +647,7 @@ function favToggle(id,ev){
   var i=favs.indexOf(id);
   if(i<0){ favs.push(id); track('fav_add','Добавил в избранное',id); }
   else { favs.splice(i,1); track('fav_del','Убрал из избранного',id); }
-  renderStay();
+  renderStay(); favBar();
 }
 
 function renderStay(){
@@ -790,6 +790,149 @@ function cmPick(d){
   cmRender(); renderStay(); leadCtxRender();
 }
 
+
+/* ---------- подборка, сравнение, ссылка ---------- */
+function toast(msg){
+  var t=document.getElementById('toast'); if(!t) return;
+  t.textContent=msg; t.classList.add('on');
+  clearTimeout(t._t); t._t=setTimeout(function(){t.classList.remove('on');},2600);
+}
+function favBar(){
+  var b=document.getElementById('favBar'); if(!b) return;
+  document.getElementById('favN').textContent=favs.length;
+  b.classList.toggle('on', favs.length>0);
+}
+function favShare(){
+  var r=RESORTS[curResort];
+  var h='#p='+[curCity, r.k, encodeURIComponent(IZI.ctx.date||''), favs.join('.')].join('~');
+  var url=location.origin+location.pathname+h;
+  track('share','Поделился подборкой', favs.length+' отел.');
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(function(){toast('Ссылка на подборку скопирована');},
+      function(){ history.replaceState(null,'',h); toast('Ссылка в адресной строке — скопируйте её'); });
+  } else { history.replaceState(null,'',h); toast('Ссылка в адресной строке — скопируйте её'); }
+}
+function favRestore(){
+  var m=(location.hash||'').match(/^#p=(.+)$/); if(!m) return false;
+  var p=m[1].split('~');
+  try{
+    if(p[0]&&DATA[p[0]]) setCity(p[0]);
+    if(p[1]) openResort(p[1],true);
+    if(p[2]) { IZI.ctx.date=decodeURIComponent(p[2]); }
+    if(p[3]) favs=p[3].split('.').filter(Boolean);
+    renderStay(); favBar(); leadCtxRender();
+    track('share_open','Открыл присланную подборку', favs.length+' отел.');
+    if(favs.length){ setTimeout(function(){ var el=document.getElementById('stay'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },500); }
+    return true;
+  }catch(e){ return false; }
+}
+function cmpOpen(){
+  if(!favs.length){ toast('Отметьте звёздочкой отели, которые сравниваем'); return; }
+  document.getElementById('cmpWrap').hidden=false; document.body.style.overflow='hidden';
+  track('compare_open','Открыл сравнение', favs.length+' отел.');
+  cmpRender();
+}
+function cmpClose(){ document.getElementById('cmpWrap').hidden=true; document.body.style.overflow=''; }
+function cmpRender(){
+  var list=favs.map(hpFind).filter(Boolean);
+  var b=document.getElementById('cmpBody');
+  if(!list.length){ b.innerHTML='<h3 class="bk-h">В подборке пусто</h3><p class="bk-p">Отметьте звёздочкой отели в выдаче — они появятся здесь рядом.</p>'; return; }
+  var minP=Math.min.apply(null,list.map(hotelPrice)),
+      maxR=Math.max.apply(null,list.map(function(h){return h.r;})),
+      minD=Math.min.apply(null,list.map(function(h){return h.dist;}));
+  b.innerHTML='<p class="bk-eyebrow">Подборка · '+list.length+' отел'+(list.length===1?'ь':(list.length<5?'я':'ей'))+'</p>'+
+    '<h3 class="bk-h">Сравнение</h3>'+
+    '<p class="bk-p">Зелёным отмечено лучшее значение в строке. Ссылку на эту подборку можно отправить тому, с кем едете.</p>'+
+    '<div class="cmp-tbl" style="grid-template-columns:repeat('+list.length+',minmax(210px,1fr));margin-top:16px">'+
+    list.map(function(h){
+      var p=hotelPrice(h);
+      return '<div class="cmp-col"><img alt="" src="'+hotelImg(h)+'">'+
+        '<div class="cmp-h"><span class="st">'+'★'.repeat(h.s)+'</span><b>'+esc(h.n)+'</b></div>'+
+        '<div class="cmp-r'+(p===minP?' win':'')+'"><span>Цена</span><b>'+money(p)+'</b></div>'+
+        '<div class="cmp-r'+(h.r===maxR?' win':'')+'"><span>Рейтинг</span><b>'+h.r.toString().replace('.',',')+' · '+h.rn+'</b></div>'+
+        '<div class="cmp-r'+(h.dist===minD?' win':'')+'"><span>До моря</span><b>'+(h.dist? h.dist+' м':'на территории')+'</b></div>'+
+        '<div class="cmp-r"><span>Питание</span><b>'+esc(h.meal)+'</b></div>'+
+        '<div class="cmp-r"><span>Линия</span><b>'+(h.line===1?'первая':'вторая')+'</b></div>'+
+        '<div class="cmp-r"><span>С детьми</span><b>'+(h.kids?'да':'взрослый отель')+'</b></div>'+
+        '<div class="cmp-f"><button class="btn btn-ember btn-s" type="button" onclick="cmpClose();bkOpen(\'compare\',\''+h.id+'\')">Забронировать</button>'+
+        '<button class="cmp-del" type="button" onclick="favToggle(\''+h.id+'\');cmpRender()">Убрать из подборки</button></div>'+
+      '</div>';}).join('')+'</div>'+
+    '<div class="bk-act"><button class="bk-ghost" type="button" onclick="cmpClose()">Закрыть</button>'+
+    '<button class="btn btn-ember btn-l" type="button" onclick="favShare()">Скопировать ссылку на подборку</button></div>';
+}
+
+/* ---------- моя поездка ---------- */
+var TRIP=null;
+function tripPlane(){ var k=RESORTS[curResort].k; return (k==='hainan'||k==='avatar')?'b777':(curCity==='skx'?'ssj':'a321'); }
+function seatBusy(row,L){ var h=(row*31+L.charCodeAt(0)*7)%100; return h<42; }
+function trOpen(){
+  if(!TRIP) return;
+  document.getElementById('trWrap').hidden=false; document.body.style.overflow='hidden';
+  track('trip_open','Открыл «Мою поездку»',TRIP.no);
+  trRender();
+}
+function trClose(){ document.getElementById('trWrap').hidden=true; document.body.style.overflow=''; }
+function trPick(row,L){
+  var seat=row+L, i=TRIP.seats.indexOf(seat);
+  if(i>=0) TRIP.seats.splice(i,1);
+  else { if(TRIP.seats.length>=TRIP.pax){ toast('Мест выбрано столько, сколько туристов'); return; } TRIP.seats.push(seat); }
+  track('seat_pick','Выбор места', TRIP.seats.join(', ')||'сброшено');
+  trRender();
+}
+function trRender(){
+  var t=TRIP, AC=FLEET[t.plane], b=document.getElementById('trBody');
+  var grid='', rows='';
+  for(var row=1;row<=AC.rows;row++){
+    var seats=smSeatsFor(AC,row), cab=smCabinFor(AC,row);
+    grid+='<div class="smcol">';
+    for(var i=0;i<AC.letters.length;i++){
+      var L=AC.letters[i];
+      if(L==='|'){ grid+='<div class="smcell aisle"></div>'; continue; }
+      if(seats.indexOf(L)<0){ grid+='<div class="smcell"></div>'; continue; }
+      var busy=seatBusy(row,L), mine=t.seats.indexOf(row+L)>=0;
+      grid+='<div class="smcell smseat '+cab.k+(busy?' busy':' pickable')+(mine?' mine':'')+'"'+
+        (busy?'':' onclick="trPick('+row+',\''+L+'\')"')+' title="Ряд '+row+', место '+L+(busy?' — занято':'')+'"></div>';
+    }
+    grid+='</div>';
+    rows+='<div class="smrn">'+((row===1||row%5===0||row===AC.rows)?row:'')+'</div>';
+  }
+  var d=new Date(2026,8,t.day), now=new Date(), left=Math.max(0,Math.ceil((d-now)/86400000));
+  b.innerHTML=
+    '<p class="bk-eyebrow">Заявка '+esc(t.no)+'</p>'+
+    '<div class="trip-h"><h3 class="bk-h" style="margin:0">'+esc(t.from)+' → '+esc(t.to)+'</h3>'+
+      '<span class="trip-st'+(t.paid?' ok':'')+'">'+(t.paid?'✓ Депозит получен':'● Ожидает оплаты депозита')+'</span></div>'+
+    '<p class="bk-p">'+esc(t.date)+' · '+esc(t.hotel||'отель подбирается')+' · '+t.pax+' турист'+(t.pax===1?'':(t.pax<5?'а':'ов'))+'</p>'+
+    '<div class="trip-cd"><div><b>'+left+'</b><span>дней до вылета</span></div>'+
+      '<div><b>'+t.deposit.toLocaleString('ru-RU')+'</b><span>внесено, ₽</span></div>'+
+      '<div><b>'+t.rest.toLocaleString('ru-RU')+'</b><span>остаток, ₽</span></div>'+
+      '<div><b style="font-size:20px">'+(t.day-14>0? (t.day-14)+' сен' : 'сейчас')+'</b><span>оплатить остаток до</span></div></div>'+
+
+    '<p class="crmp-t" style="color:#7F9CB2">Что дальше</p>'+
+    '<div class="trip-list">'+
+      '<div class="trip-i '+(t.paid?'done':'wait')+'"><i>'+(t.paid?'✓':'1')+'</i><span><b>Оплатить депозит 3 000 ₽</b><br>Фиксирует цену и место в блоке</span><em>'+(t.paid?'готово':'сейчас')+'</em></div>'+
+      '<div class="trip-i wait"><i>2</i><span><b>Прислать данные туристов</b><br>Загранпаспорта всех, кто едет</span><em>за 20 дней</em></div>'+
+      (t.visa? '<div class="trip-i wait"><i>3</i><span><b>Оформить визу</b><br>Готовим документы и записываем в центр</span><em>за 30 дней</em></div>':'')+
+      '<div class="trip-i wait"><i>'+(t.visa?4:3)+'</i><span><b>Оплатить остаток '+t.rest.toLocaleString('ru-RU')+' ₽</b><br>Можно частями или в рассрочку 0%</span><em>за 14 дней</em></div>'+
+      '<div class="trip-i wait"><i>'+(t.visa?5:4)+'</i><span><b>Получить ваучер и билеты</b><br>Придут на почту одним письмом</span><em>за 7 дней</em></div>'+
+    '</div>'+
+
+    '<p class="crmp-t" style="color:#7F9CB2">Ваш рейс и место</p>'+
+    '<p class="bk-p" style="font-size:13.5px">'+esc(AC.name)+' · вылет '+esc(t.date)+' · регистрация онлайн откроется за 48 часов. Место можно выбрать уже сейчас — оно закрепится после оплаты депозита.</p>'+
+    '<div class="seatpick">'+
+      '<div class="sp-legend"><span><i style="background:#3E5C74"></i>свободно</span>'+
+        '<span><i style="background:#24384A;opacity:.6"></i>занято</span>'+
+        '<span><i style="background:#F5A93E"></i>ваше место</span></div>'+
+      '<div class="smscroll"><div class="smplane"><div class="smnose"></div>'+
+        '<div class="smbody"><div class="smgrid">'+grid+'</div><div class="smrows">'+rows+'</div></div>'+
+        '<div class="smtail"></div></div></div>'+
+      '<p class="sp-out">'+(t.seats.length? 'Ваши места: <b>'+t.seats.join(', ')+'</b>' : 'Выберите '+t.pax+' мест'+(t.pax===1?'о':'а')+' — нажмите на свободные кресла')+'</p>'+
+    '</div>'+
+
+    '<div class="bk-act"><button class="bk-ghost" type="button" onclick="trClose()">Закрыть</button>'+
+      '<button class="btn btn-ember btn-l" type="button" onclick="crmToggle();trClose()">Что ушло в CRM</button></div>'+
+    '<p class="bk-note">Экран после брони. Сроки и состав документов — пример и требуют подтверждения туроператором.</p>';
+}
+
 /* ---------- сбор данных: событийный слой и профиль лида ---------- */
 var IZI={
   sid:'', started:Date.now(), events:[], maxScroll:0,
@@ -927,6 +1070,12 @@ function bkPay(){
   iziStep('lead');
   track('lead','Создана бронь', (IZI.ctx.toName||'—')+' · '+BK_DEPOSIT+' ₽');
   BK.no='IZI-'+new Date().toISOString().slice(2,10).replace(/-/g,'')+'-'+String(Math.floor(Math.random()*900+100));
+  var day=parseInt((IZI.ctx.date||'').replace(/[^0-9]/g,''),10)||15;
+  var total=BK.hotel? hotelPrice(BK.hotel) : curPriceNum();
+  TRIP={no:BK.no, from:IZI.ctx.fromName, to:IZI.ctx.toName, date:IZI.ctx.date||'дата уточняется',
+        hotel:BK.hotel? BK.hotel.n+' '+BK.hotel.s+'★' : '', pax:BK.adults+BK.kids, day:day,
+        deposit:BK_DEPOSIT, rest:Math.max(0,total-BK_DEPOSIT), paid:false, seats:[],
+        plane:tripPlane(), visa:(RESORTS[curResort].k==='hainan'||RESORTS[curResort].k==='avatar')};
   bkRender();
 }
 
@@ -1014,14 +1163,16 @@ function bkRender(){
       '<div class="bk-stub"><b>Здесь в рабочей версии открывается страница банка-эквайера.</b><br>'+
         'Макет платёжную форму не показывает намеренно: реквизиты карты принимает банк на своей странице, сайт их не видит и не хранит. '+
         'После оплаты банк возвращает человека сюда, а заявка в CRM переходит из «бронь создана» в «депозит получен».</div>'+
-      '<div class="bk-act"><button class="bk-ghost" type="button" onclick="bkClose()">Закрыть</button>'+
-        '<button class="btn btn-ember btn-l" type="button" onclick="crmToggle();bkClose()">Что ушло в CRM</button></div>';
+      '<div class="bk-act"><button class="bk-ghost" type="button" onclick="crmToggle();bkClose()">Что ушло в CRM</button>'+
+        '<button class="btn btn-ember btn-l" type="button" onclick="bkClose();trOpen()">Открыть мою поездку</button></div>';
   }
   crmRender();
 }
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){ var w=document.getElementById('bkWrap'); if(w&&!w.hidden) bkClose();
-    var h=document.getElementById('hpWrap'); if(h&&!h.hidden) hpClose(); }
+    var h=document.getElementById('hpWrap'); if(h&&!h.hidden) hpClose();
+    var c=document.getElementById('cmpWrap'); if(c&&!c.hidden) cmpClose();
+    var tr=document.getElementById('trWrap'); if(tr&&!tr.hidden) trClose(); }
 });
 
 /* ---------- демо-панель ---------- */
@@ -1130,7 +1281,7 @@ function submitLead(e){
 setCity('mrv');
 buildSeatMap();
 document.querySelectorAll('.mark3d').forEach(buildMark);
-iziInit(); leadCtxRender(); renderStay();
+iziInit(); leadCtxRender(); renderStay(); favBar(); favRestore();
 setRoute('direct');
 document.getElementById('hotels').innerHTML=HOTELS.map(hotelCard).join('');
 if(!reduce) animPlane();
