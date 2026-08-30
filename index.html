@@ -162,9 +162,15 @@
     <div class="calbox">
       <div class="calbox-h">
         <div><b id="calTitle">Когда лететь дешевле</b><span id="cal-city">Минеральные Воды → Бодрум · за двоих, 7 ночей</span></div>
-        <div class="calpick">Выбрано: <b class="num" id="calPick">вт, 9 сен · 119 200 ₽</b></div>
+        <div class="calpick">Выбрано: <b class="num" id="calPick">вт, 9 сен · 119 200 ₽</b>
+          <button class="calmore" type="button" id="calMore" onclick="cmToggle()" style="margin-left:12px">Календарь цен на месяц</button></div>
       </div>
       <div class="cal" id="cal"></div>
+      <div class="calmonth" id="calMonth" hidden>
+        <div class="cm-h"><b id="cmTitle">Сентябрь 2026</b><span id="cmSub"></span></div>
+        <div class="cm-grid" id="cmGrid"></div>
+        <p class="cm-note" id="cmNote"></p>
+      </div>
       <div class="calbox-f">
         <div><span class="num" id="rPrice">119 200 ₽</span><em>за двоих · бронь от 3 000 ₽ · остальное за 14 дней</em></div>
         <div class="cta2">
@@ -173,6 +179,26 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<section id="stay" class="rev">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Шаг 3 · выберите отель</p>
+        <h2>Где жить в <em id="stayCity">Бодруме</em></h2>
+        <p id="stayLede">Отели с местами на выбранную дату. Цена — за двоих, за всю поездку, вместе с перелётом и трансфером.</p>
+      </div>
+    </div>
+
+    <div class="hfilters" id="hFilters"></div>
+    <div class="hsec-h">
+      <p class="hcount" id="hCount"></p>
+      <div class="hfg" id="hSort"></div>
+    </div>
+    <div class="hgrid" id="hGrid"></div>
+    <p class="incl-note" id="stayNote">Отели, цены и фотографии — демонстрационные. В рабочей версии подставляются из системы бронирования вместе с фотографиями отельеров и реальным остатком мест.</p>
   </div>
 </section>
 
@@ -393,6 +419,14 @@
     </div>
   </section>
 </main>
+
+<div class="bkwrap" id="hpWrap" hidden>
+  <div class="bkbd" onclick="hpClose()"></div>
+  <div class="bk" style="max-width:660px" role="dialog" aria-modal="true" aria-label="Отель">
+    <button class="bk-x" type="button" onclick="hpClose()" aria-label="Закрыть">✕</button>
+    <div class="bk-b" id="hpBody"></div>
+  </div>
+</div>
 
 <div class="bkwrap" id="bkWrap" hidden>
   <div class="bkbd" onclick="bkClose()"></div>

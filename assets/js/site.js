@@ -1,4 +1,4 @@
-var IMAGES={route:'assets/img/route.webp',ac777:'assets/img/ac777.webp',ac321:'assets/img/ac321.webp',acssj:'assets/img/acssj.webp',bodrum_sea:'assets/img/bodrum_sea.webp',bodrum_city:'assets/img/bodrum_city.webp',bodrum_eve:'assets/img/bodrum_eve.webp',bodrum_who:'assets/img/bodrum_who.webp',antalya_sea:'assets/img/antalya_sea.webp',antalya_city:'assets/img/antalya_city.webp',antalya_eve:'assets/img/antalya_eve.webp',antalya_who:'assets/img/antalya_who.webp',sharm_sea:'assets/img/sharm_sea.webp',sharm_city:'assets/img/sharm_city.webp',sharm_eve:'assets/img/sharm_eve.webp',sharm_who:'assets/img/sharm_who.webp',hainan_sea:'assets/img/hainan_sea.webp',hainan_city:'assets/img/hainan_city.webp',hainan_eve:'assets/img/hainan_eve.webp',hainan_who:'assets/img/hainan_who.webp',avatar_mtn:'assets/img/avatar_mtn.webp',avatar_city:'',avatar_eve:'',avatar_who:'assets/img/avatar_who.webp',bodrum:'assets/img/bodrum.webp',
+var IMAGES={route:'assets/img/route.webp',ac777:'assets/img/ac777.webp',ac321:'assets/img/ac321.webp',acssj:'assets/img/acssj.webp',h_pool:'',h_room:'',h_beach:'',h_dine:'',h_lobby:'',h_aqua:'',bodrum_sea:'assets/img/bodrum_sea.webp',bodrum_city:'assets/img/bodrum_city.webp',bodrum_eve:'assets/img/bodrum_eve.webp',bodrum_who:'assets/img/bodrum_who.webp',antalya_sea:'assets/img/antalya_sea.webp',antalya_city:'assets/img/antalya_city.webp',antalya_eve:'assets/img/antalya_eve.webp',antalya_who:'assets/img/antalya_who.webp',sharm_sea:'assets/img/sharm_sea.webp',sharm_city:'assets/img/sharm_city.webp',sharm_eve:'assets/img/sharm_eve.webp',sharm_who:'assets/img/sharm_who.webp',hainan_sea:'assets/img/hainan_sea.webp',hainan_city:'assets/img/hainan_city.webp',hainan_eve:'assets/img/hainan_eve.webp',hainan_who:'assets/img/hainan_who.webp',avatar_mtn:'assets/img/avatar_mtn.webp',avatar_city:'',avatar_eve:'',avatar_who:'assets/img/avatar_who.webp',bodrum:'assets/img/bodrum.webp',
             antalya:'assets/img/antalya.webp',
             sharm:'assets/img/sharm.webp',
             hainan:'assets/img/hainan.webp',
@@ -19,7 +19,7 @@ function setStageArt(key){
 
 /* ---------- resorts ---------- */
 var RESORTS_DATA=[
- {k:'bodrum',n:'Бодрум',acc:'Бодрум',c:'Турция · Эгейское побережье',
+ {k:'bodrum',n:'Бодрум',acc:'Бодрум',prep:'Бодруме',c:'Турция · Эгейское побережье',
   chips:['Море 27°','До аэропорта 35 км','Пляж песчано-галечный'],
   tabs:[
    ['Море','Эгейское море держит 26–27 градусов до конца сентября. Вода прозрачная настолько, что с пирса видно дно на четыре метра, а к вечеру она становится теплее воздуха — и выходить из неё уже не хочется.','bodrum_sea'],
@@ -27,7 +27,7 @@ var RESORTS_DATA=[
    ['Вечер','Солнце садится прямо в море около восьми. Набережная просыпается: рыбные таверны выставляют столы к самой воде, где-то играют вживую, и до полуночи здесь гуляют семьями, а не толпой.','bodrum_eve'],
    ['Для кого','Тем, кому мало просто лежать: бухты для лодочных прогулок, дайвинг, живые вечера. С детьми лучше в Гюмбет или Битез — там пологий вход и спокойная вода без волны.','bodrum_who']
   ]},
- {k:'antalya',n:'Анталия',acc:'Анталию',c:'Турция · Средиземноморье',
+ {k:'antalya',n:'Анталия',acc:'Анталию',prep:'Анталии',c:'Турция · Средиземноморье',
   chips:['Море 28°','До аэропорта 20 км','Пляж песчаный'],
   tabs:[
    ['Море','Средиземное дольше всех держит тепло: 28 градусов в сентябре и 25 даже в конце октября. Лара и Коньяалты — это километры песка, а с воды видны заснеженные вершины Таврских гор.','antalya_sea'],
@@ -35,7 +35,7 @@ var RESORTS_DATA=[
    ['Вечер','Здесь вечер длинный и тёплый. Отели зажигают подсветку, на набережной работают чайные, а с холма над старым портом видно, как огни бухты уходят к горизонту.','antalya_eve'],
    ['Для кого','Классика «всё включено» для семей: большие отели, аквапарки, анимация, короткий трансфер из аэропорта. Тем, кто едет впервые, лучше начинать отсюда.','antalya_who']
   ]},
- {k:'sharm',n:'Шарм-эль-Шейх',acc:'Шарм-эль-Шейх',c:'Египет · Красное море',
+ {k:'sharm',n:'Шарм-эль-Шейх',acc:'Шарм-эль-Шейх',prep:'Шарм-эль-Шейхе',c:'Египет · Красное море',
   chips:['Море 28°','До аэропорта 18 км','Коралловый риф'],
   tabs:[
    ['Море','Красное море держит 28 градусов даже в декабре. Коралловый риф начинается в двадцати метрах от берега: маска и трубка — и вы среди рыб-бабочек, без всякого сертификата и без лодки.','sharm_sea'],
@@ -43,7 +43,7 @@ var RESORTS_DATA=[
    ['Вечер','После заката жара уходит мгновенно, и становится тем самым тёплым вечером, ради которого сюда едут зимой. Небо над пустыней без городской засветки — Млечный Путь видно невооружённым глазом.','sharm_eve'],
    ['Для кого','Тем, кто хочет к морю не летом: с ноября по март это единственное по-настоящему тёплое море в пределах прямого рейса. И тем, кто влюбляется в снорклинг с первого раза.','sharm_who']
   ]},
- {k:'hainan',n:'Хайнань',acc:'Хайнань',c:'Китай · тропический остров',
+ {k:'hainan',n:'Хайнань',acc:'Хайнань',prep:'Хайнане',c:'Китай · тропический остров',
   chips:['Море 29°','До аэропорта 30 км','Пляж белый песок'],
   tabs:[
    ['Море','Южно-Китайское море в бухте Ялунвань — 29 градусов и вода цвета бутылочного стекла. Полоса белого песка тянется на семь километров, и даже в сезон на ней есть куда уйти от людей.','hainan_sea'],
@@ -51,7 +51,7 @@ var RESORTS_DATA=[
    ['Вечер','Вечером остров пахнет франжипани и уличной едой. Набережная Дадунхай светится неоном, а через дорогу — тихие переулки с чайными, где никто никуда не спешит.','hainan_eve'],
    ['Для кого','Тем, кто уже был в Турции и Египте и хочет по-настоящему далеко. Тропики, другая культура, другая еда — и при этом отель, трансфер и виза одним пакетом.','hainan_who']
   ]},
- {k:'avatar',n:'Горы Аватара',acc:'Горы Аватара',c:'Китай · экскурсионный тур',
+ {k:'avatar',n:'Горы Аватара',acc:'Горы Аватара',prep:'Горах Аватара',c:'Китай · экскурсионный тур',
   chips:['11 дней','Русский гид','Группа до 20 человек'],
   tabs:[
    ['Горы','Чжанцзяцзе — тысячи каменных столбов, вырастающих из тумана. Именно отсюда взяты парящие скалы «Аватара». Со стеклянной смотровой площадки видно, как облака идут ниже ваших ног.','avatar_mtn'],
@@ -68,7 +68,6 @@ function curDir(){ var c=DATA[curCity], k=RESORTS[curResort].k;
   for(var i=0;i<c.dirs.length;i++) if(c.dirs[i].art===k) return c.dirs[i];
   return null; }
 function resortByKey(k){ for(var i=0;i<RESORTS.length;i++) if(RESORTS[i].k===k) return i; return 0; }
-function money(v){ return v+' ₽'; }
 
 /* --- step 1: destination cards --- */
 function dealCard(d,i){
@@ -135,7 +134,8 @@ function openResort(key,silent){
     if(IZI.ctx.resorts.indexOf(r.n)<0) IZI.ctx.resorts.push(r.n);
     iziStep('dest'); track('destination','Открыл направление',r.n); leadCtxRender();
   }
-  renderTabs(); renderCal(); setRoute(curRoute);
+  pickedDate=null; renderTabs(); renderCal(); setRoute(curRoute); renderStay();
+  var cm=document.getElementById('calMonth'); if(cm&&!cm.hidden) cmRender();
   if(!silent){ var el=document.getElementById('resort'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
 }
 function renderTabs(){
@@ -183,10 +183,11 @@ function renderCal(){
   var mb=document.getElementById('mbPrice'); if(mb){mb.textContent=sel[1]+' ₽';
     document.getElementById('mbSub').textContent=RESORTS[curResort].n+' · за двоих';}
 }
-function setDate(i){ curDate=i; renderCal();
+function setDate(i){ curDate=i; pickedDate=null; renderCal();
   if(window.IZI){ var _d=DATA[curCity].cals[i];
     IZI.ctx.date=_d[0]; IZI.ctx.price=_d[1]+' ₽'; IZI.ctx.calendarUsed=true;
-    iziStep('date'); track('date','Выбрал дату',_d[0]+' · '+_d[1]+' ₽'); leadCtxRender(); }
+    iziStep('date'); track('date','Выбрал дату',_d[0]+' · '+_d[1]+' ₽'); leadCtxRender(); renderStay();
+    var cm2=document.getElementById('calMonth'); if(cm2&&!cm2.hidden) cmRender(); }
 }
 
 /* --- step 3: route --- */
@@ -518,11 +519,282 @@ function buildMark(host){
   host.innerHTML=h;
 }
 
+
+/* ---------- отели: данные ---------- */
+/* k — коэффициент к цене направления на выбранную дату, поэтому цены живые */
+var STAY={
+ bodrum:[
+  {id:'b1',n:'Aegea Bay Resort',s:5,meal:'всё включено',line:1,dist:50,r:4.7,rn:412,k:1.24,kids:true,
+   img:'h_pool',gal:['h_pool','h_room','h_beach','h_dine'],
+   about:'Большой курортный комплекс на первой линии в бухте Гюмбет. Три бассейна, свой песчано-галечный пляж с пирсом, вечерние программы у воды.',
+   near:[['🏖','Свой пляж, 50 м'],['✈','Аэропорт 35 км'],['🏛','Старый город 6 км'],['🛒','Магазины через дорогу']],
+   rooms:[['Стандарт с видом на сад','2 взрослых · 24 м²',1.0],['Стандарт с видом на море','2 взрослых · 26 м²',1.12],['Семейный номер','2+2 · 38 м²',1.34]]},
+  {id:'b2',n:'Palmira Coast Club',s:4,meal:'полупансион',line:1,dist:80,r:4.4,rn:286,k:1.0,kids:true,
+   img:'h_beach',gal:['h_beach','h_pool','h_room','h_lobby'],
+   about:'Камерный клубный отель на склоне с террасами к морю. Тихий, зелёный, с прямым спуском к воде по лестнице.',
+   near:[['🏖','Пляж 80 м'],['✈','Аэропорт 32 км'],['🍽','Таверны 200 м'],['🚌','Долмуш у ворот']],
+   rooms:[['Стандарт','2 взрослых · 22 м²',1.0],['Номер с террасой','2 взрослых · 28 м²',1.15]]},
+  {id:'b3',n:'Mandarin Cove Hotel',s:4,meal:'завтрак',line:2,dist:250,r:4.2,rn:174,k:0.84,kids:false,
+   img:'h_lobby',gal:['h_lobby','h_room','h_dine','h_beach'],
+   about:'Небольшой городской отель в десяти минутах от марины. Подходит тем, кто едет не лежать, а ходить, есть и смотреть.',
+   near:[['🏖','Пляж 250 м'],['⚓','Марина 900 м'],['🏛','Крепость 1,2 км'],['🌙','Ночная жизнь рядом']],
+   rooms:[['Стандарт','2 взрослых · 20 м²',1.0],['Люкс с балконом','2 взрослых · 30 м²',1.22]]},
+  {id:'b4',n:'Blue Cape Suites',s:5,meal:'всё включено',line:1,dist:0,r:4.8,rn:198,k:1.55,kids:false,
+   img:'h_dine',gal:['h_dine','h_pool','h_room','h_beach'],
+   about:'Взрослый отель на мысу: бассейн-инфинити над водой, ресторан на скале, никаких анимаций и детских клубов.',
+   near:[['🏖','Выход к морю с территории'],['✈','Аэропорт 38 км'],['🍷','Винный бар на террасе'],['🧘','Спа и хаммам']],
+   rooms:[['Делюкс с видом на море','2 взрослых · 32 м²',1.0],['Сюит с бассейном','2 взрослых · 46 м²',1.48]]}
+ ],
+ antalya:[
+  {id:'a1',n:'Lara Sunrise Resort',s:5,meal:'всё включено',line:1,dist:0,r:4.6,rn:1240,k:1.3,kids:true,
+   img:'h_aqua',gal:['h_aqua','h_pool','h_room','h_dine'],
+   about:'Классический большой «всё включено» на песчаном пляже Лары. Аквапарк с семью горками, детский клуб, анимация весь день.',
+   near:[['🏖','Песчаный пляж на территории'],['✈','Аэропорт 14 км'],['🎢','Аквапарк свой'],['🛍','ТЦ 3 км']],
+   rooms:[['Стандарт','2 взрослых · 26 м²',1.0],['Семейный','2+2 · 40 м²',1.3],['Свит с видом на море','2 взрослых · 44 м²',1.42]]},
+  {id:'a2',n:'Konyaalti Garden Hotel',s:4,meal:'полупансион',line:1,dist:120,r:4.3,rn:530,k:0.96,kids:true,
+   img:'h_pool',gal:['h_pool','h_beach','h_room','h_lobby'],
+   about:'Отель на Коньяалты с видом на Таврские горы. Просторный сад, два бассейна, до галечного пляжа — через набережную.',
+   near:[['🏖','Пляж 120 м'],['🏔','Вид на горы'],['✈','Аэропорт 18 км'],['🚋','Трамвай 300 м']],
+   rooms:[['Стандарт','2 взрослых · 24 м²',1.0],['Номер с видом на горы','2 взрослых · 26 м²',1.1]]},
+  {id:'a3',n:'Kaleici Old Town House',s:4,meal:'завтрак',line:2,dist:400,r:4.5,rn:207,k:0.88,kids:false,
+   img:'h_lobby',gal:['h_lobby','h_room','h_dine','h_beach'],
+   about:'Отреставрированный османский дом в старом городе: двенадцать номеров, апельсиновый двор, завтрак под деревьями.',
+   near:[['🏛','Ворота Адриана 300 м'],['⚓','Старый порт 400 м'],['🌊','Водопад Дюден 8 км'],['🍽','Рестораны вокруг']],
+   rooms:[['Двухместный','2 взрослых · 18 м²',1.0],['Номер во дворе','2 взрослых · 24 м²',1.18]]},
+  {id:'a4',n:'Belek Pines Resort',s:5,meal:'всё включено',line:1,dist:60,r:4.7,rn:880,k:1.46,kids:true,
+   img:'h_beach',gal:['h_beach','h_aqua','h_pool','h_dine'],
+   about:'В сосновом лесу под Белеком. Собственный участок пляжа, поле для гольфа рядом, тихо и просторно даже в сезон.',
+   near:[['🏖','Пляж 60 м, сосны'],['⛳','Гольф-поля 2 км'],['✈','Аэропорт 32 км'],['👶','Детский клуб']],
+   rooms:[['Стандарт в парке','2 взрослых · 28 м²',1.0],['Семейный дуплекс','2+2 · 52 м²',1.36]]}
+ ],
+ sharm:[
+  {id:'s1',n:'Naama Reef Resort',s:5,meal:'всё включено',line:1,dist:0,r:4.6,rn:940,k:1.22,kids:true,
+   img:'h_pool',gal:['h_pool','h_beach','h_room','h_dine'],
+   about:'Свой понтон над рифом — маска и трубка в двадцати метрах от лежака. Три бассейна, дайв-центр на территории.',
+   near:[['🐠','Риф у понтона'],['🤿','Дайв-центр свой'],['✈','Аэропорт 12 км'],['🌃','Наама-Бей 1,5 км']],
+   rooms:[['Стандарт','2 взрослых · 26 м²',1.0],['Номер с видом на море','2 взрослых · 28 м²',1.14],['Семейный','2+2 · 42 м²',1.32]]},
+  {id:'s2',n:'Sinai Bay Village',s:4,meal:'всё включено',line:1,dist:100,r:4.3,rn:612,k:0.98,kids:true,
+   img:'h_aqua',gal:['h_aqua','h_pool','h_room','h_lobby'],
+   about:'Отель-деревня на склоне: домики по две-три единицы, лифт к пляжу, аквапарк с шестью горками.',
+   near:[['🏖','Пляж 100 м, лифт'],['🎢','Аквапарк свой'],['👶','Мини-клуб'],['✈','Аэропорт 18 км']],
+   rooms:[['Стандарт','2 взрослых · 24 м²',1.0],['Семейный','2+2 · 36 м²',1.28]]},
+  {id:'s3',n:'Desert Pearl Boutique',s:4,meal:'завтрак',line:2,dist:350,r:4.4,rn:188,k:0.86,kids:false,
+   img:'h_lobby',gal:['h_lobby','h_room','h_dine','h_beach'],
+   about:'Небольшой отель в тихом районе, для тех, кто едет нырять и ездить в пустыню, а не сидеть на территории.',
+   near:[['🏖','Пляж 350 м'],['🏜','Экскурсии в Синай'],['🤿','Дайв-школы рядом'],['🍽','Кафе 200 м']],
+   rooms:[['Стандарт','2 взрослых · 22 м²',1.0],['Номер с террасой','2 взрослых · 30 м²',1.2]]}
+ ],
+ hainan:[
+  {id:'x1',n:'Yalong Pearl Resort',s:5,meal:'завтрак',line:1,dist:0,r:4.7,rn:326,k:1.28,kids:true,
+   img:'h_beach',gal:['h_beach','h_pool','h_room','h_dine'],
+   about:'На первой линии бухты Ялунвань — семь километров белого песка. Тропический сад, бассейн-лагуна, спа.',
+   near:[['🏖','Белый песок на территории'],['🌴','Сад 4 га'],['✈','Аэропорт 28 км'],['🛕','Парк Наньшань 40 км']],
+   rooms:[['Номер в саду','2 взрослых · 32 м²',1.0],['Номер с видом на море','2 взрослых · 36 м²',1.18]]},
+  {id:'x2',n:'Dadonghai Bay Hotel',s:4,meal:'завтрак',line:1,dist:150,r:4.4,rn:241,k:0.94,kids:false,
+   img:'h_lobby',gal:['h_lobby','h_room','h_dine','h_beach'],
+   about:'В шаге от набережной Дадунхай: вечерний неон, рынки с фруктами и морепродуктами прямо за отелем.',
+   near:[['🏖','Пляж 150 м'],['🌃','Набережная рядом'],['🍜','Ночной рынок 400 м'],['✈','Аэропорт 22 км']],
+   rooms:[['Стандарт','2 взрослых · 26 м²',1.0],['Номер с видом на бухту','2 взрослых · 30 м²',1.16]]},
+  {id:'x3',n:'Sanya Palm Grand',s:5,meal:'полупансион',line:2,dist:300,r:4.6,rn:158,k:1.12,kids:true,
+   img:'h_pool',gal:['h_pool','h_aqua','h_room','h_dine'],
+   about:'Городской курортный отель с большим бассейном и детской зоной. До пляжа — бесплатный шаттл каждые полчаса.',
+   near:[['🚌','Шаттл до пляжа'],['👶','Детская зона'],['🛍','Молл 800 м'],['✈','Аэропорт 18 км']],
+   rooms:[['Стандарт','2 взрослых · 28 м²',1.0],['Семейный','2+2 · 44 м²',1.3]]}
+ ]
+};
+
+var HF={stars:[],meal:[],line1:false,kids:false,sort:'price'};
+var favs=[];
+
+function curPriceNum(){
+  var t=(IZI.ctx.price||'').replace(/[^0-9]/g,'');
+  return t? parseInt(t,10) : 130000;
+}
+function hotelPrice(h){ return Math.round(curPriceNum()*h.k/500)*500; }
+function money(n){ return n.toLocaleString('ru-RU')+' ₽'; }
+function hotelImg(h,key){
+  var k=key||h.img;
+  return (IMAGES[k]) ? IMAGES[k] : (IMAGES[RESORTS[curResort].k]||'');
+}
+function stayList(){
+  var key=RESORTS[curResort].k, list=(STAY[key]||[]).slice();
+  list=list.filter(function(h){
+    if(HF.stars.length && HF.stars.indexOf(h.s)<0) return false;
+    if(HF.meal.length && HF.meal.indexOf(h.meal)<0) return false;
+    if(HF.line1 && h.line!==1) return false;
+    if(HF.kids && !h.kids) return false;
+    return true;
+  });
+  list.sort(function(a,b){
+    if(HF.sort==='price') return hotelPrice(a)-hotelPrice(b);
+    if(HF.sort==='rate') return b.r-a.r;
+    return a.dist-b.dist;
+  });
+  return list;
+}
+function hfToggle(kind,val){
+  if(kind==='stars'||kind==='meal'){
+    var arr=HF[kind], i=arr.indexOf(val);
+    if(i<0) arr.push(val); else arr.splice(i,1);
+  } else if(kind==='sort'){ HF.sort=val; }
+  else { HF[kind]=!HF[kind]; }
+  track('hotel_filter','Фильтр отелей', kind+': '+(kind==='sort'?val:JSON.stringify(HF[kind])));
+  renderStay();
+}
+function hfReset(){ HF={stars:[],meal:[],line1:false,kids:false,sort:HF.sort}; track('hotel_filter','Сбросил фильтры'); renderStay(); }
+function favToggle(id,ev){
+  if(ev) ev.stopPropagation();
+  var i=favs.indexOf(id);
+  if(i<0){ favs.push(id); track('fav_add','Добавил в избранное',id); }
+  else { favs.splice(i,1); track('fav_del','Убрал из избранного',id); }
+  renderStay();
+}
+
+function renderStay(){
+  var g=document.getElementById('hGrid'); if(!g) return;
+  var r=RESORTS[curResort], all=(STAY[r.k]||[]), list=stayList();
+  var sec=document.getElementById('stay');
+  var exc=!!(curDir()&&curDir().excursion);
+  if(sec) sec.style.display = (exc||!all.length)? 'none' : '';
+  if(exc||!all.length) return;
+
+  document.getElementById('stayCity').textContent=(r.prep||r.n);
+  document.getElementById('stayLede').textContent='Отели с местами на '+(IZI.ctx.date||'ближайшую дату')+
+    '. Цена — за двоих, за всю поездку: перелёт, трансфер, проживание и страховка.';
+
+  var F=document.getElementById('hFilters');
+  var mk=function(kind,val,label){
+    var on = kind==='sort'? HF.sort===val : (kind==='stars'||kind==='meal'? HF[kind].indexOf(val)>=0 : HF[kind]);
+    return '<button type="button" aria-pressed="'+on+'" onclick="hfToggle(\''+kind+'\','+(typeof val==='number'?val:'\''+val+'\'')+')">'+label+'</button>';
+  };
+  F.innerHTML=
+    '<div class="hfg"><em>Звёзды</em>'+[3,4,5].map(function(x){return mk('stars',x,x+'★');}).join('')+'</div>'+
+    '<div class="hfg"><em>Питание</em>'+mk('meal','завтрак','Завтрак')+mk('meal','полупансион','Полупансион')+mk('meal','всё включено','Всё включено')+'</div>'+
+    '<div class="hfg">'+mk('line1',1,'1-я линия')+mk('kids',1,'Для детей')+'</div>'+
+    ((HF.stars.length||HF.meal.length||HF.line1||HF.kids)? '<button class="hreset" type="button" onclick="hfReset()">Сбросить</button>':'');
+
+  document.getElementById('hSort').innerHTML='<em>Сортировка</em>'+
+    mk('sort','price','Сначала дешевле')+mk('sort','rate','По рейтингу')+mk('sort','dist','Ближе к морю');
+
+  document.getElementById('hCount').innerHTML= list.length
+    ? 'Нашли <b>'+list.length+'</b> из '+all.length+' отелей'
+    : 'По этим условиям ничего нет';
+
+  if(!list.length){
+    g.innerHTML='<div class="hempty"><b>Под такие условия отелей нет</b>Попробуйте снять один из фильтров — например, «1-я линия».<br><button class="hreset" type="button" onclick="hfReset()">Сбросить фильтры</button></div>';
+    return;
+  }
+  g.innerHTML=list.map(function(h){
+    return '<article class="hcard" onclick="hpOpen(\''+h.id+'\')">'+
+      '<div class="hc-art"><img loading="lazy" decoding="async" alt="'+esc(h.n)+'" src="'+hotelImg(h)+'">'+
+        (h.line===1? '<span class="hc-line">1-я линия</span>':'')+
+        '<button class="hc-fav'+(favs.indexOf(h.id)>=0?' on':'')+'" type="button" title="В избранное" onclick="favToggle(\''+h.id+'\',event)">'+(favs.indexOf(h.id)>=0?'★':'☆')+'</button>'+
+        '<span class="hc-rate"><b>'+h.r.toString().replace('.',',')+'</b> · '+h.rn+' отзывов</span>'+
+      '</div>'+
+      '<div class="hc-b">'+
+        '<div><span class="hc-stars">'+'★'.repeat(h.s)+'</span><h3 class="hc-n">'+esc(h.n)+'</h3></div>'+
+        '<p class="hc-loc">'+(h.dist? h.dist+' м до моря':'Выход к морю с территории')+' · '+h.meal+'</p>'+
+        '<div class="hc-tags">'+(h.kids?'<span class="hc-tag">Для детей</span>':'')+
+          '<span class="hc-tag">'+(h.line===1?'1-я линия':'2-я линия')+'</span>'+
+          '<span class="hc-tag">'+h.s+' звезды</span></div>'+
+        '<div class="hc-f"><div><div class="hc-p num">'+money(hotelPrice(h))+'</div>'+
+          '<div class="hc-pn">за двоих · бронь от 3 000 ₽</div></div>'+
+          '<button class="hc-more" type="button" onclick="hpOpen(\''+h.id+'\');event.stopPropagation()">Подробнее</button></div>'+
+      '</div></article>';
+  }).join('');
+}
+
+/* ---------- карточка отеля ---------- */
+var HPcur=null;
+function hpFind(id){ for(var k in STAY){ for(var i=0;i<STAY[k].length;i++) if(STAY[k][i].id===id) return STAY[k][i]; } return null; }
+function hpOpen(id){
+  var h=hpFind(id); if(!h) return;
+  HPcur=h; document.getElementById('hpWrap').hidden=false; document.body.style.overflow='hidden';
+  iziStep('detail'); if(IZI.ctx.hotels.indexOf(h.n)<0) IZI.ctx.hotels.push(h.n);
+  track('hotel_view','Открыл отель',h.n);
+  hpRender(h.gal[0]);
+}
+function hpClose(){ document.getElementById('hpWrap').hidden=true; document.body.style.overflow=''; }
+function hpRender(main){
+  var h=HPcur; if(!h) return;
+  var b=document.getElementById('hpBody');
+  b.innerHTML=
+    '<p class="bk-eyebrow">'+'★'.repeat(h.s)+' · '+(h.line===1?'1-я линия':'2-я линия')+' · '+h.meal+'</p>'+
+    '<h3 class="bk-h">'+esc(h.n)+'</h3>'+
+    '<div class="hp-gal"><img class="hp-main" alt="'+esc(h.n)+'" src="'+hotelImg(h,main)+'">'+
+      '<div class="hp-side">'+h.gal.slice(1,3).map(function(k){
+        return '<img alt="" src="'+hotelImg(h,k)+'" onclick="hpRender(\''+k+'\')">';}).join('')+'</div></div>'+
+    '<p class="bk-p">'+esc(h.about)+'</p>'+
+    '<div class="hp-meta"><span class="hc-tag">Рейтинг '+h.r.toString().replace('.',',')+' · '+h.rn+' отзывов</span>'+
+      '<span class="hc-tag">'+(h.dist? h.dist+' м до моря':'Выход к морю')+'</span>'+
+      (h.kids?'<span class="hc-tag">Для детей</span>':'<span class="hc-tag">Для взрослых</span>')+'</div>'+
+    '<p class="crmp-t" style="color:#7F9CB2">Что рядом</p>'+
+    '<div class="hp-near">'+h.near.map(function(n){return '<div><i>'+n[0]+'</i>'+esc(n[1])+'</div>';}).join('')+'</div>'+
+    '<p class="crmp-t" style="color:#7F9CB2">Номера</p>'+
+    '<div class="hp-rooms">'+h.rooms.map(function(r){
+      return '<div class="hp-room"><div><b>'+esc(r[0])+'</b><br><span>'+esc(r[1])+'</span></div>'+
+             '<em>'+money(Math.round(hotelPrice(h)*r[2]/500)*500)+'</em></div>';}).join('')+'</div>'+
+    '<div class="bk-sum" style="margin-top:18px"><div class="bk-sr tot"><span>За двоих, всё включая перелёт</span><b>'+money(hotelPrice(h))+'</b></div></div>'+
+    '<div class="bk-act">'+
+      '<button class="bk-ghost" type="button" onclick="favToggle(\''+h.id+'\');hpRender(\''+main+'\')">'+(favs.indexOf(h.id)>=0?'★ В избранном':'☆ В избранное')+'</button>'+
+      '<button class="btn btn-ember btn-l" type="button" onclick="hpClose();bkOpen(\'hotel\',\''+h.id+'\')">Забронировать за 3 000 ₽</button></div>'+
+    '<p class="bk-note">Отель, фотографии и состав номеров — демонстрационные. В рабочей версии подставляются из системы бронирования.</p>';
+}
+
+/* ---------- календарь цен на месяц ---------- */
+var WD=['вс','пн','вт','ср','чт','пт','сб'], MON=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+var pickedDate=null;
+function depDays(){
+  var d=curDir(); if(!d) return [2,6];
+  var m={'вс':0,'пн':1,'вт':2,'ср':3,'чт':4,'пт':5,'сб':6}, out=[];
+  (d.meta[0]||'').split('·').forEach(function(x){ var k=x.trim().toLowerCase(); if(m[k]!==undefined) out.push(m[k]); });
+  return out.length? out : [2,6];
+}
+function cmPrice(day){ var base=curPriceNum(); return Math.round(base*(0.84+((day*37)%27)/100)/500)*500; }
+function cmToggle(){
+  var el=document.getElementById('calMonth');
+  el.hidden=!el.hidden;
+  document.getElementById('calMore').textContent=el.hidden?'Календарь цен на месяц':'Свернуть календарь';
+  if(!el.hidden){ track('cal_month','Открыл календарь на месяц'); cmRender(); }
+}
+function cmRender(){
+  var Y=2026,M=8; /* сентябрь */
+  var first=new Date(Y,M,1), days=new Date(Y,M+1,0).getDate(), dd=depDays();
+  var cells='', shift=(first.getDay()+6)%7;
+  var prices=[]; for(var d=1;d<=days;d++) if(dd.indexOf(new Date(Y,M,d).getDay())>=0) prices.push(cmPrice(d));
+  var min=Math.min.apply(null,prices);
+  cells+=['пн','вт','ср','чт','пт','сб','вс'].map(function(w){return '<div class="cm-wd">'+w+'</div>';}).join('');
+  for(var i=0;i<shift;i++) cells+='<div></div>';
+  for(var d=1;d<=days;d++){
+    var dt=new Date(Y,M,d), isDep=dd.indexOf(dt.getDay())>=0;
+    if(!isDep){ cells+='<div class="cm-d off"><span class="d">'+d+'</span></div>'; continue; }
+    var p=cmPrice(d), lbl=WD[dt.getDay()]+', '+d+' сен';
+    var sel=(pickedDate&&pickedDate.label===lbl);
+    cells+='<div class="cm-d'+(sel?' sel':'')+(p===min?' best':'')+'" onclick="cmPick('+d+')" title="'+lbl+'">'+
+      '<span class="d">'+d+'</span><span class="p">'+Math.round(p/1000)+'т</span></div>';
+  }
+  document.getElementById('cmGrid').innerHTML=cells;
+  document.getElementById('cmSub').textContent='Вылеты по расписанию: '+(curDir()? curDir().meta[0]:'—');
+  document.getElementById('cmNote').textContent='Цены за двоих на семь ночей, ориентировочные. Серым — дни без вылета по этому направлению. Зелёным — самый дешёвый вылет месяца.';
+}
+function cmPick(d){
+  var dt=new Date(2026,8,d), lbl=WD[dt.getDay()]+', '+d+' сен', p=cmPrice(d);
+  pickedDate={label:lbl,price:p};
+  IZI.ctx.date=lbl; IZI.ctx.price=p.toLocaleString('ru-RU')+' ₽'; IZI.ctx.calendarUsed=true;
+  iziStep('date'); track('date','Выбрал дату в календаре месяца',lbl+' · '+p);
+  document.getElementById('calPick').textContent=lbl+' · '+p.toLocaleString('ru-RU')+' ₽';
+  document.getElementById('rPrice').textContent=p.toLocaleString('ru-RU')+' ₽';
+  document.getElementById('ssWhen').textContent=d+' сен';
+  var mb=document.getElementById('mbPrice'); if(mb) mb.textContent=p.toLocaleString('ru-RU')+' ₽';
+  document.querySelectorAll('#cal .day').forEach(function(b){b.classList.remove('sel')});
+  cmRender(); renderStay(); leadCtxRender();
+}
+
 /* ---------- сбор данных: событийный слой и профиль лида ---------- */
 var IZI={
   sid:'', started:Date.now(), events:[], maxScroll:0,
   src:{}, ctx:{from:'',fromName:'',to:'',toName:'',date:'',price:'',pax:'2 взрослых',
-       resorts:[], tabs:[], seatmap:0, planes:[], compared:false, calendarUsed:false},
+       resorts:[], tabs:[], seatmap:0, planes:[], compared:false, calendarUsed:false, hotels:[]},
   steps:{visit:0,city:0,dest:0,detail:0,date:0,intent:0,book:0,lead:0},
   lead:{type:'',adults:2,kids:0,deposit:0,email:''}
 };
@@ -570,7 +842,8 @@ function iziPacket(){
     },
     choice:{
       from:IZI.ctx.fromName, to:IZI.ctx.toName, date:IZI.ctx.date,
-      price:IZI.ctx.price, pax:IZI.ctx.pax
+      price:IZI.ctx.price, pax:IZI.ctx.pax,
+      hotel: (typeof BK!=='undefined'&&BK.hotel)? BK.hotel.n+' '+BK.hotel.s+'*, '+BK.hotel.meal : ''
     },
     behaviour:{
       resortsViewed:IZI.ctx.resorts.slice(),
@@ -578,6 +851,8 @@ function iziPacket(){
       seatmapOpened:IZI.ctx.seatmap,
       planesViewed:IZI.ctx.planes.slice(),
       routeCompared:IZI.ctx.compared,
+      favourites:(typeof favs!=='undefined'? favs.slice():[]),
+      hotelsViewed:IZI.ctx.hotels? IZI.ctx.hotels.slice():[],
       calendarUsed:IZI.ctx.calendarUsed,
       secondsOnSite:Math.round((Date.now()-IZI.started)/1000),
       scrollDepth:IZI.maxScroll+'%',
@@ -591,7 +866,7 @@ function iziPacket(){
 
 
 /* ---------- бронирование за 3 000 ₽ ---------- */
-var BK={step:0, adults:2, kids:0, done:false, src:'', name:'', phone:'', email:''};
+var BK={step:0, adults:2, kids:0, done:false, src:'', name:'', phone:'', email:'', hotel:null};
 var BK_DEPOSIT=3000;
 
 function bkIsGroup(){ var d=(typeof curDir==='function')?curDir():null; return !!(d&&d.excursion); }
@@ -600,8 +875,10 @@ function bkPriceLine(){
   if(BK.adults===2 && BK.kids===0) return d.price||'уточняется';
   return 'пересчитается при подтверждении';
 }
-function bkOpen(src){
+function bkOpen(src,hotelId){
   BK.step=1; BK.done=false; BK.src=src||'';
+  BK.hotel = hotelId? hpFind(hotelId) : null;
+  if(BK.hotel) track('hotel_pick','Выбрал отель для брони',BK.hotel.n);
   var w=document.getElementById('bkWrap'); w.hidden=false;
   document.body.style.overflow='hidden';
   iziStep('intent'); iziStep('book');
@@ -669,7 +946,9 @@ function bkRender(){
         '<div class="bk-sr"><span>Откуда</span><b>'+esc(d.fromName||'—')+'</b></div>'+
         '<div class="bk-sr"><span>Куда</span><b>'+esc(d.toName||'не выбрано')+'</b></div>'+
         '<div class="bk-sr"><span>'+(grp?'Вылет группы':'Дата вылета')+'</span><b>'+esc(d.date||'не выбрана')+'</b></div>'+
-        '<div class="bk-sr"><span>Стоимость тура</span><b>'+esc(bkPriceLine())+'</b></div>'+
+        (BK.hotel? '<div class="bk-sr"><span>Отель</span><b>'+esc(BK.hotel.n)+' '+'★'.repeat(BK.hotel.s)+'</b></div>'+
+                   '<div class="bk-sr"><span>Питание</span><b>'+esc(BK.hotel.meal)+'</b></div>' : '')+
+        '<div class="bk-sr"><span>Стоимость тура</span><b>'+(BK.hotel&&BK.adults===2&&!BK.kids? money(hotelPrice(BK.hotel)) : esc(bkPriceLine()))+'</b></div>'+
         '<div class="bk-sr tot"><span>К оплате сейчас</span><b>'+BK_DEPOSIT.toLocaleString('ru-RU')+' ₽</b></div>'+
       '</div>'+
       '<div class="bk-pax">'+
@@ -714,6 +993,7 @@ function bkRender(){
       '</div>'+
       '<div class="bk-sum" style="margin-top:18px">'+
         '<div class="bk-sr"><span>Направление</span><b>'+esc(d.toName||'—')+(d.date?' · '+esc(d.date):'')+'</b></div>'+
+        (BK.hotel? '<div class="bk-sr"><span>Отель</span><b>'+esc(BK.hotel.n)+'</b></div>':'')+
         '<div class="bk-sr"><span>Турист</span><b>'+esc(BK.name)+' · '+esc(BK.phone)+'</b></div>'+
         '<div class="bk-sr tot"><span>К оплате сейчас</span><b>'+BK_DEPOSIT.toLocaleString('ru-RU')+' ₽</b></div>'+
       '</div>'+
@@ -740,7 +1020,8 @@ function bkRender(){
   crmRender();
 }
 document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'){ var w=document.getElementById('bkWrap'); if(w&&!w.hidden) bkClose(); }
+  if(e.key==='Escape'){ var w=document.getElementById('bkWrap'); if(w&&!w.hidden) bkClose();
+    var h=document.getElementById('hpWrap'); if(h&&!h.hidden) hpClose(); }
 });
 
 /* ---------- демо-панель ---------- */
@@ -782,6 +1063,9 @@ function crmRender(){
     crmRow('Дата', d.date||'— не выбрана', d.date?'':'dim')+
     crmRow('Цена на экране', d.price||'—', d.price?'hi':'dim')+
     crmRow('Кто едет', IZI.lead.adults+' взр.'+(IZI.lead.kids?' + '+IZI.lead.kids+' реб.':''))+
+    (k.choice.hotel? crmRow('Отель','—'===k.choice.hotel?'—':k.choice.hotel,'hi'):'')+
+    (IZI.ctx.hotels&&IZI.ctx.hotels.length? crmRow('Смотрел отели', IZI.ctx.hotels.join(', '),'dim'):'')+
+    (typeof favs!=='undefined'&&favs.length? crmRow('В избранном', favs.length+' отел'+(favs.length===1?'ь':'я'),'hi'):'')+
     crmRow('Смотрел направлений', d.resorts.length? d.resorts.length+' ('+d.resorts.join(', ')+')' : '0','dim')+
     crmRow('Вкладки курорта', d.tabs.length? d.tabs.join(', ') : '—','dim')+
     crmRow('Схема салона', d.seatmap? 'открывал '+d.seatmap+' раз'+(d.seatmap>1?'а':'') : 'нет','dim')+
@@ -846,7 +1130,7 @@ function submitLead(e){
 setCity('mrv');
 buildSeatMap();
 document.querySelectorAll('.mark3d').forEach(buildMark);
-iziInit(); leadCtxRender();
+iziInit(); leadCtxRender(); renderStay();
 setRoute('direct');
 document.getElementById('hotels').innerHTML=HOTELS.map(hotelCard).join('');
 if(!reduce) animPlane();
