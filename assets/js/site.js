@@ -10,7 +10,6 @@ var IMAGES={route:'assets/img/route.webp',ac777:'assets/img/ac777.webp',ac321:'a
    IMAGES     картинки: ключ = имя файла в assets/img
    RESORTS_DATA курорты и тексты вкладок
    DATA       города вылета, направления, цены, календарь
-   HOTELS     карточки отелей на демо-странице выдачи
    STAY       отели по курортам (kf:true — детское место бесплатно)
    FLEET      компоновки салонов
    ROUTES     геометрия маршрута
@@ -25,7 +24,7 @@ var IMAGES={route:'assets/img/route.webp',ac777:'assets/img/ac777.webp',ac321:'a
    ========================================================== */
 /* ---------- resorts ---------- */
 var RESORTS_DATA=[
- {k:'bodrum',n:'Бодрум',acc:'Бодрум',prep:'Бодруме',c:'Турция · Эгейское побережье',
+ {k:'bodrum',n:'Бодрум',acc:'Бодрум',prep:'Бодруме',gen:'Бодрума',c:'Турция · Эгейское побережье',
   chips:['Море 27°','До аэропорта 35 км','Пляж песчано-галечный'],
   tabs:[
    ['Море','Эгейское море держит 26–27 градусов до конца сентября. Вода прозрачная настолько, что с пирса видно дно на четыре метра, а к вечеру она становится теплее воздуха — и выходить из неё уже не хочется.','bodrum_sea'],
@@ -33,7 +32,7 @@ var RESORTS_DATA=[
    ['Вечер','Солнце садится прямо в море около восьми. Набережная просыпается: рыбные таверны выставляют столы к самой воде, где-то играют вживую, и до полуночи здесь гуляют семьями, а не толпой.','bodrum_eve'],
    ['Для кого','Тем, кому мало просто лежать: бухты для лодочных прогулок, дайвинг, живые вечера. С детьми лучше в Гюмбет или Битез — там пологий вход и спокойная вода без волны.','bodrum_who']
   ]},
- {k:'antalya',n:'Анталия',acc:'Анталию',prep:'Анталии',c:'Турция · Средиземноморье',
+ {k:'antalya',n:'Анталия',acc:'Анталию',prep:'Анталии',gen:'Анталии',c:'Турция · Средиземноморье',
   chips:['Море 28°','До аэропорта 20 км','Пляж песчаный'],
   tabs:[
    ['Море','Средиземное дольше всех держит тепло: 28 градусов в сентябре и 25 даже в конце октября. Лара и Коньяалты — это километры песка, а с воды видны заснеженные вершины Таврских гор.','antalya_sea'],
@@ -41,7 +40,7 @@ var RESORTS_DATA=[
    ['Вечер','Здесь вечер длинный и тёплый. Отели зажигают подсветку, на набережной работают чайные, а с холма над старым портом видно, как огни бухты уходят к горизонту.','antalya_eve'],
    ['Для кого','Классика «всё включено» для семей: большие отели, аквапарки, анимация, короткий трансфер из аэропорта. Тем, кто едет впервые, лучше начинать отсюда.','antalya_who']
   ]},
- {k:'sharm',n:'Шарм-эль-Шейх',acc:'Шарм-эль-Шейх',prep:'Шарм-эль-Шейхе',c:'Египет · Красное море',
+ {k:'sharm',n:'Шарм-эль-Шейх',acc:'Шарм-эль-Шейх',prep:'Шарм-эль-Шейхе',gen:'Шарм-эль-Шейха',c:'Египет · Красное море',
   chips:['Море 28°','До аэропорта 18 км','Коралловый риф'],
   tabs:[
    ['Море','Красное море держит 28 градусов даже в декабре. Коралловый риф начинается в двадцати метрах от берега: маска и трубка — и вы среди рыб-бабочек, без всякого сертификата и без лодки.','sharm_sea'],
@@ -49,7 +48,7 @@ var RESORTS_DATA=[
    ['Вечер','После заката жара уходит мгновенно, и становится тем самым тёплым вечером, ради которого сюда едут зимой. Небо над пустыней без городской засветки — Млечный Путь видно невооружённым глазом.','sharm_eve'],
    ['Для кого','Тем, кто хочет к морю не летом: с ноября по март это единственное по-настоящему тёплое море в пределах прямого рейса. И тем, кто влюбляется в снорклинг с первого раза.','sharm_who']
   ]},
- {k:'hainan',n:'Хайнань',acc:'Хайнань',prep:'Хайнане',c:'Китай · тропический остров',
+ {k:'hainan',n:'Хайнань',acc:'Хайнань',prep:'Хайнане',gen:'Хайнаня',c:'Китай · тропический остров',
   chips:['Море 29°','До аэропорта 30 км','Пляж белый песок'],
   tabs:[
    ['Море','Южно-Китайское море в бухте Ялунвань — 29 градусов и вода цвета бутылочного стекла. Полоса белого песка тянется на семь километров, и даже в сезон на ней есть куда уйти от людей.','hainan_sea'],
@@ -57,7 +56,7 @@ var RESORTS_DATA=[
    ['Вечер','Вечером остров пахнет франжипани и уличной едой. Набережная Дадунхай светится неоном, а через дорогу — тихие переулки с чайными, где никто никуда не спешит.','hainan_eve'],
    ['Для кого','Тем, кто уже был в Турции и Египте и хочет по-настоящему далеко. Тропики, другая культура, другая еда — и при этом отель, трансфер и виза одним пакетом.','hainan_who']
   ]},
- {k:'avatar',n:'Горы Аватара',acc:'Горы Аватара',prep:'Горах Аватара',c:'Китай · экскурсионный тур',
+ {k:'avatar',n:'Горы Аватара',acc:'Горы Аватара',prep:'Горах Аватара',gen:'гор Аватара',c:'Китай · экскурсионный тур',
   chips:['11 дней','Русский гид','Группа до 20 человек'],
   tabs:[
    ['Горы','Чжанцзяцзе — тысячи каменных столбов, вырастающих из тумана. Именно отсюда взяты парящие скалы «Аватара». Со стеклянной смотровой площадки видно, как облака идут ниже ваших ног.','avatar_mtn'],
@@ -100,11 +99,6 @@ var DATA={
  ]}
 };
 
-var HOTELS=[
- {n:'Scala Nuova Beach Hotel',s:4,loc:'Кушадасы · 30 м до моря',d:'Реновация 2025, собственный песчано-галечный пляж, открытый бассейн.',art:'bodrum',r:'4,6',rn:'318',p:'158 243',meal:'всё включено',urg:'Последние 3 номера'},
- {n:'Bodrum Beach Resort',s:4,loc:'Гюмбет, Бодрум · 100 м до моря',d:'18 000 м² ухоженной территории, реновация 2024, кафе и магазины рядом.',art:'antalya',r:'4,4',rn:'512',p:'167 011',meal:'завтрак и ужин',urg:''},
- {n:'Siesta Beach Apart',s:3,loc:'Гюмбет, Бодрум · 250 м до моря',d:'Апарт-отель рядом с песчаным пляжем, до ворот Мундус около километра.',art:'hainan',r:'4,0',rn:'164',p:'139 693',meal:'без питания',urg:'Смотрят 12 человек'}
-];
 
 /* ---------- отели: данные ---------- */
 /* k — коэффициент к цене направления на выбранную дату, поэтому цены живые */
@@ -488,7 +482,7 @@ function openResort(key,silent){
     if(IZI.ctx.resorts.indexOf(r.n)<0) IZI.ctx.resorts.push(r.n);
     iziStep('dest'); track('destination','Открыл направление',r.n); leadCtxRender();
   }
-  pickedDate=null; renderTabs(); renderCal(); setRoute(curRoute); renderStay();
+  pickedDate=null; renderTabs(); renderCal(); setRoute(curRoute); renderStay(); lpLinkText();
   var cm=document.getElementById('calMonth'); if(cm&&!cm.hidden) cmRender();
   if(!silent){ var el=document.getElementById('resort'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); }
 }
@@ -676,16 +670,6 @@ function faqTog(i){
 }
 
 
-function hotelCard(h){
-  return '<article class="hotel"><div class="hotel-art"><img class="mini" loading="lazy" decoding="async" alt="" src="'+pic(h.art)+'"></div>'+
-   '<div><h3>'+h.n+' '+h.s+'* <span class="stars">'+'★'.repeat(h.s)+'</span></h3>'+
-   '<p class="loc">'+h.loc+'</p><p class="desc">'+h.d+'</p>'+
-   '<div class="chips" style="margin-top:12px"><span class="chip">Рейтинг '+h.r+' · '+h.rn+' отзывов</span><span class="chip">'+h.meal+'</span>'+
-   (h.urg?'<span class="chip left">'+h.urg+'</span>':'')+'</div></div>'+
-   '<div class="hotel-buy"><div><div class="price num">'+h.p+' ₽</div><div class="price-note">за двоих, 7 ночей</div></div>'+
-   '<button class="btn btn-ember btn-s" type="button">Забронировать</button>'+
-   '<div class="price-note">Бронь от 3 000 ₽</div></div></article>';
-}
 
 
 var smType='b777', smFilter=null;
@@ -959,7 +943,9 @@ function renderStay(){
     g.innerHTML='<div class="hempty"><b>Под такие условия отелей нет</b>Попробуйте снять один из фильтров — например, «1-я линия».<br><button class="hreset" type="button" onclick="hfReset()">Сбросить фильтры</button></div>';
     return;
   }
-  g.innerHTML=list.map(function(h){
+  g.innerHTML=list.map(hcardHtml).join('');
+}
+function hcardHtml(h){
     return '<article class="hcard" onclick="hpOpen(\''+h.id+'\')">'+
       '<div class="hc-art"><img loading="lazy" decoding="async" alt="'+esc(h.n)+'" src="'+hotelImg(h)+'">'+
         (h.line===1? '<span class="hc-line">1-я линия</span>':'')+
@@ -976,7 +962,6 @@ function renderStay(){
           '<div class="hc-pn">за двоих · или '+money(perMonth(hotelPrice(h)))+'/мес × 6</div></div>'+
           '<button class="hc-more" type="button" onclick="hpOpen(\''+h.id+'\');event.stopPropagation()">Подробнее</button></div>'+
       '</div></article>';
-  }).join('');
 }
 
 /* ---------- карточка отеля ---------- */
@@ -1818,6 +1803,76 @@ function refLink(){
   else toast('Ссылка готова — скопируйте её');
 }
 
+
+/* ---------- посадочная страница под запрос ---------- */
+/* Собирается из тех же данных, что и главная: город вылета, направление,
+   расписание, цена. Никакой отдельной копии текстов — иначе она устареет. */
+function lpCountry(){ var d=curDir(); return d? String(d.c).split(' · ')[0] : 'Турцию'; }
+function lpCountryVin(){
+  var c=lpCountry();
+  return {'Турция':'Турцию','Египет':'Египет','Китай':'Китай'}[c] || c;
+}
+function lpRender(){
+  var c=DATA[curCity], d=curDir(), r=RESORTS[curResort];
+  if(!d) return;
+  document.getElementById('lpCity').textContent='Из '+c.name;
+  document.getElementById('lpCountry').textContent=lpCountry();
+  document.getElementById('lpH1').innerHTML='Туры в '+esc(lpCountryVin())+' <em>из '+esc(c.name)+'</em>';
+  document.getElementById('lpLede').textContent=
+    (d.excursion
+      ? 'Авторский тур с фиксированной датой вылета '+d.depDate+' и русскоговорящим гидом на всём маршруте. '
+      : (/пересадк/i.test(d.meta[1])
+          ? 'Летим с пересадкой рейсами регулярных авиакомпаний. Вылеты по дням: '+d.meta[0]+'. '
+          : 'Прямой чартер Red Wings, '+d.meta[1]+' в воздухе — и вы в '+(r.prep||r.n)+'. Вылеты по дням: '+d.meta[0]+'. '))+
+    'Перелёт, трансфер, отель и страховка — одним заказом, бронь от 3 000 ₽.';
+
+  var gen=r.gen||r.n;
+  var facts = d.excursion
+    ? [['<b>'+esc(d.depDate)+'</b>','Дата вылета группы'],
+       ['<b class="num">'+esc(d.days)+'</b>','Длительность маршрута'],
+       ['<b class="num">от '+esc(d.p)+' ₽</b>','За двоих, всё включено']]
+    : [['<b class="num">'+esc(d.meta[1])+'</b>',(/пересадк/i.test(d.meta[1])? 'Перелёт до '+esc(gen) : 'В пути до '+esc(gen))],
+       ['<b>'+esc(d.meta[0])+'</b>','Дни вылета'],
+       ['<b class="num">от '+esc(d.p)+' ₽</b>','За двоих, '+esc(d.meta[2])]];
+  if(d.left) facts.push(['<b style="color:var(--warn)">'+esc(d.left.replace(/^Осталось\s*/,''))+'</b>',
+    'Осталось на '+esc(d.excursion? d.depDate : (IZI.ctx.date||'ближайший вылет'))]);
+  document.getElementById('lpFacts').innerHTML=facts.map(function(f){
+    return '<div class="lf">'+f[0]+'<span>'+f[1]+'</span></div>'; }).join('');
+
+  document.getElementById('lpHotelsH').innerHTML='Отели с местами <em>на '+esc(IZI.ctx.date||'ближайшую дату')+'</em>';
+  var list=stayList().slice(0,3);
+  document.getElementById('hotels').innerHTML = list.length
+    ? list.map(hcardHtml).join('')
+    : '<div class="hempty"><b>По этому направлению отели показываются в выдаче Tourvisor</b>В макете они заведены только для пляжных курортов.</div>';
+
+  var qa=[
+    [(d.excursion? 'Сколько длится маршрут?' : 'Сколько лететь из '+c.name+' до '+gen+'?'),
+     d.excursion? 'Маршрут занимает '+d.days+', вылет группы '+d.depDate+'. Перелёт с пересадкой, точное время стыковки — в программе тура.'
+       : (/пересадк/i.test(d.meta[1])
+           ? 'Это направление мы возим на рейсах регулярных авиакомпаний — перелёт '+d.meta[1]+'. Точное время стыковки зависит от даты и подтверждается при бронировании.'
+           : 'Прямой рейс Red Wings идёт '+d.meta[1]+'. Пересадок нет, багаж не перегружается — вы получаете его сразу в '+(r.prep||r.n)+'.')],
+    ['По каким дням вылеты?',
+     (d.excursion? 'Это разовая группа с фиксированной датой: '+d.depDate+'. Регулярной программы по этому маршруту нет.'
+        : 'Вылеты: '+d.meta[0]+'. Полное расписание сезона — на главной странице в разделе «Полётная программа».')],
+    ['Что входит в цену тура?',
+     'Перелёт в обе стороны, багаж 20 кг, групповой трансфер аэропорт — отель — аэропорт, проживание с выбранным питанием и медицинская страховка на весь срок поездки.'],
+    ['Можно ли забронировать сейчас, а доплатить позже?',
+     'Да. Бронь закрепляется взносом от 3 000 ₽, остаток вносится за 14 дней до вылета. Цена в рублях фиксируется в день бронирования и потом не меняется.'],
+    ['А если придётся отказаться от поездки?',
+     'При отказе более чем за 21 день до вылета возвращается вся уплаченная сумма за вычетом банковской комиссии. Ближе к дате действует шкала удержаний — она есть в договоре.']
+  ];
+  document.getElementById('lpFaq').innerHTML=qa.map(function(q,i){
+    return '<details'+(i===0?' open':'')+'><summary>'+esc(q[0])+'</summary><p>'+esc(q[1])+'</p></details>'; }).join('');
+}
+function lpLinkText(){
+  var el=document.getElementById('lpLink'); if(!el) return;
+  el.textContent='Все туры в '+lpCountryVin()+' из '+DATA[curCity].name+' — отдельной страницей →';
+}
+function lpOpen(){
+  track('landing','Открыл посадочную', lpCountry()+' из '+DATA[curCity].name);
+  lpRender(); show('lp');
+}
+
 /* ---------- boot ---------- */
 setCity('mrv');
 buildSeatMap();
@@ -1828,7 +1883,6 @@ mobCollapse('#program','Показать расписание вылетов');
 mobCollapse('#club','Показать программу для постоянных туристов');
 mobCollapse('.studio','Показать, как это собрано');
 setRoute('direct');
-document.getElementById('hotels').innerHTML=HOTELS.map(hotelCard).join('');
 if(!reduce) animPlane();
 function tilt3d(id,amt){
   var sc=document.getElementById(id);

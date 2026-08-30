@@ -46,7 +46,6 @@
     <button type="button" onclick="jump('#program')">Расписание</button>
     <button type="button" onclick="jump('#value')">Что входит</button>
     <button type="button" onclick="jump('#pay')">Оплата</button>
-    <button type="button" data-view="lp" onclick="show('lp')">Из Минвод</button>
   </nav>
   <div class="head-r">
     <a class="hd-cab" href="kabinet.html" title="Личный кабинет"><span aria-hidden="true">👤</span><b>Моя поездка</b></a>
@@ -127,6 +126,8 @@
     <div class="buds" id="buds" role="group" aria-label="Бюджет"></div>
     <div class="deals" id="deals"></div>
     <p class="incl-note" id="budNote" hidden></p>
+    <p class="lp-link"><a href="#" onclick="lpOpen();return false" id="lpLink">Все туры в Турцию из Минеральных Вод — отдельной страницей →</a>
+      <span>пример посадочной под поисковый запрос</span></p>
   </div>
 </section>
 
@@ -525,36 +526,26 @@
 
 <main id="view-lp" class="hidden">
   <div class="wrap lp">
-    <p class="crumbs"><a href="#" onclick="show('home');return false">Главная</a> → <a href="#" onclick="return false">Из Минеральных Вод</a> → Турция</p>
-    <h1>Туры в Турцию <em>из Минеральных Вод</em></h1>
-    <p class="lp-lede">Прямой чартер Red Wings, три часа в воздухе — и вы на Эгейском побережье. Вылеты по вторникам и субботам с мая по октябрь. Перелёт, трансфер, отель и страховка — одним заказом, бронь от 3 000 ₽.</p>
-    <div class="lp-facts">
-      <div class="lf"><b class="num">3 ч 15 мин</b><span>В пути до Бодрума</span></div>
-      <div class="lf"><b>Вт · Сб</b><span>Дни вылета</span></div>
-      <div class="lf"><b class="num">от 130 705 ₽</b><span>За двоих, 7 ночей</span></div>
-      <div class="lf"><b style="color:var(--warn)">14 мест</b><span>Осталось на 2 сентября</span></div>
-    </div>
+    <p class="crumbs"><a href="#" onclick="show('home');return false">Главная</a> → <span id="lpCity"></span> → <span id="lpCountry"></span></p>
+    <h1 id="lpH1"></h1>
+    <p class="lp-lede" id="lpLede"></p>
+    <div class="lp-facts" id="lpFacts"></div>
   </div>
   <section style="padding-block:48px">
     <div class="wrap">
       <div class="sec-head"><div>
         <p class="eyebrow">Подобрано на ближайший вылет</p>
-        <h2>Отели с местами <em>на 29 августа</em></h2>
+        <h2 id="lpHotelsH">Отели с местами</h2>
         <p>Выдача формируется модулем Tourvisor в реальном времени — здесь показан её вид в новой вёрстке.</p>
       </div></div>
-      <div class="hotels" id="hotels"></div>
+      <div class="hgrid" id="hotels"></div>
     </div>
   </section>
   <section style="padding-block:10px 76px">
     <div class="wrap">
       <div class="sec-head"><div><p class="eyebrow">Вопросы перед вылетом</p><h2>Что спрашивают <em>чаще всего</em></h2></div></div>
-      <div class="faq">
-        <details open><summary>Сколько лететь из Минеральных Вод до Бодрума?</summary><p>Прямой рейс Red Wings идёт 3 часа 15 минут. Пересадок нет, багаж не перегружается — вы получаете его сразу в Бодруме.</p></details>
-        <details><summary>По каким дням вылеты?</summary><p>Вторник и суббота с мая по октябрь. В высокий сезон, с июля по август, добавляется четверг.</p></details>
-        <details><summary>Что входит в цену тура?</summary><p>Перелёт в обе стороны, багаж 20 кг, групповой трансфер аэропорт — отель — аэропорт, проживание с выбранным питанием и медицинская страховка на весь срок поездки.</p></details>
-        <details><summary>Можно ли забронировать сейчас, а доплатить позже?</summary><p>Да. Бронь закрепляется взносом от 3 000 ₽, остаток вносится за 14 дней до вылета. Цена в рублях фиксируется в день бронирования и потом не меняется.</p></details>
-        <details><summary>А если придётся отказаться от поездки?</summary><p>При отказе более чем за 21 день до вылета возвращается вся уплаченная сумма за вычетом банковской комиссии. Ближе к дате действует шкала удержаний — она есть в договоре.</p></details>
-      </div>
+      <div class="faq" id="lpFaq"></div>
+      <p class="incl-note" style="margin-top:22px">Это пример посадочной страницы под поисковый запрос: она собирается из тех же данных, что и главная, и меняется вместе с выбранным городом и направлением. В рабочей версии таких страниц столько же, сколько пар «город вылета × страна», и у каждой свой адрес.</p>
     </div>
   </section>
 </main>

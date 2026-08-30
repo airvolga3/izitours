@@ -810,7 +810,6 @@ section[id],main[id]{scroll-margin-top:96px}
   .rt-sun{bottom:52%;height:46%;width:190%}
   .rt-cloud.c1{bottom:52%;height:8%}.rt-cloud.c2{bottom:49%;height:7%}.rt-cloud.c3{bottom:56%;height:5%}
 }
-}
 
 /* ---------- демо-панель сбора данных ---------- */
 .crmfab{position:fixed;left:20px;bottom:26px;z-index:76;display:inline-flex;align-items:center;gap:9px;
@@ -887,6 +886,10 @@ section[id],main[id]{scroll-margin-top:96px}
 .lead-ok .num{font-variant-numeric:tabular-nums;color:var(--gold);font-weight:700}
 
 /* ---------- бюджет ---------- */
+.lp-link{margin-top:18px;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.lp-link a{color:var(--azure);text-decoration:none;font:600 14.5px var(--ui)}
+.lp-link a:hover{text-decoration:underline}
+.lp-link span{font-size:12.5px;color:var(--text-3)}
 .buds{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 .bud{display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border-radius:100px;cursor:pointer;
   font:600 13px var(--ui);color:var(--text-2);background:var(--glass);border:1px solid var(--stroke);transition:.16s}
