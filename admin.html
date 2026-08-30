@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<title>Редактор сайта — IZI TOUR</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0A1B2C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+<link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+<div class="adm">
+<header class="adm-h">
+  <a class="pglogo" href="index.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 68.3"><path d="M27.71 0.00C25.33 -0.41 21.56 -0.07 20.24 0.00C18.93 0.07 20.33 0.25 19.80 0.39C19.28 0.53 18.07 0.55 17.07 0.83C16.07 1.11 15.02 1.44 13.80 2.05C12.59 2.66 11.11 3.46 9.76 4.49C8.40 5.51 6.81 6.90 5.66 8.20C4.50 9.49 3.56 10.98 2.83 12.24C2.10 13.50 1.67 14.50 1.27 15.76C0.86 17.02 0.60 19.07 0.39 19.80C0.18 20.54 0.07 19.00 0.00 20.20C-0.07 21.39 -0.07 25.78 0.00 26.98C0.07 28.17 0.19 26.59 0.39 27.37C0.59 28.15 0.68 29.88 1.22 31.66C1.76 33.44 2.69 35.94 3.61 38.05C4.53 40.15 4.89 41.21 6.73 44.29C8.57 47.37 12.15 53.00 14.63 56.54C17.12 60.07 20.15 63.71 21.66 65.51C23.16 67.32 23.15 67.17 23.66 67.37C24.17 67.56 23.25 68.42 24.73 66.68C26.21 64.94 29.92 60.59 32.54 56.93C35.15 53.26 38.54 47.89 40.44 44.68C42.34 41.47 43.04 39.67 43.95 37.66C44.86 35.64 45.30 34.74 45.90 32.59C46.50 30.43 47.35 26.89 47.56 24.73C47.77 22.57 47.51 21.37 47.17 19.61C46.83 17.85 45.98 15.49 45.51 14.20C45.04 12.90 45.07 12.98 44.34 11.85C43.61 10.72 42.21 8.64 41.12 7.41C40.03 6.19 38.90 5.32 37.80 4.49C36.71 3.66 36.22 3.19 34.54 2.44C32.85 1.69 30.09 0.41 27.71 0.00Z" fill="#fff"/><path d="M8.29 5.71C7.54 6.57 9.10 6.91 9.37 7.17C9.63 7.43 9.17 7.67 9.90 7.27C10.63 6.86 12.93 4.24 13.76 4.73C14.59 5.23 14.35 8.64 14.88 10.24C15.41 11.85 15.95 13.02 16.93 14.34C17.90 15.66 19.48 17.17 20.73 18.15C21.98 19.12 23.00 19.65 24.44 20.20C25.88 20.74 27.76 21.28 29.37 21.41C30.97 21.54 32.52 21.33 34.05 20.98C35.58 20.63 36.98 20.20 38.54 19.32C40.10 18.43 42.50 16.13 43.41 15.66C44.33 15.19 43.76 15.85 44.00 16.49C44.24 17.13 44.66 18.35 44.88 19.51C45.10 20.67 44.95 22.76 45.32 23.46C45.68 24.17 46.71 23.76 47.07 23.76C47.44 23.75 47.50 24.11 47.51 23.41C47.53 22.72 47.50 21.08 47.17 19.56C46.85 18.04 46.30 15.98 45.56 14.29C44.82 12.60 43.46 10.55 42.73 9.41C42.00 8.28 42.00 8.29 41.17 7.46C40.34 6.63 39.14 5.41 37.76 4.44C36.37 3.46 34.28 2.28 32.88 1.61C31.47 0.94 30.11 0.64 29.32 0.44C28.52 0.24 28.37 0.46 28.10 0.39C27.83 0.32 29.02 0.07 27.71 0.00C26.40 -0.07 21.55 -0.07 20.24 0.00C18.93 0.07 20.39 0.25 19.85 0.39C19.32 0.53 18.02 0.56 17.02 0.83C16.03 1.10 15.36 1.19 13.90 2.00C12.45 2.81 9.05 4.85 8.29 5.71Z" fill="#00A8E0" fill-rule="evenodd"/><path d="M7.22 36.88C7.28 36.65 7.79 36.61 8.10 36.63C8.41 36.66 8.62 36.96 9.07 37.02C9.53 37.09 9.85 36.82 10.83 37.02C11.80 37.23 13.43 37.57 14.93 38.24C16.42 38.92 18.30 40.01 19.80 41.07C21.31 42.14 23.86 44.00 23.95 44.63C24.04 45.27 21.69 45.04 20.34 44.88C18.99 44.72 17.15 44.14 15.85 43.66C14.55 43.18 13.54 42.60 12.54 42.00C11.53 41.40 10.61 40.72 9.80 40.05C9.00 39.38 8.14 38.53 7.71 38.00C7.28 37.47 7.15 37.11 7.22 36.88ZM3.17 29.51C2.98 28.77 2.48 29.27 3.56 29.22C4.64 29.17 7.70 28.95 9.66 29.22C11.62 29.49 13.50 30.09 15.32 30.83C17.14 31.57 18.38 32.20 20.59 33.66C22.79 35.12 26.22 38.20 28.54 39.61C30.85 41.02 33.96 41.42 34.49 42.10C35.02 42.77 32.73 43.27 31.71 43.66C30.68 44.05 29.39 44.59 28.34 44.44C27.29 44.29 26.58 43.59 25.41 42.78C24.25 41.97 22.79 40.57 21.37 39.56C19.94 38.55 18.71 37.54 16.88 36.73C15.05 35.93 12.28 35.09 10.39 34.73C8.50 34.37 6.46 34.76 5.51 34.59C4.56 34.41 5.07 34.50 4.68 33.66C4.29 32.81 3.36 30.25 3.17 29.51ZM2.34 21.71C2.49 20.86 2.15 21.14 3.17 21.02C4.20 20.91 6.59 20.82 8.49 21.02C10.38 21.23 12.65 21.63 14.54 22.24C16.42 22.85 17.21 23.02 19.80 24.68C22.40 26.34 27.70 30.60 30.10 32.20C32.50 33.79 32.86 33.71 34.20 34.24C35.53 34.78 37.08 35.20 38.10 35.41C39.11 35.63 39.79 35.37 40.29 35.51C40.80 35.65 41.25 35.77 41.12 36.24C40.99 36.72 40.07 37.75 39.51 38.34C38.95 38.93 38.48 39.56 37.76 39.80C37.03 40.05 36.22 40.01 35.17 39.80C34.12 39.60 32.89 39.26 31.46 38.59C30.03 37.91 27.94 36.70 26.59 35.76C25.23 34.81 24.45 33.79 23.32 32.93C22.19 32.07 20.94 31.25 19.80 30.59C18.67 29.92 17.63 29.40 16.49 28.93C15.35 28.46 14.25 28.09 12.98 27.76C11.70 27.42 10.53 27.09 8.83 26.93C7.13 26.76 3.87 26.92 2.78 26.78C1.69 26.64 2.37 26.94 2.29 26.10C2.22 25.25 2.20 22.55 2.34 21.71ZM7.85 6.05C7.21 6.16 6.44 7.23 5.61 8.24C4.78 9.26 3.68 10.66 2.88 12.15C2.07 13.63 1.20 15.89 0.78 17.17C0.37 18.46 0.52 19.34 0.39 19.85C0.26 20.37 0.07 19.07 0.00 20.24C-0.07 21.42 -0.07 25.75 0.00 26.93C0.07 28.11 0.19 26.52 0.39 27.32C0.59 28.11 0.69 29.93 1.22 31.71C1.75 33.48 2.24 35.19 3.56 37.95C4.88 40.72 6.89 44.68 9.12 48.29C11.35 51.90 14.85 56.75 16.93 59.61C19.01 62.47 20.53 64.19 21.61 65.46C22.69 66.74 23.02 66.95 23.41 67.27C23.80 67.59 22.42 69.10 23.95 67.37C25.48 65.63 29.85 60.64 32.59 56.88C35.33 53.11 38.49 48.00 40.39 44.78C42.29 41.56 43.07 39.61 44.00 37.56C44.93 35.51 45.42 34.15 45.95 32.49C46.48 30.83 46.91 29.00 47.17 27.61C47.43 26.22 47.53 24.78 47.51 24.15C47.50 23.51 47.42 23.84 47.07 23.80C46.72 23.77 45.78 23.31 45.41 23.95C45.05 24.59 45.18 26.34 44.88 27.66C44.58 28.98 43.98 30.89 43.61 31.85C43.24 32.82 43.18 33.18 42.68 33.46C42.19 33.75 41.85 33.75 40.63 33.56C39.41 33.37 37.06 32.95 35.37 32.34C33.67 31.73 32.69 31.37 30.49 29.90C28.28 28.44 24.48 25.09 22.15 23.56C19.81 22.03 18.38 21.47 16.49 20.73C14.59 19.99 12.15 19.39 10.78 19.12C9.41 18.85 8.83 19.19 8.24 19.12C7.66 19.06 8.08 18.75 7.27 18.73C6.46 18.72 4.07 19.22 3.37 19.02C2.67 18.83 2.72 18.68 3.07 17.56C3.42 16.44 4.63 13.75 5.46 12.29C6.29 10.84 7.38 9.62 8.05 8.83C8.72 8.04 9.50 8.02 9.46 7.56C9.43 7.10 8.50 5.93 7.85 6.05Z" fill="#0058B0" fill-rule="evenodd"/></svg><span><b>IZI</b><em>TOUR</em></span></a>
+  <div class="adm-t">Редактор содержимого<span id="admSrc">загружаю…</span></div>
+  <div class="adm-act">
+    <span class="adm-dirty clean" id="admDirty">изменений нет</span>
+    <button class="bk-ghost" type="button" onclick="preview()">Посмотреть</button>
+    <button class="bk-ghost" type="button" onclick="download()">Скачать файл</button>
+    <button class="btn btn-ember btn-s" type="button" onclick="publish()">Опубликовать</button>
+  </div>
+</header>
+
+<div class="adm-b">
+  <nav class="adm-nav" id="admNav"></nav>
+  <main class="adm-main" id="admMain"></main>
+</div>
+</div>
+
+<script>
+/* ==========================================================
+   Редактор содержимого izi.tours
+   Работает с одним файлом data/content.json и папкой assets/img.
+   Ничего не знает про вёрстку сайта: правит только данные.
+   ========================================================== */
+
+var C=null, IMGS=[], NEWIMG={}, DIRTY=false, SEC='cities';
+var CFG={owner:'airvolga3',repo:'izitours',branch:'main'};
+
+/* ---------- схема форм ---------- */
+var METAS=[['0','Дни вылета'],['1','Время в пути'],['2','Длительность']];
+var SCHEMA={
+ cities:{n:'Города вылета и направления',kind:'map',label:'from',
+  lede:'Здесь живёт всё, что видно на первом экране и в блоке «Куда летим». Цены — те, что показываются как «от»: календарь и отели считаются от них.',
+  f:[
+   {k:'from',t:'text',n:'Город, именительный',h:'Минеральные Воды'},
+   {k:'name',t:'text',n:'Города, родительный',h:'«Куда летим из …» → Минеральных Вод'},
+   {k:'fleet',t:'text',n:'Строка о бортах'},
+   {k:'note',t:'area',n:'Подпись под заголовком',w:1},
+   {k:'cals',t:'tbl',n:'Даты вылета на ближайшие недели',w:1,
+    cols:[[0,'Дата','text'],[1,'Цена, ₽','text'],[2,'Дешевле всего','bool']]},
+   {k:'dirs',t:'list',n:'Направления из этого города',w:1,label:'t',
+    f:[{k:'t',t:'text',n:'Название'},
+       {k:'art',t:'res',n:'Курорт (связь с текстами)'},
+       {k:'c',t:'text',n:'Подпись',h:'Турция · Эгейское побережье'},
+       {k:'badge',t:'text',n:'Плашка на картинке'},
+       {k:'bg',t:'sel',n:'Цвет плашки',opt:[['','золотая'],['mint','зелёная']]},
+       {k:'p',t:'text',n:'Цена «от», ₽'},
+       {k:'old',t:'text',n:'Старая цена, ₽',h:'только если тур реально продавался по ней'},
+       {k:'left',t:'text',n:'Остаток мест',h:'«Осталось 14 мест» или пусто'},
+       {k:'r',t:'text',n:'Рейтинг'},{k:'rn',t:'text',n:'Число отзывов'},
+       {k:'meta.0',t:'text',n:'Дни вылета'},{k:'meta.1',t:'text',n:'В пути'},{k:'meta.2',t:'text',n:'Длительность'}]}
+  ]},
+ resorts:{n:'Курорты и тексты',kind:'arr',label:'n',
+  lede:'Названия во всех падежах и четыре вкладки с описанием. Падежи нужны, чтобы получалось «до Бодрума», а не «до Бодрум».',
+  f:[{k:'k',t:'text',n:'Ключ',h:'латиницей, совпадает с картинкой'},
+     {k:'n',t:'text',n:'Название'},{k:'acc',t:'text',n:'Винительный',h:'вижу что — Анталию'},
+     {k:'gen',t:'text',n:'Родительный',h:'до чего — Анталии'},{k:'prep',t:'text',n:'Предложный',h:'в чём — Анталии'},
+     {k:'c',t:'text',n:'Страна и побережье',w:1},
+     {k:'chips.0',t:'text',n:'Факт 1'},{k:'chips.1',t:'text',n:'Факт 2'},{k:'chips.2',t:'text',n:'Факт 3'},
+     {k:'tabs',t:'tbl',n:'Вкладки: заголовок, текст, картинка',w:1,
+      cols:[[0,'Вкладка','text'],[1,'Текст','area'],[2,'Картинка','img']]}]},
+ stay:{n:'Отели',kind:'map2',label:'n',
+  lede:'Отели по курортам. Коэффициент — во сколько раз отель дороже самого дешёвого на этом курорте; самый дешёвый всегда равен цене направления.',
+  f:[{k:'id',t:'text',n:'Код'},{k:'n',t:'text',n:'Название'},
+     {k:'s',t:'num',n:'Звёзды'},{k:'meal',t:'sel',n:'Питание',opt:[['завтрак','завтрак'],['полупансион','полупансион'],['всё включено','всё включено'],['без питания','без питания']]},
+     {k:'line',t:'num',n:'Линия'},{k:'dist',t:'num',n:'Метров до моря'},
+     {k:'r',t:'num',n:'Рейтинг'},{k:'rn',t:'num',n:'Отзывов'},
+     {k:'k',t:'num',n:'Коэффициент цены'},
+     {k:'kids',t:'bool',n:'Для детей'},{k:'kf',t:'bool',n:'Ребёнок бесплатно'},
+     {k:'img',t:'img',n:'Главное фото'},
+     {k:'about',t:'area',n:'Описание',w:1},
+     {k:'gal',t:'gal',n:'Галерея',w:1},
+     {k:'near',t:'tbl',n:'Что рядом',w:1,cols:[[0,'Значок','text'],[1,'Что рядом','text']]},
+     {k:'rooms',t:'tbl',n:'Номера: название, описание, коэффициент к цене',w:1,
+      cols:[[0,'Название','text'],[1,'Кто помещается','text'],[2,'Коэффициент','text']]}]},
+ prog:{n:'Полётная программа',kind:'map3',
+  lede:'Расписание сезона: по каким дням и в какой период летаем. Это же читают агентства.',
+  f:[{k:'to',t:'text',n:'Направление'},{k:'k',t:'res',n:'Курорт'},
+     {k:'days',t:'text',n:'Дни вылета'},{k:'per',t:'text',n:'Период программы'},
+     {k:'plane',t:'text',n:'Борт'},{k:'n',t:'text',n:'Длительность'},{k:'p',t:'num',n:'Цена от, ₽'}]},
+ soon:{n:'Ближайшие вылеты',kind:'map3',
+  lede:'Места, которые не выкупили заранее. Если система бронирования не отдаёт остаток мест — этот блок лучше не показывать вовсе.',
+  f:[{k:'to',t:'text',n:'Направление'},{k:'k',t:'res',n:'Курорт'},
+     {k:'date',t:'text',n:'Дата'},{k:'wd',t:'text',n:'День недели'},
+     {k:'n',t:'num',n:'Ночей'},{k:'seats',t:'num',n:'Осталось мест'},
+     {k:'p',t:'num',n:'Цена, ₽'},{k:'was',t:'num',n:'Была, ₽'},{k:'plane',t:'text',n:'Борт'}]},
+ addons:{n:'Дополнительные услуги',kind:'arr',label:'n',
+  lede:'То, что предлагается на втором шаге бронирования. Считается за человека или за бронь.',
+  f:[{k:'id',t:'text',n:'Код'},{k:'n',t:'text',n:'Название'},
+     {k:'p',t:'num',n:'Цена, ₽'},{k:'per',t:'sel',n:'За что',opt:[['чел','за человека'],['бронь','за бронь']]},
+     {k:'hot',t:'text',n:'Плашка',h:'«Берут чаще всего» или пусто'},
+     {k:'d',t:'area',n:'Описание',w:1}]},
+ faq:{n:'Вопросы про чартер',kind:'arr',label:'q',
+  lede:'Каждый ответ — это обязательство. Перед публикацией их читает юрист оператора.',
+  f:[{k:'q',t:'text',n:'Вопрос',w:1},{k:'a',t:'area',n:'Ответ',w:1}]},
+ club:{n:'Постоянным туристам',kind:'arr',label:'n',
+  lede:'Скидка постоянному туристу съедает маржу. Размер задаёт финансист, а не редактор.',
+  f:[{k:'n',t:'text',n:'Уровень'},{k:'d',t:'text',n:'Скидка'},
+     {k:'t',t:'lines',n:'Что даёт, по строке на пункт',w:1}]}
+};
+var ORDER=['cities','resorts','stay','prog','soon','addons','faq','club'];
+
+/* ---------- утилиты ---------- */
+function esc(v){return String(v==null?'':v).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function get(o,p){var a=String(p).split('.'),v=o;for(var i=0;i<a.length;i++){if(v==null)return '';v=v[a[i]];}return v==null?'':v;}
+function set(o,p,val){var a=String(p).split('.'),v=o;for(var i=0;i<a.length-1;i++){if(v[a[i]]==null)v[a[i]]=(/^\d+$/.test(a[i+1])?[]:{});v=v[a[i]];}v[a[a.length-1]]=val;}
+function dirty(){DIRTY=true;var e=document.getElementById('admDirty');e.textContent='есть несохранённые правки';e.className='adm-dirty';saveDraft();}
+function saveDraft(){try{localStorage.setItem('izi_draft',JSON.stringify(C));}catch(e){}}
+function log(msg,cls){var el=document.getElementById('admLog');if(!el)return;
+  el.innerHTML+=(cls?'<'+cls+'>'+esc(msg)+'</'+cls+'>':esc(msg))+'\n';el.scrollTop=el.scrollHeight;}
+
+/* ---------- загрузка ---------- */
+function boot(){
+  Promise.all([
+    fetch('data/content.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;}),
+    fetch('data/images.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():[];}).catch(function(){return [];})
+  ]).then(function(a){
+    IMGS=a[1]||[];
+    var draft=null; try{draft=JSON.parse(localStorage.getItem('izi_draft')||'null');}catch(e){}
+    if(a[0]&&draft&&confirm('В браузере есть несохранённый черновик. Продолжить с ним?\n\nОК — черновик, Отмена — то, что опубликовано на сайте.')){
+      C=draft; document.getElementById('admSrc').textContent='черновик из браузера'; DIRTY=true;
+      document.getElementById('admDirty').textContent='есть несохранённые правки';
+      document.getElementById('admDirty').className='adm-dirty';
+    } else {
+      C=a[0]; localStorage.removeItem('izi_draft');
+      document.getElementById('admSrc').textContent = C? ('data/content.json · версия '+(C.version||'—')) : 'файл не найден';
+    }
+    if(!C){ document.getElementById('admMain').innerHTML='<h2>Не нашёл data/content.json</h2>'+
+      '<p class="adm-lede">Редактор открывается только вместе с сайтом. Откройте его по адресу сайта, а не двойным щелчком по файлу.</p>'; return; }
+    nav(); show(SEC);
+  });
+}
+
+function nav(){
+  var h='<em>Содержание</em>';
+  ORDER.forEach(function(k){ h+='<button type="button" onclick="show(\''+k+'\')" id="nav-'+k+'">'+SCHEMA[k].n+'</button>'; });
+  h+='<em>Прочее</em>';
+  h+='<button type="button" onclick="show(\'imgs\')" id="nav-imgs">Фотографии</button>';
+  h+='<button type="button" onclick="show(\'eb\')" id="nav-eb">Раннее бронирование</button>';
+  h+='<button type="button" onclick="show(\'set\')" id="nav-set">Публикация</button>';
+  document.getElementById('admNav').innerHTML=h;
+}
+function show(k){
+  SEC=k;
+  document.querySelectorAll('.adm-nav button').forEach(function(b){b.classList.remove('on');});
+  var a=document.getElementById('nav-'+k); if(a)a.classList.add('on');
+  var m=document.getElementById('admMain');
+  if(k==='imgs') return imgsView(m);
+  if(k==='set') return setView(m);
+  if(k==='eb') return ebView(m);
+  var S=SCHEMA[k];
+  m.innerHTML='<h2>'+S.n+'</h2><p class="adm-lede">'+S.lede+'</p><div id="secBody"></div>';
+  render(k);
+  window.scrollTo(0,0);
+}
+
+/* ---------- отрисовка форм ---------- */
+function fieldHtml(path,f,val){
+  var id='f_'+path.replace(/[^a-z0-9]/gi,'_');
+  var w=f.w?' style="grid-column:1/-1"':'';
+  var inner='';
+  if(f.t==='area') inner='<textarea id="'+id+'" oninput="edit(this,\''+path+'\',\'s\')">'+esc(val)+'</textarea>';
+  else if(f.t==='lines') inner='<textarea id="'+id+'" oninput="edit(this,\''+path+'\',\'lines\')">'+esc((val||[]).join('\n'))+'</textarea>';
+  else if(f.t==='num') inner='<input type="number" step="any" id="'+id+'" value="'+esc(val)+'" oninput="edit(this,\''+path+'\',\'n\')">';
+  else if(f.t==='bool') return '<div class="fld bool"'+w+'><input type="checkbox" id="'+id+'"'+(val?' checked':'')+' onchange="edit(this,\''+path+'\',\'b\')"><label for="'+id+'">'+f.n+'</label></div>';
+  else if(f.t==='sel') inner='<select id="'+id+'" onchange="edit(this,\''+path+'\',\'s\')">'+f.opt.map(function(o){
+      return '<option value="'+esc(o[0])+'"'+(String(val)===String(o[0])?' selected':'')+'>'+esc(o[1])+'</option>';}).join('')+'</select>';
+  else if(f.t==='res') inner='<select id="'+id+'" onchange="edit(this,\''+path+'\',\'s\')">'+(C.resorts||[]).map(function(r){
+      return '<option value="'+esc(r.k)+'"'+(val===r.k?' selected':'')+'>'+esc(r.n)+' ('+esc(r.k)+')</option>';}).join('')+'</select>';
+  else if(f.t==='img') inner=imgSel(id,path,val);
+  else inner='<input type="text" id="'+id+'" value="'+esc(val)+'" oninput="edit(this,\''+path+'\',\'s\')">';
+  return '<div class="fld"'+w+'><label for="'+id+'">'+f.n+'</label>'+inner+
+    (f.h?'<span class="hint">'+esc(f.h)+'</span>':'')+'</div>';
+}
+/* В списке — и файлы с сайта, и только что загруженные, и всё, на что уже
+   ссылаются данные: иначе опубликованная вчера картинка пропала бы из выбора. */
+function usedImgs(){
+  var out=[];
+  try{
+    (C.resorts||[]).forEach(function(r){ (r.tabs||[]).forEach(function(t){ if(t&&t[2]) out.push(t[2]); }); });
+    Object.keys(C.stay||{}).forEach(function(k){ (C.stay[k]||[]).forEach(function(h){
+      if(h.img) out.push(h.img); (h.gal||[]).forEach(function(g){ if(g) out.push(g); }); }); });
+  }catch(e){}
+  return out;
+}
+function allImgs(){
+  return IMGS.concat(Object.keys(NEWIMG)).concat(usedImgs())
+    .filter(function(v,i,a){ return v && a.indexOf(v)===i; }).sort();
+}
+function imgSel(id,path,val){
+  var all=allImgs();
+  return '<div class="imgpick"><img src="'+imgSrc(val)+'" alt="" onerror="this.style.opacity=.2">'+
+    '<select id="'+id+'" onchange="edit(this,\''+path+'\',\'s\');show(SEC)"><option value="">— нет —</option>'+
+    all.map(function(k){return '<option value="'+esc(k)+'"'+(val===k?' selected':'')+'>'+esc(k)+'</option>';}).join('')+
+    '</select></div>';
+}
+function imgSrc(k){ if(!k) return ''; if(NEWIMG[k]) return NEWIMG[k].url; return 'assets/img/'+k+'.webp'; }
+
+function edit(el,path,kind){
+  var v = kind==='b'? el.checked : (kind==='n'? (el.value===''?'':parseFloat(el.value)) : (kind==='lines'? el.value.split('\n').filter(function(x){return x.trim();}) : el.value));
+  set(C,path,v); dirty();
+}
+
+function group(title,sub,body,one){
+  return '<div class="grp"><div class="grp-h"><b>'+esc(title)+'</b><i>'+esc(sub||'')+'</i></div>'+
+    '<div class="grp-b'+(one?' one':'')+'">'+body+'</div></div>';
+}
+function fieldsFor(S,path,obj){
+  return S.f.map(function(f){
+    if(f.t==='tbl') return tblHtml(path+'.'+f.k,f,get(obj,f.k)||[]);
+    if(f.t==='list') return listHtml(path+'.'+f.k,f,get(obj,f.k)||[]);
+    if(f.t==='gal') return galHtml(path+'.'+f.k,f,get(obj,f.k)||[]);
+    return fieldHtml(path+'.'+f.k,f,get(obj,f.k));
+  }).join('');
+}
+function tblHtml(path,f,arr){
+  var h='<div class="fld" style="grid-column:1/-1"><label>'+f.n+'</label><div class="rows">';
+  arr.forEach(function(row,i){
+    h+='<div class="row">'+f.cols.map(function(c){
+      var p=path+'.'+i+'.'+c[0], v=row[c[0]];
+      if(c[2]==='bool') return '<label><input type="checkbox"'+(v?' checked':'')+' onchange="edit(this,\''+p+'\',\'b\')"> '+c[1]+'</label>';
+      if(c[2]==='img') return imgSel('t_'+i,p,v);
+      if(c[2]==='area') return '<input type="text" value="'+esc(v)+'" placeholder="'+c[1]+'" style="flex:3 1 320px" oninput="edit(this,\''+p+'\',\'s\')">';
+      return '<input type="text" value="'+esc(v)+'" placeholder="'+c[1]+'" oninput="edit(this,\''+p+'\',\'s\')">';
+    }).join('')+'<button class="del" type="button" title="Удалить" onclick="rm(\''+path+'\','+i+')">×</button></div>';
+  });
+  h+='<button class="addbtn" type="button" onclick="add(\''+path+'\',\'row\','+f.cols.length+')">+ добавить строку</button>';
+  return h+'</div></div>';
+}
+function galHtml(path,f,arr){
+  var h='<div class="fld" style="grid-column:1/-1"><label>'+f.n+'</label><div class="rows">';
+  arr.forEach(function(k,i){
+    h+='<div class="row">'+imgSel('g_'+i,path+'.'+i,k)+
+       '<button class="del" type="button" onclick="rm(\''+path+'\','+i+')">×</button></div>';
+  });
+  h+='<button class="addbtn" type="button" onclick="addStr(\''+path+'\')">+ добавить фото</button>';
+  return h+'</div></div>';
+}
+function addStr(path){ var a=get(C,path); if(!Array.isArray(a)){ set(C,path,[]); a=get(C,path); } a.push(''); dirty(); show(SEC); }
+function listHtml(path,f,arr){
+  var h='<div class="fld" style="grid-column:1/-1"><label>'+f.n+'</label>';
+  arr.forEach(function(it,i){
+    h+='<div class="grp" style="margin-bottom:10px"><div class="grp-h"><b>'+esc(it[f.label]||('№'+(i+1)))+'</b>'+
+       '<button class="del" type="button" onclick="rm(\''+path+'\','+i+')">×</button></div><div class="grp-b">'+
+       f.f.map(function(ff){ return fieldHtml(path+'.'+i+'.'+ff.k,ff,get(it,ff.k)); }).join('')+'</div></div>';
+  });
+  h+='<button class="addbtn" type="button" onclick="add(\''+path+'\',\'obj\')">+ добавить</button>';
+  return h+'</div>';
+}
+function rm(path,i){ if(!confirm('Удалить эту запись?'))return; var a=get(C,path); a.splice(i,1); dirty(); show(SEC); }
+function add(path,kind,cols){ var a=get(C,path);
+  if(kind==='row'){ var r=[]; for(var i=0;i<cols;i++) r.push(''); a.push(r); }
+  else a.push({});
+  dirty(); show(SEC); }
+
+function render(k){
+  var S=SCHEMA[k], body=document.getElementById('secBody'), h='';
+  if(S.kind==='map'){
+    Object.keys(C[k]).forEach(function(ck){
+      h+=group(C[k][ck][S.label]||ck, ck, fieldsFor(S,k+'.'+ck,C[k][ck]));
+    });
+  } else if(S.kind==='arr'){
+    C[k].forEach(function(it,i){
+      h+=group(it[S.label]||('№'+(i+1)),'', fieldsFor(S,k+'.'+i,it)+
+        '<div style="grid-column:1/-1"><button class="del" type="button" onclick="rm(\''+k+'\','+i+')">× удалить</button></div>');
+    });
+    h+='<button class="addbtn" type="button" onclick="add(\''+k+'\',\'obj\')">+ добавить</button>';
+  } else if(S.kind==='map2'){
+    Object.keys(C[k]).forEach(function(rk){
+      h+='<h3 style="margin:22px 0 10px;font-size:17px;color:var(--gold)">'+esc(rk)+'</h3>';
+      C[k][rk].forEach(function(it,i){
+        h+=group(it[S.label]||('№'+(i+1)),'', fieldsFor(S,k+'.'+rk+'.'+i,it)+
+          '<div style="grid-column:1/-1"><button class="del" type="button" onclick="rm(\''+k+'.'+rk+'\','+i+')">× удалить</button></div>');
+      });
+      h+='<button class="addbtn" type="button" onclick="add(\''+k+'.'+rk+'\',\'obj\')">+ добавить отель</button>';
+    });
+  } else if(S.kind==='map3'){
+    Object.keys(C[k]).forEach(function(ck){
+      h+='<h3 style="margin:22px 0 10px;font-size:17px;color:var(--gold)">'+esc(cityName(ck))+'</h3>';
+      C[k][ck].forEach(function(it,i){
+        h+=group(it.to||('№'+(i+1)),'', fieldsFor(S,k+'.'+ck+'.'+i,it)+
+          '<div style="grid-column:1/-1"><button class="del" type="button" onclick="rm(\''+k+'.'+ck+'\','+i+')">× удалить</button></div>');
+      });
+      h+='<button class="addbtn" type="button" onclick="add(\''+k+'.'+ck+'\',\'obj\')">+ добавить строку</button>';
+    });
+  }
+  body.innerHTML=h;
+}
+function cityName(k){ return (C.cities&&C.cities[k]&&C.cities[k].from)||k; }
+
+/* ---------- раннее бронирование ---------- */
+function ebView(m){
+  var e=C.eb||{base:{},tiers:[]};
+  var h='<h2>Раннее бронирование</h2><p class="adm-lede">Этапы со скидками и цены будущего сезона. Даты этапов — из приказа оператора: таймер на сайте считает до ближайшей.</p>';
+  h+='<div class="grp"><div class="grp-h"><b>Этапы</b></div><div class="grp-b one"><div class="rows">';
+  (e.tiers||[]).forEach(function(t,i){
+    h+='<div class="row"><input type="text" value="'+esc(t.till||'')+'" placeholder="ГГГГ-ММ-ДД или пусто" oninput="edit(this,\'eb.tiers.'+i+'.till\',\'s\')">'+
+       '<input type="text" value="'+esc(t.label||'')+'" placeholder="Подпись" oninput="edit(this,\'eb.tiers.'+i+'.label\',\'s\')">'+
+       '<input type="number" value="'+esc(t.d)+'" placeholder="Скидка, %" oninput="edit(this,\'eb.tiers.'+i+'.d\',\'n\')">'+
+       '<button class="del" type="button" onclick="rm(\'eb.tiers\','+i+')">×</button></div>';
+  });
+  h+='<button class="addbtn" type="button" onclick="add(\'eb.tiers\',\'obj\')">+ этап</button></div></div></div>';
+  h+='<div class="grp"><div class="grp-h"><b>Цены будущего сезона по городам</b></div><div class="grp-b">';
+  Object.keys(e.base||{}).forEach(function(ck){
+    h+=fieldHtml('eb.base.'+ck+'.to',{t:'text',n:cityName(ck)+' · направление'},e.base[ck].to);
+    h+=fieldHtml('eb.base.'+ck+'.k',{t:'res',n:cityName(ck)+' · курорт'},e.base[ck].k);
+    h+=fieldHtml('eb.base.'+ck+'.p',{t:'num',n:cityName(ck)+' · базовая цена, ₽'},e.base[ck].p);
+  });
+  h+='</div></div>';
+  h+='<div class="grp"><div class="grp-h"><b>Коэффициенты размещения</b></div><div class="grp-b">'+
+     fieldHtml('paxK.single',{t:'num',n:'Один взрослый',h:'доплата за одноместное, 1.35 = +35%'},get(C,'paxK.single'))+
+     fieldHtml('paxK.extraAdult',{t:'num',n:'Третий и далее взрослый',h:'доля от половины цены'},get(C,'paxK.extraAdult'))+
+     fieldHtml('paxK.child',{t:'num',n:'Ребёнок 2–11',h:'доля от половины цены'},get(C,'paxK.child'))+
+     fieldHtml('paxK.infant',{t:'num',n:'Малыш до 2 лет, ₽',h:'фиксированный сбор'},get(C,'paxK.infant'))+
+     '</div></div>';
+  m.innerHTML=h; window.scrollTo(0,0);
+}
+
+/* ---------- фотографии ---------- */
+function imgsView(m){
+  var h='<h2>Фотографии</h2><p class="adm-lede">Перетащите файлы сюда — они уменьшатся до 1600 пикселей и превратятся в WebP прямо в браузере. Имя файла станет ключом: его выбирают в полях «Картинка».</p>';
+  h+='<div class="drop" id="drop"><b>Перетащите фотографии сюда</b>или <label style="color:var(--azure);cursor:pointer;text-decoration:underline">выберите файлы<input type="file" accept="image/*" multiple hidden onchange="pick(this.files)"></label></div>';
+  var all=allImgs();
+  h+='<div class="imgs">'+all.map(function(k){
+    var isNew=!!NEWIMG[k];
+    return '<div class="imgc'+(isNew?' new':'')+'"><img loading="lazy" src="'+imgSrc(k)+'" alt=""><b>'+esc(k)+'</b>'+
+      '<span>'+(isNew? ('новая · '+Math.round(NEWIMG[k].bytes/1024)+' КБ') : 'на сайте')+'</span></div>';
+  }).join('')+'</div>';
+  m.innerHTML=h;
+  var d=document.getElementById('drop');
+  ['dragenter','dragover'].forEach(function(e){d.addEventListener(e,function(ev){ev.preventDefault();d.classList.add('over');});});
+  ['dragleave','drop'].forEach(function(e){d.addEventListener(e,function(ev){ev.preventDefault();d.classList.remove('over');});});
+  d.addEventListener('drop',function(ev){ pick(ev.dataTransfer.files); });
+  window.scrollTo(0,0);
+}
+var TRANSLIT={'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y',
+ 'к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h',
+ 'ц':'c','ч':'ch','ш':'sh','щ':'sch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'};
+/* Имя файла становится ключом картинки. Кириллицу переводим в латиницу,
+   иначе «Отель Тест.jpg» превратился бы в пустую строку. */
+function slug(name){
+  var s=String(name).toLowerCase().split('').map(function(ch){
+    return TRANSLIT[ch]!==undefined? TRANSLIT[ch] : ch; }).join('');
+  s=s.replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+  if(!s) s='foto_'+Date.now().toString(36);
+  if(/^[0-9]/.test(s)) s='img_'+s;
+  return s.slice(0,48);
+}
+function pick(files){
+  var list=Array.prototype.slice.call(files||[]);
+  if(!list.length) return;
+  var done=0;
+  list.forEach(function(f){
+    if(!/^image\//.test(f.type)) { done++; return; }
+    var key=slug(f.name.replace(/\.[^.]+$/,''));
+    var img=new Image(), url=URL.createObjectURL(f);
+    img.onload=function(){
+      var w=img.width,hh=img.height,max=1600;
+      if(w>max){ hh=Math.round(hh*max/w); w=max; }
+      var cv=document.createElement('canvas'); cv.width=w; cv.height=hh;
+      cv.getContext('2d').drawImage(img,0,0,w,hh);
+      cv.toBlob(function(bl){
+        var fr=new FileReader();
+        fr.onload=function(){
+          NEWIMG[key]={url:fr.result, b64:String(fr.result).split(',')[1], bytes:bl.size};
+          done++; if(done===list.length){ dirty(); imgsView(document.getElementById('admMain')); }
+        };
+        fr.readAsDataURL(bl);
+        URL.revokeObjectURL(url);
+      },'image/webp',0.82);
+    };
+    img.onerror=function(){ done++; };
+    img.src=url;
+  });
+}
+
+/* ---------- публикация ---------- */
+function setView(m){
+  m.innerHTML='<h2>Публикация</h2>'+
+   '<p class="adm-lede">Правки уходят прямо в репозиторий сайта. Через минуту-полторы GitHub пересобирает страницу, и их видно всем.</p>'+
+   '<div class="setbox"><h3>Куда публикуем</h3>'+
+   '<div class="fld"><label>Владелец</label><input type="text" id="sOwner" value="'+esc(CFG.owner)+'"></div>'+
+   '<div class="fld"><label>Репозиторий</label><input type="text" id="sRepo" value="'+esc(CFG.repo)+'"></div>'+
+   '<div class="fld"><label>Ветка</label><input type="text" id="sBranch" value="'+esc(CFG.branch)+'"></div>'+
+   '<div class="fld"><label>Ключ доступа</label><input type="text" id="sToken" value="'+esc(localStorage.getItem('izi_token')||'')+'" placeholder="github_pat_…">'+
+   '<span class="hint">Создаётся на github.com → Settings → Developer settings → Fine-grained tokens. Дайте доступ только к репозиторию '+esc(CFG.repo)+' и только право Contents: Read and write.</span></div>'+
+   '<button class="btn btn-ember btn-s" type="button" onclick="saveCfg()">Запомнить</button>'+
+   '<p class="adm-note adm-warn"><b>Про ключ честно.</b> Он хранится в этом браузере и даёт право менять файлы репозитория. Кто сядет за этот компьютер — сможет им воспользоваться. Не открывайте редактор на общем компьютере, а если ключ утёк — удалите его на GitHub, он отзывается одной кнопкой. Когда сайт переедет на свой сервер, вход будет обычный: логин и пароль.</p>'+
+   '</div><div class="log" id="admLog">готов к работе\n</div>';
+  window.scrollTo(0,0);
+}
+function saveCfg(){
+  CFG.owner=document.getElementById('sOwner').value.trim();
+  CFG.repo=document.getElementById('sRepo').value.trim();
+  CFG.branch=document.getElementById('sBranch').value.trim()||'main';
+  localStorage.setItem('izi_cfg',JSON.stringify(CFG));
+  localStorage.setItem('izi_token',document.getElementById('sToken').value.trim());
+  log('настройки сохранены','b');
+}
+function tok(){ return localStorage.getItem('izi_token')||''; }
+
+function ghHeaders(){ return {'Authorization':'Bearer '+tok(),'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}; }
+function ghUrl(path){ return 'https://api.github.com/repos/'+CFG.owner+'/'+CFG.repo+'/contents/'+path; }
+function ghGetSha(path){
+  return fetch(ghUrl(path)+'?ref='+encodeURIComponent(CFG.branch),{headers:ghHeaders()})
+    .then(function(r){ return r.ok? r.json().then(function(j){return j.sha;}) : null; })
+    .catch(function(){ return null; });
+}
+function ghPut(path,b64,msg){
+  return ghGetSha(path).then(function(sha){
+    var body={message:msg,content:b64,branch:CFG.branch};
+    if(sha) body.sha=sha;
+    return fetch(ghUrl(path),{method:'PUT',headers:ghHeaders(),body:JSON.stringify(body)})
+      .then(function(r){ if(!r.ok) return r.text().then(function(t){ throw new Error(r.status+' '+t.slice(0,160)); }); return r.json(); });
+  });
+}
+function b64(str){ return btoa(unescape(encodeURIComponent(str))); }
+
+function publish(){
+  if(!tok()){ show('set'); setTimeout(function(){alert('Сначала впишите ключ доступа и нажмите «Запомнить».');},50); return; }
+  if(!confirm('Опубликовать правки на сайте?\n\nОни станут видны всем через минуту-полторы.')) return;
+  show('set');
+  setTimeout(function(){
+    C.version=new Date().toISOString().slice(0,10);
+    var keys=Object.keys(NEWIMG);
+    log('публикую: файл данных'+(keys.length?(' и картинок: '+keys.length):''));
+    var chain=Promise.resolve();
+    keys.forEach(function(k){
+      chain=chain.then(function(){
+        log('  картинка '+k+'.webp …');
+        return ghPut('assets/img/'+k+'.webp',NEWIMG[k].b64,'Редактор: картинка '+k);
+      });
+    });
+    chain=chain.then(function(){
+      log('  data/content.json …');
+      return ghPut('data/content.json',b64(JSON.stringify(C,null,1)),'Редактор: обновлено содержимое сайта');
+    }).then(function(){
+      NEWIMG={}; DIRTY=false; localStorage.removeItem('izi_draft');
+      document.getElementById('admDirty').textContent='всё опубликовано';
+      document.getElementById('admDirty').className='adm-dirty clean';
+      log('готово. Через минуту-полторы правки будут на сайте.','b');
+    }).catch(function(e){
+      log('не получилось: '+e.message,'i');
+      log('Проверьте ключ доступа и права: нужен Contents — Read and write для репозитория '+CFG.repo+'.','i');
+    });
+  },60);
+}
+function download(){
+  C.version=new Date().toISOString().slice(0,10);
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(C,null,1)],{type:'application/json'}));
+  a.download='content.json'; a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+  if(Object.keys(NEWIMG).length) alert('Файл данных скачан.\n\nНовые фотографии в него не попадают — их нужно публиковать кнопкой «Опубликовать» или положить в assets/img вручную.');
+}
+function preview(){ saveDraft(); window.open('index.html?draft=1','_blank'); }
+
+window.addEventListener('beforeunload',function(e){ if(DIRTY){ e.preventDefault(); e.returnValue=''; } });
+try{ var c=JSON.parse(localStorage.getItem('izi_cfg')||'null'); if(c) CFG=c; }catch(e){}
+boot();
+</script>
+</body>
+</html>

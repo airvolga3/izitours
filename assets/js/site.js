@@ -1895,7 +1895,45 @@ function lpOpen(){
   lpRender(); show('lp');
 }
 
+
+/* ---------- внешние данные ----------
+   Всё редакторское лежит в data/content.json и правится через admin.html.
+   Если файла нет или он битый — сайт молча работает на данных из кода. */
+function applyContent(j){
+  if(!j||typeof j!=='object') return;
+  if(Array.isArray(j.resorts)&&j.resorts.length){ RESORTS_DATA=j.resorts; RESORTS=RESORTS_DATA; }
+  if(j.cities&&Object.keys(j.cities).length) DATA=j.cities;
+  if(j.stay) STAY=j.stay;
+  if(j.prog) PROG=j.prog;
+  if(j.soon) SOON=j.soon;
+  if(Array.isArray(j.addons)&&j.addons.length) ADDONS=j.addons;
+  if(j.paxK) PAX_K=j.paxK;
+  if(j.eb&&j.eb.tiers) EB=j.eb;
+  if(Array.isArray(j.club)&&j.club.length) CLUB=j.club;
+  if(Array.isArray(j.faq)&&j.faq.length) FAQ=j.faq;
+}
+function loadContent(next){
+  /* Предпросмотр из редактора: index.html?draft=1 берёт черновик из браузера,
+     а не опубликованный файл. Так менеджер видит правки до публикации. */
+  try{
+    if(/[?&]draft=1/.test(location.search)){
+      var d=localStorage.getItem('izi_draft');
+      if(d){ applyContent(JSON.parse(d)); document.documentElement.setAttribute('data-draft','1');
+        var db=document.querySelector('.draftbar'); if(db) db.hidden=false;
+        next(); return; }
+    }
+  }catch(e){}
+  try{
+    fetch('data/content.json',{cache:'no-cache'})
+      .then(function(r){ return r.ok? r.json() : null; })
+      .then(function(j){ try{ applyContent(j); }catch(e){} })
+      .catch(function(){})
+      .then(next,next);
+  }catch(e){ next(); }
+}
+
 /* ---------- boot ---------- */
+function bootSite(){
 setCity('mrv');
 buildSeatMap();
 document.querySelectorAll('.mark3d').forEach(buildMark);
@@ -1906,6 +1944,8 @@ mobCollapse('#club','Показать программу для постоянн
 mobCollapse('.studio','Показать, как это собрано');
 setRoute('direct');
 if(!reduce) animPlane();
+}
+loadContent(bootSite);
 function tilt3d(id,amt){
   var sc=document.getElementById(id);
   if(!sc||reduce) return;
