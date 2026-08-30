@@ -1930,8 +1930,8 @@ function onScroll(){
   var lead=document.getElementById('lead');
   var past=window.scrollY>window.innerHeight*0.85;
   var atLead=lead && lead.getBoundingClientRect().top < window.innerHeight*0.95;
-  var ss=document.getElementById('stickysearch');
-  if(ss) ss.classList.toggle('on', past && !atLead);
+  var mb=document.getElementById('mbar');
+  if(mb){ var on=past && !atLead; mb.classList.toggle('on', on); document.body.classList.toggle('barup', on); }
   var db=document.getElementById('deskbar');
   if(db) db.classList.remove('on');
 }
