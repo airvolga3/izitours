@@ -84,11 +84,28 @@ function dealCard(d,i){
    '<div class="deal-body"><div class="chips">'+d.meta.map(function(m){return '<span class="chip">'+m+'</span>'}).join('')+
    (d.left?'<span class="chip left">'+d.left+'</span>':'')+'</div>'+
    '<div class="deal-foot"><div>'+(d.old?'<div class="price-old num">'+d.old+' ₽</div>':'')+
-   '<div class="price num">'+d.p+' ₽</div><div class="price-note">за двоих · бронь от 3 000 ₽</div></div>'+
+   '<div class="price num">'+d.p+' ₽</div><div class="price-note">за двоих · бронь 3 000 ₽, дальше '+money(perMonth(priceNum(d.p)))+'/мес</div></div>'+
    '<button class="btn btn-ember btn-s quick" type="button" onclick="quickBook(\''+d.art+'\');event.stopPropagation()">Забронировать за 3 000 ₽</button>'+
    '<button class="deal-alt" type="button" onclick="openResort(\''+d.art+'\');event.stopPropagation()">Сначала посмотреть даты и отели</button></div></div></article>';
 }
 
+var BUD=0;
+function renderDeals(){
+  var c=DATA[curCity], list=c.dirs.filter(function(d){ return !BUD || priceNum(d.p)<=BUD; });
+  var el=document.getElementById('deals'); if(!el) return;
+  el.innerHTML=(list.length? list : c.dirs).map(dealCard).join('');
+  var bs=document.getElementById('buds');
+  var opts=[[0,'Любая цена'],[130000,'до 130 000 ₽'],[160000,'до 160 000 ₽'],[220000,'до 220 000 ₽']];
+  bs.innerHTML=opts.map(function(o){
+    var n=c.dirs.filter(function(d){ return !o[0] || priceNum(d.p)<=o[0]; }).length;
+    return '<button type="button" class="bud'+(BUD===o[0]?' on':'')+'" aria-pressed="'+(BUD===o[0])+'" onclick="setBud('+o[0]+')">'+
+      o[1]+'<i>'+n+'</i></button>';
+  }).join('');
+  var note=document.getElementById('budNote');
+  if(BUD && !list.length){ note.hidden=false; note.textContent='В этот бюджет из '+c.name+' пока ничего не укладывается — показали всё, что есть. Подпишитесь на цену, и мы напишем, когда появится дешевле.'; }
+  else note.hidden=true;
+}
+function setBud(v){ BUD=v; track('budget','Фильтр по бюджету', v? 'до '+v+' ₽':'любая цена'); renderDeals(); }
 function setCity(k){
   if(window.IZI){ var _c=DATA[k]; IZI.ctx.from=k; IZI.ctx.fromName=_c.from; iziStep('city'); track('city','Город вылета',_c.from); }
   curCity=k;
@@ -99,12 +116,12 @@ function setCity(k){
   document.getElementById('fromLabel').textContent=c.from;
   document.getElementById('ssFrom').textContent=c.from;
   document.getElementById('fleetLine').textContent=c.fleet;
-  document.getElementById('deals').innerHTML=c.dirs.map(dealCard).join('');
+  renderDeals();
   heroPriceRender();
   document.getElementById('fTo').innerHTML=c.dirs.map(function(d){
     return '<option value="'+d.art+'">'+d.t+'</option>';}).join('');
   setModel(document.getElementById('heroImg'),c.dirs[0].art);
-  renderSoon(); renderProg(); watchFill();
+  renderSoon(); renderProg(); watchFill(); renderEb();
   openResort(c.dirs[0].art,true);
 }
 function pickFromSearch(){ openResort(document.getElementById('fTo').value); }
@@ -656,12 +673,12 @@ function buildMark(host){
 /* k — коэффициент к цене направления на выбранную дату, поэтому цены живые */
 var STAY={
  bodrum:[
-  {id:'b1',n:'Aegea Bay Resort',s:5,meal:'всё включено',line:1,dist:50,r:4.7,rn:412,k:1.24,kids:true,
+  {id:'b1',n:'Aegea Bay Resort',s:5,meal:'всё включено',line:1,dist:50,r:4.7,rn:412,k:1.24,kids:true,kf:true,
    img:'h_pool',gal:['h_pool','h_room','h_beach','h_dine'],
    about:'Большой курортный комплекс на первой линии в бухте Гюмбет. Три бассейна, свой песчано-галечный пляж с пирсом, вечерние программы у воды.',
    near:[['🏖','Свой пляж, 50 м'],['✈','Аэропорт 35 км'],['🏛','Старый город 6 км'],['🛒','Магазины через дорогу']],
    rooms:[['Стандарт с видом на сад','2 взрослых · 24 м²',1.0],['Стандарт с видом на море','2 взрослых · 26 м²',1.12],['Семейный номер','2+2 · 38 м²',1.34]]},
-  {id:'b2',n:'Palmira Coast Club',s:4,meal:'полупансион',line:1,dist:80,r:4.4,rn:286,k:1.0,kids:true,
+  {id:'b2',n:'Palmira Coast Club',s:4,meal:'полупансион',line:1,dist:80,r:4.4,rn:286,k:1.0,kids:true,kf:true,
    img:'h_beach',gal:['h_beach','h_pool','h_room','h_lobby'],
    about:'Камерный клубный отель на склоне с террасами к морю. Тихий, зелёный, с прямым спуском к воде по лестнице.',
    near:[['🏖','Пляж 80 м'],['✈','Аэропорт 32 км'],['🍽','Таверны 200 м'],['🚌','Долмуш у ворот']],
@@ -678,12 +695,12 @@ var STAY={
    rooms:[['Делюкс с видом на море','2 взрослых · 32 м²',1.0],['Сюит с бассейном','2 взрослых · 46 м²',1.48]]}
  ],
  antalya:[
-  {id:'a1',n:'Lara Sunrise Resort',s:5,meal:'всё включено',line:1,dist:0,r:4.6,rn:1240,k:1.3,kids:true,
+  {id:'a1',n:'Lara Sunrise Resort',s:5,meal:'всё включено',line:1,dist:0,r:4.6,rn:1240,k:1.3,kids:true,kf:true,
    img:'h_aqua',gal:['h_aqua','h_pool','h_room','h_dine'],
    about:'Классический большой «всё включено» на песчаном пляже Лары. Аквапарк с семью горками, детский клуб, анимация весь день.',
    near:[['🏖','Песчаный пляж на территории'],['✈','Аэропорт 14 км'],['🎢','Аквапарк свой'],['🛍','ТЦ 3 км']],
    rooms:[['Стандарт','2 взрослых · 26 м²',1.0],['Семейный','2+2 · 40 м²',1.3],['Свит с видом на море','2 взрослых · 44 м²',1.42]]},
-  {id:'a2',n:'Konyaalti Garden Hotel',s:4,meal:'полупансион',line:1,dist:120,r:4.3,rn:530,k:0.96,kids:true,
+  {id:'a2',n:'Konyaalti Garden Hotel',s:4,meal:'полупансион',line:1,dist:120,r:4.3,rn:530,k:0.96,kids:true,kf:true,
    img:'h_pool',gal:['h_pool','h_beach','h_room','h_lobby'],
    about:'Отель на Коньяалты с видом на Таврские горы. Просторный сад, два бассейна, до галечного пляжа — через набережную.',
    near:[['🏖','Пляж 120 м'],['🏔','Вид на горы'],['✈','Аэропорт 18 км'],['🚋','Трамвай 300 м']],
@@ -693,14 +710,14 @@ var STAY={
    about:'Отреставрированный османский дом в старом городе: двенадцать номеров, апельсиновый двор, завтрак под деревьями.',
    near:[['🏛','Ворота Адриана 300 м'],['⚓','Старый порт 400 м'],['🌊','Водопад Дюден 8 км'],['🍽','Рестораны вокруг']],
    rooms:[['Двухместный','2 взрослых · 18 м²',1.0],['Номер во дворе','2 взрослых · 24 м²',1.18]]},
-  {id:'a4',n:'Belek Pines Resort',s:5,meal:'всё включено',line:1,dist:60,r:4.7,rn:880,k:1.46,kids:true,
+  {id:'a4',n:'Belek Pines Resort',s:5,meal:'всё включено',line:1,dist:60,r:4.7,rn:880,k:1.46,kids:true,kf:true,
    img:'h_beach',gal:['h_beach','h_aqua','h_pool','h_dine'],
    about:'В сосновом лесу под Белеком. Собственный участок пляжа, поле для гольфа рядом, тихо и просторно даже в сезон.',
    near:[['🏖','Пляж 60 м, сосны'],['⛳','Гольф-поля 2 км'],['✈','Аэропорт 32 км'],['👶','Детский клуб']],
    rooms:[['Стандарт в парке','2 взрослых · 28 м²',1.0],['Семейный дуплекс','2+2 · 52 м²',1.36]]}
  ],
  sharm:[
-  {id:'s1',n:'Naama Reef Resort',s:5,meal:'всё включено',line:1,dist:0,r:4.6,rn:940,k:1.22,kids:true,
+  {id:'s1',n:'Naama Reef Resort',s:5,meal:'всё включено',line:1,dist:0,r:4.6,rn:940,k:1.22,kids:true,kf:true,
    img:'h_pool',gal:['h_pool','h_beach','h_room','h_dine'],
    about:'Свой понтон над рифом — маска и трубка в двадцати метрах от лежака. Три бассейна, дайв-центр на территории.',
    near:[['🐠','Риф у понтона'],['🤿','Дайв-центр свой'],['✈','Аэропорт 12 км'],['🌃','Наама-Бей 1,5 км']],
@@ -735,7 +752,7 @@ var STAY={
  ]
 };
 
-var HF={stars:[],meal:[],line1:false,kids:false,sort:'price'};
+var HF={stars:[],meal:[],line1:false,kids:false,kf:false,sort:'price'};
 var favs=[];
 
 function curPriceNum(){
@@ -755,6 +772,7 @@ function stayList(){
     if(HF.meal.length && HF.meal.indexOf(h.meal)<0) return false;
     if(HF.line1 && h.line!==1) return false;
     if(HF.kids && !h.kids) return false;
+    if(HF.kf && !h.kf) return false;
     return true;
   });
   list.sort(function(a,b){
@@ -773,7 +791,7 @@ function hfToggle(kind,val){
   track('hotel_filter','Фильтр отелей', kind+': '+(kind==='sort'?val:JSON.stringify(HF[kind])));
   renderStay();
 }
-function hfReset(){ HF={stars:[],meal:[],line1:false,kids:false,sort:HF.sort}; track('hotel_filter','Сбросил фильтры'); renderStay(); }
+function hfReset(){ HF={stars:[],meal:[],line1:false,kids:false,kf:false,sort:HF.sort}; track('hotel_filter','Сбросил фильтры'); renderStay(); }
 function favToggle(id,ev){
   if(ev) ev.stopPropagation();
   var i=favs.indexOf(id);
@@ -802,8 +820,8 @@ function renderStay(){
   F.innerHTML=
     '<div class="hfg"><em>Звёзды</em>'+[3,4,5].map(function(x){return mk('stars',x,x+'★');}).join('')+'</div>'+
     '<div class="hfg"><em>Питание</em>'+mk('meal','завтрак','Завтрак')+mk('meal','полупансион','Полупансион')+mk('meal','всё включено','Всё включено')+'</div>'+
-    '<div class="hfg">'+mk('line1',1,'1-я линия')+mk('kids',1,'Для детей')+'</div>'+
-    ((HF.stars.length||HF.meal.length||HF.line1||HF.kids)? '<button class="hreset" type="button" onclick="hfReset()">Сбросить</button>':'');
+    '<div class="hfg">'+mk('line1',1,'1-я линия')+mk('kids',1,'Для детей')+mk('kf',1,'Ребёнок бесплатно')+'</div>'+
+    ((HF.stars.length||HF.meal.length||HF.line1||HF.kids||HF.kf)? '<button class="hreset" type="button" onclick="hfReset()">Сбросить</button>':'');
 
   document.getElementById('hSort').innerHTML='<em>Сортировка</em>'+
     mk('sort','price','Сначала дешевле')+mk('sort','rate','По рейтингу')+mk('sort','dist','Ближе к морю');
@@ -826,11 +844,11 @@ function renderStay(){
       '<div class="hc-b">'+
         '<div><span class="hc-stars">'+'★'.repeat(h.s)+'</span><h3 class="hc-n">'+esc(h.n)+'</h3></div>'+
         '<p class="hc-loc">'+(h.dist? h.dist+' м до моря':'Выход к морю с территории')+' · '+h.meal+'</p>'+
-        '<div class="hc-tags">'+(h.kids?'<span class="hc-tag">Для детей</span>':'')+
+        '<div class="hc-tags">'+(h.kf?'<span class="hc-tag hc-kf">Ребёнок бесплатно</span>':'')+(h.kids?'<span class="hc-tag">Для детей</span>':'')+
           '<span class="hc-tag">'+(h.line===1?'1-я линия':'2-я линия')+'</span>'+
           '<span class="hc-tag">'+h.s+' звезды</span></div>'+
         '<div class="hc-f"><div><div class="hc-p num">'+money(hotelPrice(h))+'</div>'+
-          '<div class="hc-pn">за двоих · бронь от 3 000 ₽</div></div>'+
+          '<div class="hc-pn">за двоих · или '+money(perMonth(hotelPrice(h)))+'/мес × 6</div></div>'+
           '<button class="hc-more" type="button" onclick="hpOpen(\''+h.id+'\');event.stopPropagation()">Подробнее</button></div>'+
       '</div></article>';
   }).join('');
@@ -927,6 +945,8 @@ function cmPick(d){
 
 /* ---------- быстрый путь: три клика до брони ---------- */
 function priceNum(v){ return parseInt(String(v).replace(/[^0-9]/g,''),10)||0; }
+var INSTALL_M=6;
+function perMonth(n){ return Math.ceil((n-BK_DEPOSIT)/INSTALL_M/100)*100; }
 function heroPriceRender(){
   var el=document.getElementById('heroPrice'); if(!el) return;
   var c=DATA[curCity], min=null;
@@ -1206,12 +1226,14 @@ var BK_STEPS=4;
    ценовой матрицы туроператора вместе с ценой тура. */
 var PAX_K={single:1.35, extraAdult:0.82, child:0.45, infant:4900};
 
+function kidsFree(){ return (BK.hotel && BK.hotel.kf && BK.kids>0) ? 1 : 0; }
+function paidKids(){ return Math.max(0, BK.kids-kidsFree()); }
 function paxTotal(base){
   if(!base) return 0;
   var half=base/2, t;
   if(BK.adults<=1) t=half*PAX_K.single;
   else t=base+(BK.adults-2)*half*PAX_K.extraAdult;
-  t+=BK.kids*half*PAX_K.child;
+  t+=paidKids()*half*PAX_K.child;
   t+=BK.inf*PAX_K.infant;
   return Math.round(t/100)*100;
 }
@@ -1330,6 +1352,7 @@ function bkTotalsHtml(){
   if(tour) h+='<div class="bk-sr wide"><span>Итого за поездку</span><b>'+money(total)+'</b></div>';
   h+='<div class="bk-sr wide tot"><span>К оплате сейчас</span><b>'+money(BK_DEPOSIT)+'</b></div>';
   if(tour) h+='<div class="bk-sr wide"><span>Остаток за 14 дней до вылета</span><b>'+money(Math.max(0,total-BK_DEPOSIT))+'</b></div>';
+  if(tour) h+='<div class="bk-sr wide"><span>Или в рассрочку без процентов</span><b>'+money(perMonth(total))+' × '+INSTALL_M+' мес</b></div>';
   return h;
 }
 
@@ -1370,11 +1393,13 @@ function bkRender(){
       (base? '<div class="bk-calc">'+
         '<div class="bk-cr"><span>Двое взрослых в номере</span><b>'+money(BK.adults<=1? Math.round(half*PAX_K.single/100)*100 : base)+'</b></div>'+
         (BK.adults>2? '<div class="bk-cr"><span>Ещё '+(BK.adults-2)+' взр. · доп. место в номере</span><b>+ '+money(Math.round((BK.adults-2)*half*PAX_K.extraAdult/100)*100)+'</b></div>':'')+
-        (BK.kids? '<div class="bk-cr"><span>Дети 2–11 · −'+Math.round((1-PAX_K.child)*100)+'% от взрослого</span><b>+ '+money(Math.round(BK.kids*half*PAX_K.child/100)*100)+'</b></div>':'')+
+        (kidsFree()? '<div class="bk-cr free"><span>Первый ребёнок в этом отеле — бесплатно</span><b>0 ₽</b></div>':'')+
+        (paidKids()? '<div class="bk-cr"><span>'+(kidsFree()?'Ещё ':'')+'дети 2–11 · −'+Math.round((1-PAX_K.child)*100)+'% от взрослого</span><b>+ '+money(Math.round(paidKids()*half*PAX_K.child/100)*100)+'</b></div>':'')+
         (BK.inf? '<div class="bk-cr"><span>Малыши до 2 лет · только сбор</span><b>+ '+money(BK.inf*PAX_K.infant)+'</b></div>':'')+
         '<div class="bk-cr tot"><span>Тур целиком</span><b>'+money(paxTotal(base))+'</b></div>'+
       '</div>'
       : '')+
+      (BK.kids&&BK.hotel&&!BK.hotel.kf? '<p class="bk-hint">В этом отеле детское место платное. В выдаче есть отели с бесплатным местом для первого ребёнка — фильтр «Ребёнок бесплатно».</p>':'')+
       '<p class="bk-note">'+(BK.kids? 'Ребёнок 2–11 лет на дополнительном месте стоит меньше половины взрослого — поэтому семейная цена ниже, чем «плюс ещё один взрослый». ':'')+
         'Коэффициенты размещения показаны как пример: в рабочей версии они приходят из ценовой матрицы туроператора.</p>'+
       '<div class="bk-act"><button class="btn btn-ember btn-l" type="button" onclick="bkNext()">Дальше</button></div>';
@@ -1628,13 +1653,102 @@ function submitAgency(e){
   return false;
 }
 
+
+/* ---------- раннее бронирование ---------- */
+/* Этапы, скидки и цены на будущее лето — демонстрационные. */
+var EB={
+  base:{mrv:{to:'Анталия',k:'antalya',p:134000},krr:{to:'Анталия',k:'antalya',p:129000},skx:{to:'Анталия',k:'antalya',p:136000}},
+  tiers:[
+    {till:'2026-10-01', label:'до 30 сентября', d:12},
+    {till:'2026-11-01', label:'до 31 октября', d:8},
+    {till:'2026-12-01', label:'до 30 ноября',  d:5},
+    {till:null,         label:'с 1 декабря',   d:0}
+  ]
+};
+function ebActive(){
+  var now=Date.now();
+  for(var i=0;i<EB.tiers.length;i++){
+    var t=EB.tiers[i];
+    if(!t.till || new Date(t.till+'T00:00:00').getTime()>now) return i;
+  }
+  return EB.tiers.length-1;
+}
+function ebPrice(i){
+  var b=(EB.base[curCity]||EB.base.mrv).p;
+  return Math.round(b*(1-EB.tiers[i].d/100)/500)*500;
+}
+function renderEb(){
+  var el=document.getElementById('ebLadder'); if(!el) return;
+  var act=ebActive(), b=(EB.base[curCity]||EB.base.mrv);
+  el.innerHTML=EB.tiers.map(function(t,i){
+    var p=ebPrice(i), save=b.p-p;
+    return '<article class="ebt'+(i===act?' on':'')+(i<act?' past':'')+'">'+
+      '<p class="ebt-k">'+(i===act?'Действует сейчас':(i<act?'Уже прошло':'Потом'))+'</p>'+
+      '<b class="ebt-d">'+(t.d?'−'+t.d+'%':'0%')+'</b>'+
+      '<p class="ebt-l">'+t.label+'</p>'+
+      '<p class="ebt-p"><b>'+money(p)+'</b>'+(save? '<span>выгода '+money(save)+'</span>':'<span>базовая цена</span>')+'</p>'+
+    '</article>';
+  }).join('');
+  document.getElementById('ebNote').textContent=
+    b.to+', 7 ночей, июнь 2027 из '+DATA[curCity].name+' — '+money(ebPrice(act))+' за двоих вместо '+money(b.p)+'.';
+  ebTick();
+}
+var ebT=null;
+function ebTick(){
+  var el=document.getElementById('ebTimer'); if(!el) return;
+  var t=EB.tiers[ebActive()];
+  if(!t.till){ el.innerHTML='<b>Раннее бронирование завершено</b><span>Действует базовая цена сезона</span>'; return; }
+  var ms=new Date(t.till+'T00:00:00').getTime()-Date.now();
+  if(ms<0) ms=0;
+  var d=Math.floor(ms/86400000), h=Math.floor(ms/3600000)%24, m=Math.floor(ms/60000)%60;
+  el.innerHTML='<span class="ebt-cap">До конца этапа −'+t.d+'%</span>'+
+    '<div class="ebclock"><i><b>'+d+'</b>'+plural(d,['день','дня','дней'])+'</i>'+
+    '<i><b>'+h+'</b>'+plural(h,['час','часа','часов'])+'</i>'+
+    '<i><b>'+m+'</b>мин</i></div>';
+  if(!ebT) ebT=setInterval(ebTick,30000);
+}
+function ebBook(){
+  var act=ebActive(), b=(EB.base[curCity]||EB.base.mrv);
+  track('early_book','Бронь по раннему', b.to+' · лето 2027 · −'+EB.tiers[act].d+'%');
+  openResort(b.k,true);
+  IZI.ctx.date='июнь 2027 · раннее бронирование';
+  IZI.ctx.price=money(ebPrice(act));
+  iziStep('date');
+  bkOpen('early', null);
+}
+
+/* ---------- постоянные туристы ---------- */
+var CLUB=[
+ {n:'После первой поездки', d:'3%', t:['скидка на следующий тур','ранний доступ к раннему бронированию за сутки до всех']},
+ {n:'После третьей',        d:'5%', t:['скидка на тур','выбор мест в самолёте бесплатно','приоритет в листе ожидания на забитый борт']},
+ {n:'После пятой',          d:'7%', t:['скидка на тур','выбор мест и ранний заезд бесплатно','личный менеджер, а не общая линия']}
+];
+function renderClub(){
+  var el=document.getElementById('clubTiers'); if(!el) return;
+  el.innerHTML=CLUB.map(function(c,i){
+    return '<article class="ct'+(i===2?' hi':'')+'"><p class="ct-n">'+c.n+'</p>'+
+      '<b class="ct-d">'+c.d+'</b><span class="ct-s">скидка</span>'+
+      '<ul>'+c.t.map(function(x){return '<li>'+x+'</li>';}).join('')+'</ul></article>';
+  }).join('');
+}
+function refLink(){
+  var code='IZI-'+Math.random().toString(36).slice(2,7).toUpperCase();
+  var url=location.origin+location.pathname+'?ref='+code;
+  var out=document.getElementById('refOut');
+  out.textContent=url; out.hidden=false;
+  track('referral','Взял ссылку для друга',code);
+  if(navigator.clipboard) navigator.clipboard.writeText(url).then(function(){ toast('Ссылка скопирована'); },function(){});
+  else toast('Ссылка готова — скопируйте её');
+}
+
 /* ---------- boot ---------- */
 setCity('mrv');
 buildSeatMap();
 document.querySelectorAll('.mark3d').forEach(buildMark);
-iziInit(); leadCtxRender(); renderStay(); favBar(); favRestore(); renderFaq(); watchFill();
+iziInit(); leadCtxRender(); renderStay(); favBar(); favRestore(); renderFaq(); watchFill(); renderClub();
 mobCollapse('#cabin','Показать схему салона и борт');
 mobCollapse('#program','Показать расписание вылетов');
+mobCollapse('#club','Показать программу для постоянных туристов');
 mobCollapse('#agents','Показать условия для агентств');
 mobCollapse('.studio','Показать, как это собрано');
 setRoute('direct');
