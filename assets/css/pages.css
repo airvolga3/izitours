@@ -65,6 +65,10 @@
 .pglogin .btn{justify-content:center}
 .codehint{font-size:12px;color:var(--text-3);text-align:center;line-height:1.6}
 
+.offbar{position:sticky;top:0;z-index:70;padding:9px 18px;text-align:center;
+  font:600 12.5px var(--ui);color:var(--on-gold);background:var(--warn)}
+.offbar[hidden]{display:none}
+
 /* кабинет */
 .cabtop{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:20px}
 .cabno{font-family:var(--disp);font-weight:500;font-size:26px;letter-spacing:.01em;color:var(--gold);

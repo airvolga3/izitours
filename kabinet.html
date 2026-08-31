@@ -4,6 +4,12 @@
 <title>Личный кабинет — IZI TOUR</title>
 <meta name="description" content="Личный кабинет туриста IZI TOUR: статус брони, документы, доплата остатка, выбор мест и связь с представителем на курорте.">
 <link rel="canonical" href="https://airvolga3.github.io/izitours/kabinet.html">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/img/icon-192.png" sizes="192x192">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Моя поездка">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
@@ -25,6 +31,8 @@
     <a href="#" onclick="cabOut();return false" id="outLink" hidden>Выйти</a>
   </nav>
 </div></header>
+
+<div class="offbar" id="offBar" hidden>Нет сети — показываем сохранённую копию поездки</div>
 
 <main>
 <section class="pghero" id="loginView"><div class="pgwrap">
@@ -101,6 +109,13 @@
         <p class="pgnote">Докупить можно до вылета. Цены демонстрационные.</p>
       </div>
 
+      <div class="cabbox" id="pwaBox" hidden>
+        <h3>Поездка на телефоне</h3>
+        <p style="font-size:13.5px;line-height:1.6;color:var(--text-2)" id="pwaTxt"></p>
+        <div class="cabact" id="pwaAct"></div>
+        <p class="pgnote">Документы, номер брони и телефон представителя останутся доступны, даже если в аэропорту не будет интернета.</p>
+      </div>
+
       <div class="cabbox">
         <h3>Представитель на курорте</h3>
         <div class="cabrow"><span>Кто встречает</span><b>Ирина, русскоговорящий гид</b></div>
@@ -138,6 +153,11 @@ var EXTRA=[
  {n:'Парковка в аэропорту вылета', p:'2 900 ₽', d:'Место на охраняемой стоянке на весь тур.'},
  {n:'Ранний заезд в отель', p:'5 600 ₽', d:'Номер с 8 утра в день прилёта.'}
 ];
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
 function esc(v){ return String(v==null?'':v).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
 function render(){
   document.getElementById('docs').innerHTML=DOCS.map(function(d){
@@ -171,7 +191,7 @@ function cabIn(e){
   document.getElementById('loginView').hidden=true;
   document.getElementById('cabView').hidden=false;
   document.getElementById('outLink').hidden=false;
-  render();
+  render(); pwaRender(); netRender();
   window.scrollTo(0,0);
   return false;
 }
@@ -185,6 +205,52 @@ function cabOut(){
   document.getElementById('cabBtn').textContent='Прислать код';
   window.scrollTo(0,0);
 }
+/* ---------- установка на телефон ---------- */
+var deferredPrompt=null;
+function standalone(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+}
+function isIOS(){ return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream; }
+function pwaRender(){
+  var box=document.getElementById('pwaBox'); if(!box) return;
+  var txt=document.getElementById('pwaTxt'), act=document.getElementById('pwaAct');
+  if(standalone()){
+    box.hidden=false;
+    txt.textContent='Поездка уже сохранена на телефоне. Открывайте её с домашнего экрана — она работает и без интернета.';
+    act.innerHTML='';
+    return;
+  }
+  if(deferredPrompt){
+    box.hidden=false;
+    txt.textContent='Сохраните поездку как приложение: иконка на домашнем экране, запуск за секунду и доступ к документам без интернета.';
+    act.innerHTML='<button class="btn btn-ember" type="button" onclick="pwaInstall()">Сохранить на телефон</button>';
+    return;
+  }
+  if(isIOS()){
+    box.hidden=false;
+    txt.innerHTML='Сохраните поездку на домашний экран — тогда документы и время вылета будут открываться даже без интернета.<br><br>'+
+      'Нажмите <b>«Поделиться»</b> внизу экрана (квадрат со стрелкой вверх), пролистайте список и выберите <b>«На экран „Домой“»</b>.';
+    act.innerHTML='';
+    return;
+  }
+  box.hidden=true;
+}
+window.addEventListener('beforeinstallprompt',function(e){ e.preventDefault(); deferredPrompt=e; pwaRender(); });
+window.addEventListener('appinstalled',function(){ deferredPrompt=null; pwaRender(); });
+function pwaInstall(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(){ deferredPrompt=null; pwaRender(); });
+}
+/* ---------- состояние сети ---------- */
+function netRender(){
+  var b=document.getElementById('offBar'); if(!b) return;
+  b.hidden = navigator.onLine;
+}
+window.addEventListener('online',netRender);
+window.addEventListener('offline',netRender);
+document.addEventListener('DOMContentLoaded',function(){ netRender(); pwaRender(); });
+
 function stub(msg){
   var t=document.createElement('div');
   t.className='toast on';

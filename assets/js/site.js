@@ -1594,7 +1594,9 @@ function bkRender(){
         'Макет платёжную форму не показывает намеренно: реквизиты карты принимает банк на своей странице, сайт их не видит и не хранит. '+
         'После оплаты банк возвращает человека сюда, а заявка в CRM переходит из «бронь создана» в «депозит получен».</div>'+
       '<div class="bk-act"><button class="bk-ghost" type="button" onclick="crmToggle();bkClose()">Что ушло в CRM</button>'+
-        '<button class="btn btn-ember btn-l" type="button" onclick="bkClose();trOpen()">Открыть мою поездку</button></div>';
+        '<button class="btn btn-ember btn-l" type="button" onclick="bkClose();trOpen()">Открыть мою поездку</button></div>'+
+      '<p class="bk-note">Поездку можно сохранить на телефон: <a href="kabinet.html" style="color:var(--azure)">личный кабинет</a> '+
+      'ставится как приложение и показывает документы, время вылета и телефон представителя даже без интернета.</p>';
   }
   crmRender();
 }
